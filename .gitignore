@@ -45,3 +45,5 @@ app.*.map.json
 # Android gradle build artifacts
 **/build/
 android/gradle/wrapper/*.zip
+
+# DSH AgentTeams 团队数据.agent-teams/
