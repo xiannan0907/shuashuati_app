@@ -15,7 +15,7 @@ class _NotificationPageState extends State<NotificationPage> {
   String _filter = '全部';
   bool _isLoading = true;
 
-  final List<String> _filterOptions = ['全部', '提醒', '复习', '成就', '系统'];
+  final List<String> _filterOptions = ['全部', '更新', '提醒', '复习', '成就', '系统'];
 
   @override
   void initState() {
@@ -35,6 +35,7 @@ class _NotificationPageState extends State<NotificationPage> {
   List<NotificationItem> get _filteredNotifications {
     if (_filter == '全部') return _notifications;
     final typeMap = {
+      '更新': 'update',
       '提醒': 'reminder',
       '复习': 'review',
       '成就': 'achievement',

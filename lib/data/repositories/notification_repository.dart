@@ -13,14 +13,38 @@ class NotificationRepository {
   }
 
   // ============================================================
-  // ✅ 初始化示例通知（首次启动）
+  // ✅ 初始化通知（首次启动示例 + 版本更新公告）
   // ============================================================
 
   Future<void> initSampleNotifications() async {
     final box = await _getBox();
-    if (box.isNotEmpty) return;
-
     final now = DateTime.now();
+
+    // ── 版本更新公告：无论是否首次启动都确保存在（升级用户可见，未读红点）──
+    final announcements = [
+      NotificationItem(
+        id: 'announce_v1_0_1',
+        title: '🔄 v1.0.1 版本更新',
+        content: '【重大改进】\n'
+            '· 修复：启动卡死问题、错题/存档数据误删风险\n'
+            '· 新增：全局搜索可直接进入题库\n'
+            '· 优化：错题复习算法、课表解析、主题切换\n'
+            '· 其他：依赖全面升级、性能与细节打磨',
+        type: 'update',
+        timestamp: now,
+        isRead: false,
+        actionRoute: null,
+        icon: 'new_releases',
+      ),
+    ];
+    for (var item in announcements) {
+      if (!box.containsKey(item.id)) {
+        await box.put(item.id, item);
+      }
+    }
+
+    // ── 首次启动示例（仅空 box 时插入）──
+    if (box.isNotEmpty) return;
 
     final samples = [
       NotificationItem(
