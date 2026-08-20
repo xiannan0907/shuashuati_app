@@ -78,7 +78,7 @@ class _ExitButton extends StatelessWidget {
       label: Text(exit.displayName),
       style: ElevatedButton.styleFrom(
         backgroundColor: exit.direction == 'portal'
-            ? const Color(0xFFaa55ff).withOpacity(0.2)
+            ? const Color(0xFFaa55ff).withValues(alpha: 0.2)
             : const Color(0xFF141425),
         foregroundColor: exit.direction == 'portal'
             ? const Color(0xFFaa55ff)
@@ -88,7 +88,7 @@ class _ExitButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(
             color: exit.direction == 'portal'
-                ? const Color(0xFFaa55ff).withOpacity(0.3)
+                ? const Color(0xFFaa55ff).withValues(alpha: 0.3)
                 : Colors.grey[800]!,
           ),
         ),

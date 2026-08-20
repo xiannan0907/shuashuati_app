@@ -8,7 +8,7 @@ part of 'course_model.dart';
 
 class CourseAdapter extends TypeAdapter<Course> {
   @override
-  final int typeId = 30;
+  final typeId = 30;
 
   @override
   Course read(BinaryReader reader) {
@@ -19,19 +19,19 @@ class CourseAdapter extends TypeAdapter<Course> {
     return Course(
       id: fields[0] as String,
       name: fields[1] as String,
-      teacher: fields[2] as String,
-      classroom: fields[3] as String,
-      weekday: fields[4] as int,
-      startSlot: fields[5] as int,
-      endSlot: fields[6] as int,
-      weekStart: fields[7] as int,
-      weekEnd: fields[8] as int,
-      color: fields[9] as String,
+      teacher: fields[2] == null ? '' : fields[2] as String,
+      classroom: fields[3] == null ? '' : fields[3] as String,
+      weekday: (fields[4] as num).toInt(),
+      startSlot: (fields[5] as num).toInt(),
+      endSlot: (fields[6] as num).toInt(),
+      weekStart: fields[7] == null ? 1 : (fields[7] as num).toInt(),
+      weekEnd: fields[8] == null ? 20 : (fields[8] as num).toInt(),
+      color: fields[9] == null ? 'blue' : fields[9] as String,
       note: fields[10] as String?,
-      credit: fields[11] as double,
-      scheduleType: fields[12] as String,
-      startMinute: fields[13] as int?,
-      endMinute: fields[14] as int?,
+      credit: fields[11] == null ? 0.0 : (fields[11] as num).toDouble(),
+      scheduleType: fields[12] == null ? 'course' : fields[12] as String,
+      startMinute: (fields[13] as num?)?.toInt(),
+      endMinute: (fields[14] as num?)?.toInt(),
     );
   }
 

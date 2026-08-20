@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:equatable/equatable.dart';
 
 part 'course_model.g.dart';
@@ -52,7 +52,7 @@ class Course extends Equatable {
   @HiveField(14)
   final int? endMinute;
 
-  Course({
+  const Course({
     required this.id,
     required this.name,
     this.teacher = '',

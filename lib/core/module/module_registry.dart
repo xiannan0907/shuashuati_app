@@ -1,7 +1,6 @@
 import 'app_module.dart';
 import '../../../modules/quiz/quiz_module.dart';
 import '../../../modules/timetable/timetable_module.dart'; // ✅ 添加这行
-import 'package:flutter/material.dart';
 import '../../../modules/portalborn/portalborn_module.dart';
 
 class ModuleRegistry {

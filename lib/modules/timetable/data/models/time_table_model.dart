@@ -1,4 +1,5 @@
-import 'package:hive/hive.dart';
+// ignore_for_file: must_be_immutable
+import 'package:hive_ce/hive.dart';
 import 'package:equatable/equatable.dart';
 
 part 'time_table_model.g.dart';

@@ -1,4 +1,5 @@
 /// 职业数据
+library;
 
 /// 职业定义
 class ClassData {

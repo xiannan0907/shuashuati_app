@@ -1,4 +1,5 @@
 /// 词条系统数据
+library;
 
 class LoreEntry {
   final String id;

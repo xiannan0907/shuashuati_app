@@ -303,7 +303,7 @@ class _FilterChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             color: isSelected
-                ? const Color(0xFF00ff88).withOpacity(0.2)
+                ? const Color(0xFF00ff88).withValues(alpha: 0.2)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
@@ -348,12 +348,12 @@ class _InventoryItemCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isEquipped
-            ? const Color(0xFF00ff88).withOpacity(0.1)
+            ? const Color(0xFF00ff88).withValues(alpha: 0.1)
             : const Color(0xFF141425),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isEquipped
-              ? const Color(0xFF00ff88).withOpacity(0.3)
+              ? const Color(0xFF00ff88).withValues(alpha: 0.3)
               : Colors.grey[800]!,
         ),
       ),
@@ -384,7 +384,7 @@ class _InventoryItemCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00ff88).withOpacity(0.2),
+                          color: const Color(0xFF00ff88).withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(
@@ -401,7 +401,7 @@ class _InventoryItemCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFffaa33).withOpacity(0.2),
+                          color: const Color(0xFFffaa33).withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -504,7 +504,7 @@ class _ActionButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(4),
           ),
           child: Text(

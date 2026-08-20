@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/models/course_model.dart';
 import '../../data/models/time_table_model.dart';
-import '../bloc/timetable_bloc.dart';
 import '../../utils/timetable_settings.dart';
 
 class TimetableWeekView extends StatefulWidget {
@@ -40,7 +38,6 @@ class TimetableWeekViewState extends State<TimetableWeekView> {
   late int _viewWeek;
   late Map<int, String> _slotTimes;
   final Set<String> _emptySlotKeys = {};
-  Course? _draggingCourse;
   String? _dragTargetKey;
   bool _isDragging = false;
 
@@ -174,7 +171,6 @@ class TimetableWeekViewState extends State<TimetableWeekView> {
     setState(() {
       _isDragging = false;
       _dragTargetKey = null;
-      _draggingCourse = null;
     });
 
     if (existing == null) {
@@ -242,11 +238,10 @@ class TimetableWeekViewState extends State<TimetableWeekView> {
         final bool isActive = _emptySlotKeys.contains(slotKey);
         cells.add(
           DragTarget<Course>(
-            onAccept: (dragged) => _handleDrop(dragged, weekday, slot),
-            onWillAccept: (dragged) {
-              if (dragged == null) return false;
+            onAcceptWithDetails: (details) => _handleDrop(details.data, weekday, slot),
+            onWillAcceptWithDetails: (details) {
               final existing = _findCourseAt(weekday, slot);
-              if (existing?.id == dragged.id) return false;
+              if (existing?.id == details.data.id) return false;
               return true;
             },
             builder: (context, candidateData, rejectedData) {
@@ -337,7 +332,7 @@ class TimetableWeekViewState extends State<TimetableWeekView> {
         final double height = ((endSlot - startSlot + 1) * rowHeight).toDouble();
 
         final color = _getColor(course.color);
-        final bgColor = color.withOpacity(isDark ? 0.35 : 0.2);
+        final bgColor = color.withValues(alpha: isDark ? 0.35 : 0.2);
         final borderColor = color;
 
         final double left = (leftColumnWidth + (weekday - 1) * effectiveColumnWidth + 2).toDouble();
@@ -345,7 +340,7 @@ class TimetableWeekViewState extends State<TimetableWeekView> {
 
         courseWidgets.add(
           Positioned(
-            key: ValueKey('course_${course.id}_${_viewWeek}'),
+            key: ValueKey('course_${course.id}_$_viewWeek'),
             left: left,
             top: top,
             width: width,
@@ -358,7 +353,7 @@ class TimetableWeekViewState extends State<TimetableWeekView> {
                     width: width,
                     height: height,
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.9),
+                      color: color.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(8.0),
                       border: Border.all(color: Colors.white, width: 2.0),
                       boxShadow: const [
@@ -385,7 +380,6 @@ class TimetableWeekViewState extends State<TimetableWeekView> {
                 delay: const Duration(milliseconds: 500),
                 onDragStarted: () {
                   setState(() {
-                    _draggingCourse = course;
                     _isDragging = true;
                   });
                 },
@@ -393,7 +387,6 @@ class TimetableWeekViewState extends State<TimetableWeekView> {
                   setState(() {
                     _isDragging = false;
                     _dragTargetKey = null;
-                    _draggingCourse = null;
                   });
                 },
                 child: GestureDetector(
@@ -602,7 +595,7 @@ class TimetableWeekViewState extends State<TimetableWeekView> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 6.0),
               decoration: BoxDecoration(
-                color: _viewWeek == currentWeek ? Colors.green.withOpacity(0.15) : Colors.transparent,
+                color: _viewWeek == currentWeek ? Colors.green.withValues(alpha: 0.15) : Colors.transparent,
                 borderRadius: BorderRadius.circular(8.0),
                 border: Border.all(
                   color: _viewWeek == currentWeek ? Colors.green : (isDark ? Colors.grey.shade700 : Colors.grey.shade300),

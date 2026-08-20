@@ -60,7 +60,7 @@ class _TowerPageState extends State<TowerPage> {
 
     try {
       _progress = await _towerRepo.getProgress();
-      print('📊 当前进度: 第${_progress!.currentFloor}层, HP: ${_progress!.hp}/${_progress!.maxHp}');
+      debugPrint('📊 当前进度: 第${_progress!.currentFloor}层, HP: ${_progress!.hp}/${_progress!.maxHp}');
 
       if (_progress!.isAllNodesCompleted) {
         _progress!.currentFloor++;
@@ -84,7 +84,7 @@ class _TowerPageState extends State<TowerPage> {
         _hasDoubleExpActive = false;
       });
     } catch (e) {
-      print('❌ 加载爬塔数据失败: $e');
+      debugPrint('❌ 加载爬塔数据失败: $e');
       setState(() {
         _isLoading = false;
       });
@@ -666,7 +666,8 @@ class _TowerPageState extends State<TowerPage> {
   void _startBattle(int index, TowerNodeType type) {
     if (_currentQuestion == null && _availableQuestions.isEmpty) {
       _loadQuestions().then((_) {
-        if (_currentQuestion != null && mounted) {
+        if (!mounted) return;
+        if (_currentQuestion != null) {
           _startBattle(index, type);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -738,7 +739,7 @@ class _TowerPageState extends State<TowerPage> {
         const SnackBar(
           content: Text('👑 魔王被击败了！'),
           backgroundColor: Colors.orange,
-          duration: const Duration(seconds: 2),
+          duration: Duration(seconds: 2),
         ),
       );
 
@@ -991,6 +992,7 @@ class _TowerPageState extends State<TowerPage> {
               _fillAnswers.clear();
               await _towerRepo.saveProgress(_progress!);
               _loadData();
+              if (!mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('🗡️ 冒险已重置，从第1层开始！'),
@@ -1248,7 +1250,7 @@ class _TowerPageState extends State<TowerPage> {
       trailing: ElevatedButton(
         onPressed: count > 0 ? onTap : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: color.withOpacity(0.2),
+          backgroundColor: color.withValues(alpha: 0.2),
           foregroundColor: color,
         ),
         child: Text(count > 0 ? '使用' : '无'),
@@ -1386,8 +1388,13 @@ class _TowerPageState extends State<TowerPage> {
       });
     }
 
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && mounted) Navigator.pop(this.context);
+      },
       child: Scaffold(
         backgroundColor: Colors.deepPurple.shade900,
         appBar: AppBar(
@@ -1400,7 +1407,7 @@ class _TowerPageState extends State<TowerPage> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () async {
               final shouldExit = await _onWillPop();
-              if (shouldExit) {
+              if (shouldExit && context.mounted) {
                 Navigator.pop(context);
               }
             },
@@ -1545,12 +1552,12 @@ class _TowerPageState extends State<TowerPage> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
-                        color: _getBattleColor().withOpacity(0.2),
+                        color: _getBattleColor().withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: _getBattleColor(), width: 1),
                         boxShadow: [
                           BoxShadow(
-                            color: _getBattleColor().withOpacity(0.3),
+                            color: _getBattleColor().withValues(alpha: 0.3),
                             blurRadius: 8,
                           ),
                         ],
@@ -1587,20 +1594,20 @@ class _TowerPageState extends State<TowerPage> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.deepPurple.shade800.withOpacity(0.8),
-                            Colors.deepPurple.shade700.withOpacity(0.5),
+                            Colors.deepPurple.shade800.withValues(alpha: 0.8),
+                            Colors.deepPurple.shade700.withValues(alpha: 0.5),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: Colors.deepPurple.shade400.withOpacity(0.3),
+                          color: Colors.deepPurple.shade400.withValues(alpha: 0.3),
                           width: 1.5,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.deepPurple.shade900.withOpacity(0.5),
+                            color: Colors.deepPurple.shade900.withValues(alpha: 0.5),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
@@ -1634,7 +1641,7 @@ class _TowerPageState extends State<TowerPage> {
                       Container(
                         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                         decoration: BoxDecoration(
-                          color: _feedbackColor?.withOpacity(0.1),
+                          color: _feedbackColor?.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: _feedbackColor ?? Colors.transparent, width: 1),
                         ),
@@ -1656,7 +1663,7 @@ class _TowerPageState extends State<TowerPage> {
                                   _feedbackMessage!.split('\n')[1],
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: _feedbackColor?.withOpacity(0.8),
+                                    color: _feedbackColor?.withValues(alpha: 0.8),
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -1747,7 +1754,7 @@ class _TowerPageState extends State<TowerPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.green.withOpacity(0.5),
+            color: Colors.green.withValues(alpha: 0.5),
             blurRadius: 20,
           ),
         ],
@@ -1806,7 +1813,7 @@ class _TowerPageState extends State<TowerPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.red.withOpacity(0.5),
+            color: Colors.red.withValues(alpha: 0.5),
             blurRadius: 20,
           ),
         ],

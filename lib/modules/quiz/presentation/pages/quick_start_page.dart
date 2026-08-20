@@ -36,7 +36,7 @@ class _QuickStartPageState extends State<QuickStartPage> {
       _totalQuestions = questions.length;
       _answeredQuestions = questions.where((q) => q.isAnsweredValue).length;
     } catch (e) {
-      print('加载快速开始数据失败: $e');
+      debugPrint('加载快速开始数据失败: $e');
     }
     setState(() => _isLoading = false);
   }
@@ -100,7 +100,7 @@ class _QuickStartPageState extends State<QuickStartPage> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blue.withOpacity(0.3),
+                    color: Colors.blue.withValues(alpha: 0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -133,7 +133,7 @@ class _QuickStartPageState extends State<QuickStartPage> {
                         '进度 $_answeredQuestions/$_totalQuestions 题',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.white.withOpacity(0.85),
+                          color: Colors.white.withValues(alpha: 0.85),
                         ),
                       ),
                       const Spacer(),
@@ -153,7 +153,7 @@ class _QuickStartPageState extends State<QuickStartPage> {
                     child: LinearProgressIndicator(
                       value: _totalQuestions > 0 ? _answeredQuestions / _totalQuestions : 0,
                       minHeight: 6,
-                      backgroundColor: Colors.white.withOpacity(0.3),
+                      backgroundColor: Colors.white.withValues(alpha: 0.3),
                       color: Colors.white,
                     ),
                   ),

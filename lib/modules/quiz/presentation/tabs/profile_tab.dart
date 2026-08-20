@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/bloc/theme_bloc.dart';
 import '../../../../data/repositories/notification_repository.dart'; // ✅ 新增
 
 class ProfileTab extends StatefulWidget {
@@ -83,7 +82,7 @@ class _ProfileTabState extends State<ProfileTab> {
                         '已学习 ${widget.totalAnswered} 题',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.white.withOpacity(0.85),
+                          color: Colors.white.withValues(alpha: 0.85),
                         ),
                       ),
                       Row(
@@ -95,7 +94,7 @@ class _ProfileTabState extends State<ProfileTab> {
                             '连续学习 ${widget.continuousDays} 天',
                             style: TextStyle(
                               fontSize: 13,
-                              color: Colors.white.withOpacity(0.85),
+                              color: Colors.white.withValues(alpha: 0.85),
                             ),
                           ),
                         ],
@@ -252,9 +251,9 @@ class _ProfileTabState extends State<ProfileTab> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.06),
+          color: color.withValues(alpha: 0.06),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withOpacity(0.12), width: 1),
+          border: Border.all(color: color.withValues(alpha: 0.12), width: 1),
         ),
         child: Column(
           children: [
@@ -272,7 +271,7 @@ class _ProfileTabState extends State<ProfileTab> {
               label,
               style: TextStyle(
                 fontSize: 10,
-                color: color.withOpacity(0.7),
+                color: color.withValues(alpha: 0.7),
               ),
             ),
           ],

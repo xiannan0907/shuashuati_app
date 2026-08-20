@@ -28,11 +28,14 @@ class _ShareQRCodePageState extends State<ShareQRCodePage> {
       final filePath = '${tempDir.path}/qrcode_${widget.setName}.png';
       final file = File(filePath);
       await file.writeAsBytes(byteData.buffer.asUint8List());
-      await Share.shareXFiles(
-        [XFile(filePath)],
-        text: '📚 扫码导入题库：${widget.setName}',
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(filePath)],
+          text: '📚 扫码导入题库：${widget.setName}',
+        ),
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('分享失败: $e')),
       );

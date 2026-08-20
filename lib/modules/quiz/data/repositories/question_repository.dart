@@ -1,4 +1,5 @@
-import 'package:hive/hive.dart';
+import 'package:flutter/foundation.dart';
+import 'package:hive_ce/hive.dart';
 import 'dart:convert';
 import '../models/question_model.dart';
 import '../models/wrong_question_stats.dart';
@@ -36,7 +37,7 @@ class QuestionRepository {
 
       return setNames;
     } catch (e) {
-      print('❌ 获取题库列表失败: $e');
+      debugPrint('❌ 获取题库列表失败: $e');
       return ['默认题库'];
     }
   }
@@ -73,7 +74,7 @@ class QuestionRepository {
         await _saveSetNames(names);
       }
     } catch (e) {
-      print('❌ 设置当前题库失败: $e');
+      debugPrint('❌ 设置当前题库失败: $e');
     }
   }
 
@@ -85,7 +86,7 @@ class QuestionRepository {
       final box = await Hive.openBox<String>(setsBoxName);
       await box.put(key, index.toString());
     } catch (e) {
-      print('❌ 保存索引失败: $e');
+      debugPrint('❌ 保存索引失败: $e');
     }
   }
 
@@ -108,7 +109,7 @@ class QuestionRepository {
       final key = 'filterType_${Uri.encodeComponent(setName)}';
       await setsBox.put(key, filterType);
     } catch (e) {
-      print('❌ 保存筛选类型失败: $e');
+      debugPrint('❌ 保存筛选类型失败: $e');
     }
   }
 
@@ -129,7 +130,7 @@ class QuestionRepository {
       final key = 'displayIndex_${Uri.encodeComponent(setName)}';
       await setsBox.put(key, index.toString());
     } catch (e) {
-      print('❌ 保存显示索引失败: $e');
+      debugPrint('❌ 保存显示索引失败: $e');
     }
   }
 
@@ -155,7 +156,7 @@ class QuestionRepository {
       await setCurrentSetName(name);
       await saveCurrentIndex(0, setName: name);
     } catch (e) {
-      print('❌ 创建题库失败: $e');
+      debugPrint('❌ 创建题库失败: $e');
       rethrow;
     }
   }
@@ -192,7 +193,7 @@ class QuestionRepository {
         }
       }
     } catch (e) {
-      print('❌ 删除题库失败: $e');
+      debugPrint('❌ 删除题库失败: $e');
       rethrow;
     }
   }
@@ -252,7 +253,7 @@ class QuestionRepository {
       await newBox.close();
       await Hive.deleteBoxFromDisk(oldBoxName);
     } catch (e) {
-      print('❌ 重命名失败: $e');
+      debugPrint('❌ 重命名失败: $e');
       rethrow;
     }
   }
@@ -264,7 +265,7 @@ class QuestionRepository {
       final box = await Hive.openBox<Question>(_getBoxName(name));
       return box.values.toList();
     } catch (e) {
-      print('❌ getQuestions 失败: $e');
+      debugPrint('❌ getQuestions 失败: $e');
       return [];
     }
   }
@@ -286,9 +287,9 @@ class QuestionRepository {
         }
         await box.putAll(map);
       }
-      print('✅ saveQuestions 成功，共 ${questions.length} 道题');
+      debugPrint('✅ saveQuestions 成功，共 ${questions.length} 道题');
     } catch (e) {
-      print('❌ saveQuestions 失败: $e');
+      debugPrint('❌ saveQuestions 失败: $e');
       rethrow;
     }
   }
@@ -299,9 +300,9 @@ class QuestionRepository {
       final name = setName ?? (await getCurrentSetName() ?? '默认题库');
       final box = await Hive.openBox<Question>(_getBoxName(name));
       await box.clear();
-      print('✅ clearAll 成功');
+      debugPrint('✅ clearAll 成功');
     } catch (e) {
-      print('❌ clearAll 失败: $e');
+      debugPrint('❌ clearAll 失败: $e');
       rethrow;
     }
   }
@@ -320,9 +321,9 @@ class QuestionRepository {
         await box.putAt(i, q);
       }
       await saveCurrentIndex(0, setName: name);
-      print('✅ resetProgress 成功');
+      debugPrint('✅ resetProgress 成功');
     } catch (e) {
-      print('❌ resetProgress 失败: $e');
+      debugPrint('❌ resetProgress 失败: $e');
       rethrow;
     }
   }
@@ -339,12 +340,12 @@ class QuestionRepository {
         'setName': setName,
         'addedAt': DateTime.now().toIso8601String(),
       });
-      print('✅ 添加错题: ${question.id}');
+      debugPrint('✅ 添加错题: ${question.id}');
 
       // ✅ 新增：检查是否需要生成复习通知
       await _checkAndCreateReviewNotification(setName);
     } catch (e) {
-      print('❌ 添加错题失败: $e');
+      debugPrint('❌ 添加错题失败: $e');
     }
   }
 
@@ -365,7 +366,7 @@ class QuestionRepository {
         );
       }
     } catch (e) {
-      print('❌ 检查错题通知失败: $e');
+      debugPrint('❌ 检查错题通知失败: $e');
     }
   }
 
@@ -373,9 +374,9 @@ class QuestionRepository {
     try {
       final wrongBox = await Hive.openBox<Map>(wrongQuestionsBoxName);
       await wrongBox.delete(questionId);
-      print('✅ 移除错题: $questionId');
+      debugPrint('✅ 移除错题: $questionId');
     } catch (e) {
-      print('❌ 移除错题失败: $e');
+      debugPrint('❌ 移除错题失败: $e');
     }
   }
 
@@ -396,7 +397,7 @@ class QuestionRepository {
       records.sort((a, b) => b['addedAt'].compareTo(a['addedAt']));
       return records;
     } catch (e) {
-      print('❌ 获取错题记录失败: $e');
+      debugPrint('❌ 获取错题记录失败: $e');
       return [];
     }
   }
@@ -422,7 +423,7 @@ class QuestionRepository {
       records.sort((a, b) => b['addedAt'].compareTo(a['addedAt']));
       return records;
     } catch (e) {
-      print('❌ 获取错题记录失败: $e');
+      debugPrint('❌ 获取错题记录失败: $e');
       return [];
     }
   }
@@ -457,7 +458,7 @@ class QuestionRepository {
       }
       return questions;
     } catch (e) {
-      print('❌ 获取错题列表失败: $e');
+      debugPrint('❌ 获取错题列表失败: $e');
       return [];
     }
   }
@@ -475,9 +476,9 @@ class QuestionRepository {
     try {
       final wrongBox = await Hive.openBox<Map>(wrongQuestionsBoxName);
       await wrongBox.clear();
-      print('✅ 清空所有错题');
+      debugPrint('✅ 清空所有错题');
     } catch (e) {
-      print('❌ 清空错题失败: $e');
+      debugPrint('❌ 清空错题失败: $e');
     }
   }
 
@@ -497,9 +498,9 @@ class QuestionRepository {
       for (var id in questionIds) {
         await wrongBox.delete(id);
       }
-      print('✅ 批量移除 ${questionIds.length} 道错题');
+      debugPrint('✅ 批量移除 ${questionIds.length} 道错题');
     } catch (e) {
-      print('❌ 批量移除错题失败: $e');
+      debugPrint('❌ 批量移除错题失败: $e');
     }
   }
 
@@ -564,7 +565,7 @@ class QuestionRepository {
     }
     stats.calculateMastery();
     await box.put(questionId, stats);
-    print('📊 更新错题统计: $questionId, 正确=$isCorrect, 掌握度=${stats.masteryLevel}');
+    debugPrint('📊 更新错题统计: $questionId, 正确=$isCorrect, 掌握度=${stats.masteryLevel}');
   }
 
   /// 获取某个题目的统计信息
@@ -595,9 +596,13 @@ class QuestionRepository {
     double totalMastery = 0.0;
     for (var stats in statsList) {
       totalMastery += stats.masteryLevel;
-      if (stats.masteryLevel >= 0.7) mastered++;
-      else if (stats.masteryLevel >= 0.4) medium++;
-      else hard++;
+      if (stats.masteryLevel >= 0.7) {
+        mastered++;
+      } else if (stats.masteryLevel >= 0.4) {
+        medium++;
+      } else {
+        hard++;
+      }
     }
     return {
       'total': statsList.length,
@@ -612,7 +617,7 @@ class QuestionRepository {
   Future<void> clearAllWrongStats() async {
     final box = await _getWrongStatsBox();
     await box.clear();
-    print('🗑️ 清空错题统计');
+    debugPrint('🗑️ 清空错题统计');
   }
 
   /// 删除单个错题统计
@@ -656,7 +661,7 @@ class QuestionRepository {
       }
       return null;
     } catch (e) {
-      print('❌ getQuestionById 失败: $e');
+      debugPrint('❌ getQuestionById 失败: $e');
       return null;
     }
   }
@@ -687,10 +692,10 @@ class QuestionRepository {
         }
       }
 
-      print('📚 获取到 ${questions.length} 道需要复习的题目');
+      debugPrint('📚 获取到 ${questions.length} 道需要复习的题目');
       return questions;
     } catch (e) {
-      print('❌ getReviewQuestions 失败: $e');
+      debugPrint('❌ getReviewQuestions 失败: $e');
       return [];
     }
   }
@@ -710,7 +715,7 @@ class QuestionRepository {
         );
         stats.calculateNextReview(isCorrect);
         await box.put(questionId, stats);
-        print('📊 创建复习统计: $questionId, 正确=$isCorrect');
+        debugPrint('📊 创建复习统计: $questionId, 正确=$isCorrect');
         return;
       }
 
@@ -722,17 +727,17 @@ class QuestionRepository {
       stats.calculateNextReview(isCorrect);
       await box.put(questionId, stats);
 
-      print('📊 更新复习统计: $questionId, 正确=$isCorrect, 间隔=${stats.interval}天, 连续正确=${stats.consecutiveCorrect}次');
+      debugPrint('📊 更新复习统计: $questionId, 正确=$isCorrect, 间隔=${stats.interval}天, 连续正确=${stats.consecutiveCorrect}次');
 
       // 如果掌握度 >= 0.8 且连续正确 >= 5 次，可以从错题集移除
       if (stats.masteryLevel >= 0.8 && stats.consecutiveCorrect >= 5) {
         if (await isWrongQuestion(questionId)) {
           await removeWrongQuestion(questionId);
-          print('✅ 掌握度高且连续正确5次，从错题集移除: $questionId');
+          debugPrint('✅ 掌握度高且连续正确5次，从错题集移除: $questionId');
         }
       }
     } catch (e) {
-      print('❌ updateReviewStats 失败: $e');
+      debugPrint('❌ updateReviewStats 失败: $e');
     }
   }
 
@@ -791,9 +796,9 @@ class QuestionRepository {
         await box.put(stats.questionId, stats);
       }
 
-      print('✅ 间隔重复字段迁移完成，共处理 ${allStats.length} 条记录');
+      debugPrint('✅ 间隔重复字段迁移完成，共处理 ${allStats.length} 条记录');
     } catch (e) {
-      print('❌ migrateReviewFields 失败: $e');
+      debugPrint('❌ migrateReviewFields 失败: $e');
     }
   }
 
@@ -813,14 +818,14 @@ class QuestionRepository {
           if (q != null && q.id == questionId) {
             final updated = q.copyWith(isFavorite: true);
             await box.putAt(i, updated);
-            print('⭐ 收藏题目: ${q.content.substring(0, q.content.length > 30 ? 30 : q.content.length)}... (来源: $name)');
+            debugPrint('⭐ 收藏题目: ${q.content.substring(0, q.content.length > 30 ? 30 : q.content.length)}... (来源: $name)');
             return;
           }
         }
       }
-      print('⚠️ 未找到要收藏的题目 ID: $questionId');
+      debugPrint('⚠️ 未找到要收藏的题目 ID: $questionId');
     } catch (e) {
-      print('❌ 收藏失败: $e');
+      debugPrint('❌ 收藏失败: $e');
     }
   }
 
@@ -836,14 +841,14 @@ class QuestionRepository {
           if (q != null && q.id == questionId) {
             final updated = q.copyWith(isFavorite: false);
             await box.putAt(i, updated);
-            print('⭐ 取消收藏: ${q.content.substring(0, q.content.length > 30 ? 30 : q.content.length)}... (来源: $name)');
+            debugPrint('⭐ 取消收藏: ${q.content.substring(0, q.content.length > 30 ? 30 : q.content.length)}... (来源: $name)');
             return;
           }
         }
       }
-      print('⚠️ 未找到要取消收藏的题目 ID: $questionId');
+      debugPrint('⚠️ 未找到要取消收藏的题目 ID: $questionId');
     } catch (e) {
-      print('❌ 取消收藏失败: $e');
+      debugPrint('❌ 取消收藏失败: $e');
     }
   }
 
@@ -860,15 +865,15 @@ class QuestionRepository {
             final newState = !q.isFavorite;
             final updated = q.copyWith(isFavorite: newState);
             await box.putAt(i, updated);
-            print('⭐ 切换收藏: ${q.content.substring(0, q.content.length > 30 ? 30 : q.content.length)}... -> $newState (来源: $name)');
+            debugPrint('⭐ 切换收藏: ${q.content.substring(0, q.content.length > 30 ? 30 : q.content.length)}... -> $newState (来源: $name)');
             return newState;
           }
         }
       }
-      print('⚠️ 未找到要切换收藏的题目 ID: $questionId');
+      debugPrint('⚠️ 未找到要切换收藏的题目 ID: $questionId');
       return false;
     } catch (e) {
-      print('❌ 切换收藏失败: $e');
+      debugPrint('❌ 切换收藏失败: $e');
       return false;
     }
   }
@@ -911,7 +916,7 @@ class QuestionRepository {
       favorites.sort((a, b) => b.id.compareTo(a.id));
       return favorites;
     } catch (e) {
-      print('❌ 获取收藏列表失败: $e');
+      debugPrint('❌ 获取收藏列表失败: $e');
       return [];
     }
   }
@@ -938,7 +943,7 @@ class QuestionRepository {
       favorites.sort((a, b) => b['question'].id.compareTo(a['question'].id));
       return favorites;
     } catch (e) {
-      print('❌ 获取收藏列表(含来源)失败: $e');
+      debugPrint('❌ 获取收藏列表(含来源)失败: $e');
       return [];
     }
   }
@@ -1029,7 +1034,7 @@ class QuestionRepository {
 
       return results;
     } catch (e) {
-      print('❌ 搜索失败: $e');
+      debugPrint('❌ 搜索失败: $e');
       return [];
     }
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/bloc/theme_bloc.dart';
-import '../../core/theme/app_theme.dart';
 import '../../data/models/user_model.dart';
 import '../../data/repositories/user_repository.dart';
 import '../pages/notification_page.dart';
@@ -89,6 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () async {
                       await userRepo.updateAvatar(emoji);
                       await _loadUser();
+                      if (!ctx.mounted) return;
                       Navigator.pop(ctx);
                     },
                     child: Container(
@@ -244,6 +244,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (text.trim().isEmpty) return;
     await userRepo.updateNickname(text.trim());
     await _loadUser();
+    if (!ctx.mounted) return;
     Navigator.pop(ctx);
   }
 
@@ -294,6 +295,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
     await userRepo.updateSignature(text.trim());
     await _loadUser();
+    if (!ctx.mounted) return;
     Navigator.pop(ctx);
   }
 
@@ -374,7 +376,7 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected
-              ? (isDark ? Colors.blue.shade900.withOpacity(0.4) : Colors.blue.shade50)
+              ? (isDark ? Colors.blue.shade900.withValues(alpha: 0.4) : Colors.blue.shade50)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(

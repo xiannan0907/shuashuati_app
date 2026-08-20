@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 // ✅ 跳转到全局壳页面
-import '../../../../presentation/pages/main_shell_page.dart';
+import '../../../../presentation/pages/home_page.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -49,8 +49,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          // ✅ 跳转到主壳页面
-          builder: (_) => const MainShellPage(),
+          // ✅ 跳转到主入口壳（与 main.dart 一致）
+          builder: (_) => const HomePage(),
         ),
       );
     }
@@ -99,7 +99,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           width: 140,
                           height: 140,
                           decoration: BoxDecoration(
-                            color: (page['color'] as Color).withOpacity(0.1),
+                            color: (page['color'] as Color).withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(

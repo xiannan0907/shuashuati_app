@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../core/bloc/theme_bloc.dart';
 import '../../modules/quiz/data/models/question_model.dart';
 import '../../modules/quiz/data/repositories/question_repository.dart';
+import '../../modules/quiz/presentation/bloc/quiz_bloc.dart';
+import '../../modules/quiz/presentation/pages/quiz_page.dart';
+import '../../modules/quiz/services/file_parser_service.dart';
 
 /// 搜索结果项基类（未来可扩展）
 class SearchResultItem {
@@ -12,6 +16,7 @@ class SearchResultItem {
   final String title;
   final String subtitle;
   final String? actionRoute;
+  final String? setName; // 所属题库名（quiz 模块结果，跳转用）
   final IconData icon;
 
   SearchResultItem({
@@ -20,6 +25,7 @@ class SearchResultItem {
     required this.title,
     required this.subtitle,
     this.actionRoute,
+    this.setName,
     required this.icon,
   });
 }
@@ -35,7 +41,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
   final TextEditingController _controller = TextEditingController();
   List<SearchResultItem> _results = [];
   bool _isLoading = false;
-  String _searchQuery = '';
+  Timer? _debounce; // ✅ 输入防抖
 
   // 分组结果
   Map<String, List<SearchResultItem>> get _groupedResults {
@@ -49,12 +55,18 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _controller.dispose();
     super.dispose();
   }
 
+  /// ✅ 输入防抖：停止输入 350ms 后才触发搜索
+  void _onSearchChanged(String query) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 350), () => _search(query));
+  }
+
   void _search(String query) async {
-    _searchQuery = query;
     if (query.trim().isEmpty) {
       setState(() {
         _results = [];
@@ -92,6 +104,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
             title: q.content,
             subtitle: '📚 $setName · $typeLabel',
             actionRoute: '/quiz/question/${q.id}',
+            setName: setName,
             icon: Icons.quiz,
           ),
         );
@@ -108,6 +121,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
               title: '📚 题库：$name',
               subtitle: '点击进入刷题',
               actionRoute: '/quiz/set/$name',
+              setName: name,
               icon: Icons.library_books,
             ),
           );
@@ -184,7 +198,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
               )
                   : null,
             ),
-            onChanged: _search,
+            onChanged: _onSearchChanged,
           ),
         ),
       ),
@@ -304,20 +318,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       bool isDark,
       ) {
     return GestureDetector(
-      onTap: () {
-        // 处理点击跳转
-        if (item.actionRoute != null && item.actionRoute!.startsWith('/quiz/')) {
-          Navigator.pop(context);
-          // 实际应用中根据路由跳转
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('跳转到: ${item.title}'),
-              duration: const Duration(seconds: 1),
-              backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
-            ),
-          );
-        }
-      },
+      onTap: () => _handleResultTap(context, item, isDark),
       child: Container(
         margin: const EdgeInsets.only(bottom: 4),
         padding: const EdgeInsets.all(12),
@@ -378,6 +379,60 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// ✅ 处理搜索结果点击跳转
+  void _handleResultTap(BuildContext context, SearchResultItem item, bool isDark) {
+    final route = item.actionRoute;
+    if (route == null) return;
+
+    if (route.startsWith('/quiz/set/')) {
+      // 题库名直接取自路由
+      _openQuizSet(context, route.substring('/quiz/set/'.length));
+    } else if (route.startsWith('/quiz/question/')) {
+      // 题目结果：跳转到其所属题库（setName 在创建结果时已存入 item）
+      final setName = item.setName;
+      if (setName != null && setName.isNotEmpty) {
+        _openQuizSet(context, setName);
+      } else {
+        _showUnsupportedSnack(context, item, isDark);
+      }
+    } else {
+      // 未知前缀：保持原提示行为
+      _showUnsupportedSnack(context, item, isDark);
+    }
+  }
+
+  /// 打开指定题库刷题页
+  /// 全局搜索页不在刷题模块子树内（QuizBloc 只在刷题模块内提供），
+  /// 需自建 QuizBloc（与 quiz_module.dart 的提供方式一致）
+  void _openQuizSet(BuildContext context, String setName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (_) => QuizBloc(
+            QuestionRepository(),
+            FileParserService(),
+          ),
+          child: QuizPage(setName: setName),
+        ),
+      ),
+    );
+  }
+
+  void _showUnsupportedSnack(
+      BuildContext context,
+      SearchResultItem item,
+      bool isDark,
+      ) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('跳转到: ${item.title}'),
+        duration: const Duration(seconds: 1),
+        backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
       ),
     );
   }

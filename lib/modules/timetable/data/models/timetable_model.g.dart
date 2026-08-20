@@ -8,7 +8,7 @@ part of 'timetable_model.dart';
 
 class TimetableAdapter extends TypeAdapter<Timetable> {
   @override
-  final int typeId = 31;
+  final typeId = 31;
 
   @override
   Timetable read(BinaryReader reader) {
@@ -19,11 +19,12 @@ class TimetableAdapter extends TypeAdapter<Timetable> {
     return Timetable(
       id: fields[0] as String,
       name: fields[1] as String,
-      semester: fields[2] as int,
-      year: fields[3] as int,
-      courseIds: (fields[4] as List).cast<String>(),
+      semester: fields[2] == null ? 1 : (fields[2] as num).toInt(),
+      year: (fields[3] as num).toInt(),
+      courseIds:
+          fields[4] == null ? const [] : (fields[4] as List).cast<String>(),
       createdAt: fields[5] as DateTime?,
-      isCurrent: fields[6] as bool,
+      isCurrent: fields[6] == null ? false : fields[6] as bool,
       timeTableId: fields[7] as String?,
     );
   }

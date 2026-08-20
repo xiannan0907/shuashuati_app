@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 /// Portalborn 模块尺寸/间距/布局常量
 class PortalbornSizes {

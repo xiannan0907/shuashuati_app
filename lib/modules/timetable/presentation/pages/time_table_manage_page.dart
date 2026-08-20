@@ -346,7 +346,7 @@ class _TimeTableManagePageState extends State<TimeTableManagePage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
-          color: isActive ? color.withOpacity(0.15) : Colors.grey.shade100,
+          color: isActive ? color.withValues(alpha: 0.15) : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(4),
           border: Border.all(
             color: isActive ? color : Colors.grey.shade300,

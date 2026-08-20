@@ -5,7 +5,6 @@ import '../../presentation/bloc/portalborn_bloc.dart';
 import '../../presentation/bloc/portalborn_event.dart';
 import '../../presentation/bloc/portalborn_state.dart';
 import '../../data/seed_data/recipes.dart';
-import '../../data/models/item_model.dart';
 import '../widgets/portalborn_status_bar.dart';
 
 /// Portalborn 制作页面
@@ -225,12 +224,12 @@ class _RecipeCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: canCraft
-            ? const Color(0xFF00ff88).withOpacity(0.05)
+            ? const Color(0xFF00ff88).withValues(alpha: 0.05)
             : const Color(0xFF141425),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: canCraft
-              ? const Color(0xFF00ff88).withOpacity(0.3)
+              ? const Color(0xFF00ff88).withValues(alpha: 0.3)
               : Colors.grey[800]!,
         ),
       ),

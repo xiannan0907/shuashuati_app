@@ -71,6 +71,7 @@ class _ReviewPageState extends State<ReviewPage> {
       setState(() {
         _isLoading = false;
       });
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('加载复习题目失败: $e'),
@@ -95,6 +96,7 @@ class _ReviewPageState extends State<ReviewPage> {
     final repository = QuestionRepository();
     await repository.updateReviewStats(question.id, isCorrect);
 
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -147,8 +149,6 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('🧠 智能复习'),
@@ -259,7 +259,7 @@ class _ReviewPageState extends State<ReviewPage> {
             '继续保持，全部掌握！',
             style: TextStyle(
               fontSize: 16,
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 24),
@@ -282,7 +282,6 @@ class _ReviewPageState extends State<ReviewPage> {
     final currentQuestion = _reviewQuestions[_currentIndex];
 
     final isAnswered = _tempIsAnswered[currentQuestion.id] ?? false;
-    final selectedOption = _tempSelectedOptions[currentQuestion.id];
 
     final currentStats = _reviewStats.isNotEmpty && _currentIndex < _reviewStats.length
         ? _reviewStats[_currentIndex]
@@ -356,7 +355,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  '📅 ${interval}天',
+                  '📅 $interval天',
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.blue.shade700,
@@ -368,7 +367,7 @@ class _ReviewPageState extends State<ReviewPage> {
           const SizedBox(height: 8),
           LinearProgressIndicator(
             value: (_currentIndex + 1) / total,
-            backgroundColor: theme.colorScheme.surfaceVariant,
+            backgroundColor: theme.colorScheme.surfaceContainerHighest,
             color: Colors.purple,
             minHeight: 8,
             borderRadius: BorderRadius.circular(4),
@@ -443,7 +442,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.red.withOpacity(0.3),
+                        color: Colors.red.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -484,7 +483,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withOpacity(0.3),
+                        color: Colors.green.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),

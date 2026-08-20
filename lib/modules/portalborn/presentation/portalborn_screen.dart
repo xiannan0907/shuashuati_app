@@ -18,7 +18,7 @@ class PortalbornScreen extends StatelessWidget {
     return BlocBuilder<PortalbornBloc, PortalbornState>(
       builder: (context, state) {
         // ✅ 添加调试日志
-        print('📌 PortalbornScreen 当前状态: ${state.runtimeType}');
+        debugPrint('📌 PortalbornScreen 当前状态: ${state.runtimeType}');
 
         if (state is PortalbornMainMenu) {
           return const PortalbornMainMenuPage();

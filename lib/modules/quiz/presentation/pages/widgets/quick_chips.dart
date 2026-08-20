@@ -70,9 +70,9 @@ class QuickChips extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.08),
+            color: color.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: color.withOpacity(0.15), width: 1),
+            border: Border.all(color: color.withValues(alpha: 0.15), width: 1),
           ),
           child: Stack(
             clipBehavior: Clip.none,

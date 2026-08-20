@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:cross_file/cross_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../data/repositories/question_repository.dart';
@@ -36,7 +35,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
         _selectedSet = _setNames.first;
       }
     } catch (e) {
-      print('加载题库列表失败: $e');
+      debugPrint('加载题库列表失败: $e');
     }
     setState(() => _isLoading = false);
   }
@@ -60,12 +59,14 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
         ),
       );
 
+      if (!mounted) return;
       if (result.status == ShareResultStatus.success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('✅ 导出成功！')),
         );
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('导出失败: $e')),
       );
@@ -90,12 +91,14 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
         ),
       );
 
+      if (!mounted) return;
       if (result.status == ShareResultStatus.success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('✅ 导出成功！')),
         );
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('导出失败: $e')),
       );
@@ -105,19 +108,20 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
   // ==================== 导入JSON ====================
   Future<void> _importJson() async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final files = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
-      if (result == null || result.files.isEmpty) return;
+      if (files.isEmpty) return;
 
-      final file = result.files.first;
+      final file = files.first;
       final path = file.path;
       if (path == null) return;
 
       final content = await File(path).readAsString();
       final jsonData = jsonDecode(content);
 
+      if (!mounted) return;
       // 验证格式
       if (!jsonData.containsKey('questions') || !jsonData.containsKey('setName')) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -154,6 +158,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
       final allQuestions = [...existing, ...questions];
       await repo.saveQuestions(allQuestions, setName: setName);
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('✅ 成功导入 ${questions.length} 道题到 "$setName"'),
@@ -162,6 +167,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
       );
       _loadData();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('导入失败: $e')),
       );
@@ -190,6 +196,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
         ),
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('分享失败: $e')),
       );
@@ -361,7 +368,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
+            color: iconColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: iconColor),

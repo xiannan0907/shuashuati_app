@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/models/question_model.dart';
@@ -223,9 +224,9 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
             isStudyMode: _isStudyMode,
           ));
         }
-        print('✅ LoadQuizSet 完成');
+        debugPrint('✅ LoadQuizSet 完成');
       } catch (e) {
-        print('❌ LoadQuizSet 失败: $e');
+        debugPrint('❌ LoadQuizSet 失败: $e');
         emit(QuizError('加载题库失败: $e'));
       }
     });
@@ -274,7 +275,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
             isStudyMode: _isStudyMode,
           ));
         }
-        print('✅ LoadQuestions 完成');
+        debugPrint('✅ LoadQuestions 完成');
       } catch (e) {
         emit(QuizError('加载失败: $e'));
       }
@@ -395,9 +396,9 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
             final questions = await parser.parseFile(filePath, event.sourceType);
             allQuestions.addAll(questions);
             success = true;
-            print('✅ 解析成功: ${filePath.split('/').last}，得到 ${questions.length} 道题');
+            debugPrint('✅ 解析成功: ${filePath.split('/').last}，得到 ${questions.length} 道题');
           } catch (e) {
-            print('❌ 解析失败: ${filePath.split('/').last}，错误: $e');
+            debugPrint('❌ 解析失败: ${filePath.split('/').last}，错误: $e');
           }
           processed++;
           emit(QuizImporting(
@@ -431,9 +432,9 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
           isShuffled: _isShuffled,
           isStudyMode: _isStudyMode,
         ));
-        print('✅ 已发射 QuizLoaded');
+        debugPrint('✅ 已发射 QuizLoaded');
       } catch (e) {
-        print('❌ 导入失败: $e');
+        debugPrint('❌ 导入失败: $e');
         emit(QuizError('导入失败: ${e.toString()}'));
       }
     });
@@ -454,9 +455,9 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
             final questions = await parser.parseFile(filePath, event.sourceType);
             newQuestions.addAll(questions);
             success = true;
-            print('✅ 解析成功: ${filePath.split('/').last}，得到 ${questions.length} 道题');
+            debugPrint('✅ 解析成功: ${filePath.split('/').last}，得到 ${questions.length} 道题');
           } catch (e) {
-            print('❌ 解析失败: ${filePath.split('/').last}，错误: $e');
+            debugPrint('❌ 解析失败: ${filePath.split('/').last}，错误: $e');
           }
           processed++;
           emit(QuizImporting(
@@ -492,7 +493,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
           isStudyMode: _isStudyMode,
         ));
       } catch (e) {
-        print('❌ 追加导入失败: $e');
+        debugPrint('❌ 追加导入失败: $e');
         emit(QuizError('追加导入失败: ${e.toString()}'));
       }
     });
@@ -561,7 +562,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
           await repository.saveCurrentIndex(_currentOriginalIndex, setName: _currentSetName);
           _isShuffled = true;
-          print('🔄 切换到乱序，进度重置到第一题，正序进度: $_savedOriginalIndex');
+          debugPrint('🔄 切换到乱序，进度重置到第一题，正序进度: $_savedOriginalIndex');
         } else {
           List<Question> displayQuestions = List.from(_originalQuestions);
 
@@ -583,7 +584,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
           await repository.saveCurrentIndex(_currentOriginalIndex, setName: _currentSetName);
           _isShuffled = false;
-          print('🔄 切换到正序，恢复到进度: $_savedOriginalIndex');
+          debugPrint('🔄 切换到正序，恢复到进度: $_savedOriginalIndex');
         }
       }
     });
@@ -597,7 +598,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
           isStudyMode: newMode,
           clearFeedback: true,
         ));
-        print('🔄 切换模式: ${newMode ? "背题模式" : "做题模式"}');
+        debugPrint('🔄 切换模式: ${newMode ? "背题模式" : "做题模式"}');
       }
     });
 
@@ -627,9 +628,9 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
           ));
         }
 
-        print('✅ 重置进度成功（最高优先级），强制回到正序第一题，已重新加载题库');
+        debugPrint('✅ 重置进度成功（最高优先级），强制回到正序第一题，已重新加载题库');
       } catch (e) {
-        print('❌ 重置进度失败: $e');
+        debugPrint('❌ 重置进度失败: $e');
         emit(QuizError('重置进度失败: $e'));
       }
     });
@@ -650,7 +651,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
             clearFeedback: true,
           ));
           repository.saveCurrentIndex(_currentOriginalIndex, setName: _currentSetName);
-          print('📍 跳转到显示索引 $targetIndex');
+          debugPrint('📍 跳转到显示索引 $targetIndex');
         }
       }
     });
@@ -886,7 +887,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
         );
       }
     } catch (e) {
-      print('❌ 检查成就通知失败: $e');
+      debugPrint('❌ 检查成就通知失败: $e');
     }
   }
 
@@ -901,7 +902,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
       }
       return total;
     } catch (e) {
-      print('❌ 获取总正确数失败: $e');
+      debugPrint('❌ 获取总正确数失败: $e');
       return 0;
     }
   }

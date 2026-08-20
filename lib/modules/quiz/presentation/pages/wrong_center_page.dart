@@ -42,7 +42,7 @@ class _WrongCenterPageState extends State<WrongCenterPage> {
       // ✅ _masteredCount 已删除，这里只取 todayNew
       _todayNew = stats['todayNew'] ?? 0;
     } catch (e) {
-      print('加载错题中心数据失败: $e');
+      debugPrint('加载错题中心数据失败: $e');
     }
     setState(() => _isLoading = false);
   }
@@ -254,9 +254,9 @@ class _WrongCenterPageState extends State<WrongCenterPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.06),
+          color: color.withValues(alpha: 0.06),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withOpacity(0.12), width: 1),
+          border: Border.all(color: color.withValues(alpha: 0.12), width: 1),
         ),
         child: Column(
           children: [
@@ -274,7 +274,7 @@ class _WrongCenterPageState extends State<WrongCenterPage> {
               label,
               style: TextStyle(
                 fontSize: 10,
-                color: color.withOpacity(0.7),
+                color: color.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -296,9 +296,9 @@ class _WrongCenterPageState extends State<WrongCenterPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.06),
+            color: color.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: color.withOpacity(0.12), width: 1),
+            border: Border.all(color: color.withValues(alpha: 0.12), width: 1),
           ),
           child: Column(
             children: [
@@ -316,7 +316,7 @@ class _WrongCenterPageState extends State<WrongCenterPage> {
                 subtitle,
                 style: TextStyle(
                   fontSize: 10,
-                  color: color.withOpacity(0.7),
+                  color: color.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -346,6 +346,7 @@ class _WrongCenterPageState extends State<WrongCenterPage> {
               Navigator.pop(dialogContext);
               final repo = QuestionRepository();
               await repo.clearAllWrongQuestions();
+              if (!context.mounted) return;
               _loadData();
               widget.onRefresh();
               ScaffoldMessenger.of(context).showSnackBar(

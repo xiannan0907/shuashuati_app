@@ -8,7 +8,7 @@ part of 'character_model.dart';
 
 class GameCharacterAdapter extends TypeAdapter<GameCharacter> {
   @override
-  final int typeId = 33;
+  final typeId = 33;
 
   @override
   GameCharacter read(BinaryReader reader) {
@@ -20,36 +20,45 @@ class GameCharacterAdapter extends TypeAdapter<GameCharacter> {
       id: fields[0] as String?,
       name: fields[1] as String,
       mainClass: fields[2] as String,
-      unlockedClasses: (fields[3] as List).cast<String>(),
-      equippedSkills: (fields[4] as List).cast<String>(),
-      level: fields[5] as int,
-      exp: fields[6] as int,
-      maxHp: fields[7] as int,
-      currentHp: fields[8] as int,
-      baseAttack: fields[9] as int,
-      baseDefense: fields[10] as int,
-      strength: fields[11] as int,
-      dexterity: fields[12] as int,
-      intelligence: fields[13] as int,
-      constitution: fields[14] as int,
-      availablePoints: fields[15] as int,
-      inventoryIds: (fields[16] as List).cast<String>(),
-      materials: (fields[17] as Map).cast<String, int>(),
+      unlockedClasses:
+          fields[3] == null ? const [] : (fields[3] as List).cast<String>(),
+      equippedSkills:
+          fields[4] == null ? const [] : (fields[4] as List).cast<String>(),
+      level: fields[5] == null ? 1 : (fields[5] as num).toInt(),
+      exp: fields[6] == null ? 0 : (fields[6] as num).toInt(),
+      maxHp: fields[7] == null ? 20 : (fields[7] as num).toInt(),
+      currentHp: fields[8] == null ? 20 : (fields[8] as num).toInt(),
+      baseAttack: fields[9] == null ? 2 : (fields[9] as num).toInt(),
+      baseDefense: fields[10] == null ? 1 : (fields[10] as num).toInt(),
+      strength: fields[11] == null ? 5 : (fields[11] as num).toInt(),
+      dexterity: fields[12] == null ? 5 : (fields[12] as num).toInt(),
+      intelligence: fields[13] == null ? 5 : (fields[13] as num).toInt(),
+      constitution: fields[14] == null ? 5 : (fields[14] as num).toInt(),
+      availablePoints: fields[15] == null ? 0 : (fields[15] as num).toInt(),
+      inventoryIds:
+          fields[16] == null ? const [] : (fields[16] as List).cast<String>(),
+      materials: fields[17] == null
+          ? const {}
+          : (fields[17] as Map).cast<String, int>(),
       weaponId: fields[18] as String?,
       armorId: fields[19] as String?,
       accessoryId: fields[20] as String?,
-      completedRealms: (fields[21] as List).cast<String>(),
-      discoveredLore: (fields[22] as List).cast<String>(),
-      gold: fields[23] as int,
-      totalDeaths: fields[24] as int,
-      totalKills: fields[25] as int,
-      playTimeSeconds: fields[26] as int,
-      lineage: fields[27] as String,
-      heritagePoints: fields[28] as int,
-      heritageTree: (fields[29] as Map).cast<String, int>(),
+      completedRealms:
+          fields[21] == null ? const [] : (fields[21] as List).cast<String>(),
+      discoveredLore:
+          fields[22] == null ? const [] : (fields[22] as List).cast<String>(),
+      gold: fields[23] == null ? 0 : (fields[23] as num).toInt(),
+      totalDeaths: fields[24] == null ? 0 : (fields[24] as num).toInt(),
+      totalKills: fields[25] == null ? 0 : (fields[25] as num).toInt(),
+      playTimeSeconds: fields[26] == null ? 0 : (fields[26] as num).toInt(),
+      lineage: fields[27] == null ? 'wanderer' : fields[27] as String,
+      heritagePoints: fields[28] == null ? 0 : (fields[28] as num).toInt(),
+      heritageTree: fields[29] == null
+          ? const {}
+          : (fields[29] as Map).cast<String, int>(),
       lastPlayDate: fields[30] as DateTime?,
-      todayFortune: fields[31] as String,
-      hasRerolledFortuneToday: fields[32] as bool,
+      todayFortune: fields[31] == null ? 'normal' : fields[31] as String,
+      hasRerolledFortuneToday: fields[32] == null ? false : fields[32] as bool,
     );
   }
 

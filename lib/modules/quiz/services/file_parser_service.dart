@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:doc_text_extractor/doc_text_extractor.dart' as docx;
@@ -41,7 +42,7 @@ class FileParserService {
           .where((p) => p.isNotEmpty)
           .toList();
 
-      print('📄 总共读取 ${rawLines.length} 行文本');
+      debugPrint('📄 总共读取 ${rawLines.length} 行文本');
 
       final lines = _preprocessLines(rawLines);
 
@@ -50,41 +51,41 @@ class FileParserService {
       // 策略一：标准模式
       questions = await _parseStandardMode(lines);
       if (questions.isNotEmpty) {
-        print('✅ 使用标准模式解析成功');
+        debugPrint('✅ 使用标准模式解析成功');
         return questions;
       }
 
       // 策略二：行内答案模式
       questions = _parseInlineMode(lines);
       if (questions.isNotEmpty) {
-        print('✅ 使用行内答案模式解析成功');
+        debugPrint('✅ 使用行内答案模式解析成功');
         return questions;
       }
 
       // 策略三：纯选择题模式
       questions = _parseChoiceOnlyMode(lines);
       if (questions.isNotEmpty) {
-        print('✅ 使用纯选择题模式解析成功');
+        debugPrint('✅ 使用纯选择题模式解析成功');
         return questions;
       }
 
       // 策略四：紧邻答案模式（终极版）
       questions = _parseAdjacentAnswerModeUltimate(lines);
       if (questions.isNotEmpty) {
-        print('✅ 使用紧邻答案模式解析成功');
+        debugPrint('✅ 使用紧邻答案模式解析成功');
         return questions;
       }
 
       // 策略五：无答案区模式（兜底）
       questions = _parseNoAnswerTagMode(lines);
       if (questions.isNotEmpty) {
-        print('✅ 使用无答案区模式解析成功');
+        debugPrint('✅ 使用无答案区模式解析成功');
         return questions;
       }
 
       throw Exception('未识别到任何有效题目，请检查文档格式');
     } catch (e) {
-      print('❌ Word解析异常: $e');
+      debugPrint('❌ Word解析异常: $e');
       throw Exception('Word解析失败: $e');
     }
   }
@@ -109,7 +110,7 @@ class FileParserService {
   Future<List<Question>> _parseStandardMode(List<String> lines) async {
     int answerStartIndex = _findAnswerStart(lines);
     if (answerStartIndex == -1) {
-      print('⚠️ 未找到答案区，尝试其他模式');
+      debugPrint('⚠️ 未找到答案区，尝试其他模式');
       return [];
     }
 
@@ -183,7 +184,7 @@ class FileParserService {
       }
 
       if (answerText == null || answerText.isEmpty) {
-        print('⚠️ 题目 $key 没有答案，跳过');
+        debugPrint('⚠️ 题目 $key 没有答案，跳过');
         continue;
       }
 
@@ -338,9 +339,9 @@ class FileParserService {
           }
           buffer = '';
         }
-        buffer += line + ' ';
+        buffer += '$line ';
       } else {
-        buffer += line + ' ';
+        buffer += '$line ';
       }
     }
     if (buffer.isNotEmpty) {
@@ -432,7 +433,7 @@ class FileParserService {
       }
 
       if (answerText == null || answerText.isEmpty) {
-        print('⚠️ 题目 $key 没有找到答案');
+        debugPrint('⚠️ 题目 $key 没有找到答案');
         continue;
       }
 
@@ -621,7 +622,7 @@ class FileParserService {
     }
 
     return Question(
-      id: 'import_${DateTime.now().millisecondsSinceEpoch}_${questionNumber}',
+      id: 'import_${DateTime.now().millisecondsSinceEpoch}_$questionNumber',
       content: content,
       options: options,
       correctIndex: correctIndex,
@@ -645,7 +646,7 @@ class FileParserService {
       correctIndex = 1;
     }
     return Question(
-      id: 'import_${DateTime.now().millisecondsSinceEpoch}_${questionNumber}',
+      id: 'import_${DateTime.now().millisecondsSinceEpoch}_$questionNumber',
       content: content,
       options: ['正确', '错误'],
       correctIndex: correctIndex,
@@ -664,26 +665,13 @@ class FileParserService {
     }
 
     return Question(
-      id: 'import_${DateTime.now().millisecondsSinceEpoch}_${questionNumber}',
+      id: 'import_${DateTime.now().millisecondsSinceEpoch}_$questionNumber',
       content: content,
       options: ['（填空题）'],
       correctIndex: 0,
       source: 'word',
       answer: answerText.trim(),
     );
-  }
-
-  // ============================================================
-  // 题型统计辅助
-  // ============================================================
-  String _getQuestionType(Question q) {
-    if (q.options.length == 2 && q.options.contains('正确') && q.options.contains('错误')) {
-      return '判断题';
-    } else if (q.options.length == 1 && q.options.first.contains('填空')) {
-      return '填空题';
-    } else {
-      return '选择题';
-    }
   }
 
   // ============================================================
@@ -804,7 +792,7 @@ class FileParserService {
             questions.add(q);
           }
         } catch (e) {
-          print('⚠️ 跳过一条无效题目: $e');
+          debugPrint('⚠️ 跳过一条无效题目: $e');
           continue;
         }
       }

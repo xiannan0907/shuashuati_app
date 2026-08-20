@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 import 'wrong_reinforce_page.dart';
 import 'review_page.dart';
 import '../../data/models/question_model.dart';
 import '../../data/repositories/question_repository.dart';
-import '../bloc/quiz_bloc.dart';
-import '../widgets/question_card.dart';
 
 class WrongQuestionsPage extends StatefulWidget {
   const WrongQuestionsPage({super.key});
@@ -60,7 +57,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
       setState(() {
         _isLoading = false;
       });
-      print('加载数据失败: $e');
+      debugPrint('加载数据失败: $e');
     }
   }
 
@@ -110,7 +107,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
       setState(() {
         _isLoading = false;
       });
-      print('加载错题失败: $e');
+      debugPrint('加载错题失败: $e');
     }
   }
 
@@ -122,7 +119,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
         _stats = stats;
       });
     } catch (e) {
-      print('加载统计失败: $e');
+      debugPrint('加载统计失败: $e');
     }
   }
 
@@ -133,6 +130,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
   Future<void> _removeWrongQuestion(String questionId, {bool showSnackBar = true}) async {
     final repository = QuestionRepository();
     await repository.removeWrongQuestion(questionId);
+    if (!mounted) return;
     setState(() {
       _wrongQuestions.removeWhere((q) => q.id == questionId);
       _tempSelectedOptions.remove(questionId);
@@ -273,6 +271,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
     if (_selectedIds.isEmpty) return;
     final repository = QuestionRepository();
     await repository.batchRemoveWrongQuestions(_selectedIds.toList());
+    if (!mounted) return;
     setState(() {
       _wrongQuestions.removeWhere((q) => _selectedIds.contains(q.id));
       _selectedIds.clear();
@@ -356,6 +355,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
               Navigator.pop(dialogContext);
               final repository = QuestionRepository();
               await repository.clearAllWrongQuestions();
+              if (!context.mounted) return;
               _loadData();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -396,8 +396,6 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -620,7 +618,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
                 : '继续保持，再接再厉！',
             style: TextStyle(
               fontSize: 16,
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 24),
@@ -698,7 +696,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
                   ),
                 ),
                 selected: isSelected,
-                selectedTileColor: theme.primaryColor.withOpacity(0.1),
+                selectedTileColor: theme.primaryColor.withValues(alpha: 0.1),
                 controlAffinity: ListTileControlAffinity.leading,
               );
             },
@@ -821,7 +819,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
             const SizedBox(height: 8),
             LinearProgressIndicator(
               value: (_currentIndex + 1) / total,
-              backgroundColor: theme.colorScheme.surfaceVariant,
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
               color: Colors.red,
               minHeight: 8,
               borderRadius: BorderRadius.circular(4),
@@ -911,7 +909,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
                       gradient: isFirst
                           ? null
                           : LinearGradient(
-                        colors: [theme.primaryColor, theme.primaryColor.withOpacity(0.7)],
+                        colors: [theme.primaryColor, theme.primaryColor.withValues(alpha: 0.7)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -920,7 +918,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
                           ? null
                           : [
                         BoxShadow(
-                          color: theme.primaryColor.withOpacity(0.3),
+                          color: theme.primaryColor.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -928,11 +926,11 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
                     ),
                     child: IconButton(
                       icon: Icon(Icons.arrow_back_ios,
-                          color: isFirst ? theme.colorScheme.onSurface.withOpacity(0.3) : Colors.white,
+                          color: isFirst ? theme.colorScheme.onSurface.withValues(alpha: 0.3) : Colors.white,
                           size: 22),
                       onPressed: isFirst ? null : _goToPrevious,
                       style: IconButton.styleFrom(
-                        backgroundColor: isFirst ? theme.colorScheme.surfaceVariant : theme.primaryColor,
+                        backgroundColor: isFirst ? theme.colorScheme.surfaceContainerHighest : theme.primaryColor,
                         fixedSize: const Size(48, 48),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
@@ -974,14 +972,14 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
                         end: Alignment.bottomRight,
                       )
                           : LinearGradient(
-                        colors: [theme.primaryColor, theme.primaryColor.withOpacity(0.7)],
+                        colors: [theme.primaryColor, theme.primaryColor.withValues(alpha: 0.7)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(30),
                       boxShadow: [
                         BoxShadow(
-                          color: (isLast ? Colors.green : theme.primaryColor).withOpacity(0.3),
+                          color: (isLast ? Colors.green : theme.primaryColor).withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -1289,7 +1287,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
                     tileColor = Colors.red.shade100;
                   }
                 } else if (isSelected) {
-                  tileColor = theme.primaryColor.withOpacity(0.1);
+                  tileColor = theme.primaryColor.withValues(alpha: 0.1);
                 }
                 if (isAnswered && isCorrect == null && isOptionCorrect) {
                   tileColor = Colors.blue.shade50;
@@ -1330,7 +1328,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
                         shape: BoxShape.circle,
                         color: isSelected && isEnabled
                             ? theme.primaryColor
-                            : theme.colorScheme.surfaceVariant,
+                            : theme.colorScheme.surfaceContainerHighest,
                       ),
                       child: Center(
                         child: Text(
@@ -1356,7 +1354,7 @@ class _WrongQuestionsPageState extends State<WrongQuestionsPage> {
                     enabled: isEnabled,
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ],
         ),

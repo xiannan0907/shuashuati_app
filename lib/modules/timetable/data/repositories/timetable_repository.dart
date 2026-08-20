@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import '../models/course_model.dart';
 import '../models/timetable_model.dart';
 import '../models/time_table_model.dart';

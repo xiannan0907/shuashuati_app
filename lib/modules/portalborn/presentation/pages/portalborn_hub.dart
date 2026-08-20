@@ -7,7 +7,6 @@ import '../../presentation/bloc/portalborn_state.dart';
 import '../widgets/portalborn_status_bar.dart';
 import '../widgets/portalborn_terminal.dart';
 import '../widgets/portalborn_command_input.dart';
-import '../widgets/portalborn_quick_buttons.dart';
 import 'portalborn_inventory.dart';
 import 'portalborn_crafting.dart';
 

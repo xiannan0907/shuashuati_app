@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart'; // ✅ 新增
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 part 'notification_item.g.dart';
 

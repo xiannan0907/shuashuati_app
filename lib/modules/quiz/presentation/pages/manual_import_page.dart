@@ -183,7 +183,7 @@ class _ManualImportPageState extends State<ManualImportPage> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             filled: true,
-                            fillColor: theme.colorScheme.surfaceVariant,
+                            fillColor: theme.colorScheme.surfaceContainerHighest,
                             hintStyle: TextStyle(fontSize: 14 * _textScale),
                           ),
                           style: TextStyle(fontSize: 14 * _textScale),
@@ -233,7 +233,7 @@ class _ManualImportPageState extends State<ManualImportPage> {
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceVariant,
+                    color: theme.colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Wrap(
@@ -513,6 +513,7 @@ class _ManualImportPageState extends State<ManualImportPage> {
                 _density = tempDensity;
               });
               await _saveSettings();
+              if (!ctx.mounted) return;
               Navigator.pop(ctx);
             },
             child: const Text('应用'),
@@ -658,7 +659,7 @@ class _ManualImportPageState extends State<ManualImportPage> {
       if (RegExp(r'^[A-D][、. )）]').hasMatch(trimmed)) {
         optionLines.add(trimmed);
       } else if (optionLines.isNotEmpty) {
-        optionLines[optionLines.length - 1] += ' ' + trimmed;
+        optionLines[optionLines.length - 1] += ' $trimmed';
       }
     }
     final combined = optionLines.join('\n');
@@ -762,19 +763,23 @@ class _ManualImportPageState extends State<ManualImportPage> {
                     ),
                     const SizedBox(height: 12),
                     const Text('选项（点击圆圈选择正确答案）：'),
-                    ...List.generate(options.length, (optIndex) {
-                      return Padding(
+                    RadioGroup<int>(
+                      groupValue: correctIndex,
+                      onChanged: (value) {
+                        setDialogState(() {
+                          correctIndex = value!;
+                        });
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ...List.generate(options.length, (optIndex) {
+                            return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2),
                         child: Row(
                           children: [
                             Radio<int>(
                               value: optIndex,
-                              groupValue: correctIndex,
-                              onChanged: (value) {
-                                setDialogState(() {
-                                  correctIndex = value!;
-                                });
-                              },
                             ),
                             Expanded(
                               child: TextFormField(
@@ -810,8 +815,11 @@ class _ManualImportPageState extends State<ManualImportPage> {
                             ),
                           ],
                         ),
-                      );
-                    }),
+                          );
+                        }),
+                        ],
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     ElevatedButton.icon(
                       onPressed: () {
@@ -923,6 +931,7 @@ class _ManualImportPageState extends State<ManualImportPage> {
       }
 
       await repository.saveQuestions(finalQuestions, setName: setName);
+      if (!mounted) return;
       context.read<QuizBloc>().add(LoadQuizSetList());
 
       if (mounted) {
@@ -938,6 +947,7 @@ class _ManualImportPageState extends State<ManualImportPage> {
           Navigator.pop(context, true);
         } else {
           final goToQuiz = await _showGoToQuizDialog(context, setName);
+          if (!mounted) return;
           if (goToQuiz == true) {
             // ✅ 修复：传递 QuizBloc
             final quizBloc = context.read<QuizBloc>();

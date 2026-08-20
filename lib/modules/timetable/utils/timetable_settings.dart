@@ -86,6 +86,7 @@ class TimetableSettings {
   static int getWeekNumber(DateTime date, DateTime semesterStart) {
     if (date.isBefore(semesterStart)) return 1;
     final difference = date.difference(semesterStart);
-    return (difference.inDays / 7).floor() + 1;
+    // 与 WeekUtils / SemesterSettings 统一：ceil 语义（第 0-6 天=第 1 周）
+    return (difference.inDays / 7).ceil().clamp(1, 20);
   }
 }

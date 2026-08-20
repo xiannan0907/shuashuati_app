@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 import '../../data/models/course_model.dart';
 import '../../data/models/timetable_model.dart';
@@ -250,9 +250,8 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     // ============================================================
     on<UpdateCourse>((event, emit) async {
       try {
-        await repository.removeCourseFromTimetable(event.course.id);
+        // ✅ 只保存课程内容，不强加进当前课表（避免把其他课表的课程拉进来）
         await repository.saveCourse(event.course);
-        await repository.addCourseToCurrentTimetable(event.course);
         final courses = await repository.getCurrentTimetableCourses();
         if (state is TimetableLoaded) {
           final current = state as TimetableLoaded;

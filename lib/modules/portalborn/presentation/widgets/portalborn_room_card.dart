@@ -44,7 +44,7 @@ class PortalbornRoomCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF00ff88).withOpacity(0.2),
+                    color: const Color(0xFF00ff88).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
@@ -59,7 +59,7 @@ class PortalbornRoomCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFaa55ff).withOpacity(0.2),
+                    color: const Color(0xFFaa55ff).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
@@ -74,7 +74,7 @@ class PortalbornRoomCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFffaa33).withOpacity(0.2),
+                    color: const Color(0xFFffaa33).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
@@ -89,7 +89,7 @@ class PortalbornRoomCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFff3355).withOpacity(0.2),
+                    color: const Color(0xFFff3355).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
@@ -148,10 +148,10 @@ class _MonsterInfo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFff3355).withOpacity(0.1),
+        color: const Color(0xFFff3355).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: const Color(0xFFff3355).withOpacity(0.2),
+          color: const Color(0xFFff3355).withValues(alpha: 0.2),
         ),
       ),
       child: Row(

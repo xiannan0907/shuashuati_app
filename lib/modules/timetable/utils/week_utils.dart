@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import '../data/models/course_model.dart';  // ✅ 修正路径
 
 class WeekUtils {
-  static DateTime semesterStart = DateTime(2025, 9, 1);
+  /// 学期开始日期（默认当年 9 月 1 日，与 SemesterSettings 默认一致）
+  static DateTime semesterStart = DateTime(DateTime.now().year, 9, 1);
+
+  /// 由 SemesterSettings 写入学期开始日期后同步（保持两处一致）
+  static void updateSemesterStart(DateTime date) {
+    semesterStart = date;
+  }
 
   static int getCurrentWeek() {
     final now = DateTime.now();

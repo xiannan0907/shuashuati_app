@@ -59,7 +59,6 @@ class _DateHeaderState extends State<DateHeader> {
 
     // 获取当前月的年份和月份（用于显示）
     final currentMonth = widget.selectedDate.month;
-    final currentYear = widget.selectedDate.year;
 
     return Container(
       color: Colors.white,

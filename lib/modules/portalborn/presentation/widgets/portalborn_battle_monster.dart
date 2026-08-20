@@ -77,13 +77,13 @@ class PortalbornBattleMonster extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             color: isPlayerTurn
-                                ? const Color(0xFF00ff88).withOpacity(0.2)
-                                : const Color(0xFFffaa33).withOpacity(0.2),
+                                ? const Color(0xFF00ff88).withValues(alpha: 0.2)
+                                : const Color(0xFFffaa33).withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
                               color: isPlayerTurn
-                                  ? const Color(0xFF00ff88).withOpacity(0.3)
-                                  : const Color(0xFFffaa33).withOpacity(0.3),
+                                  ? const Color(0xFF00ff88).withValues(alpha: 0.3)
+                                  : const Color(0xFFffaa33).withValues(alpha: 0.3),
                             ),
                           ),
                           child: Text(
@@ -196,10 +196,10 @@ class PortalbornBattleMonster extends StatelessWidget {
                 return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: _getTagColor(tag).withOpacity(0.2),
+                    color: _getTagColor(tag).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: _getTagColor(tag).withOpacity(0.3),
+                      color: _getTagColor(tag).withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(

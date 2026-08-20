@@ -17,7 +17,6 @@ class PortalbornCommandInput extends StatefulWidget {
 class _PortalbornCommandInputState extends State<PortalbornCommandInput> {
   final TextEditingController _controller = TextEditingController();
   final List<String> _history = [];
-  int _historyIndex = -1;
 
   @override
   void dispose() {
@@ -91,26 +90,11 @@ class _PortalbornCommandInputState extends State<PortalbornCommandInput> {
     if (_history.isEmpty || _history.last != trimmed) {
       _history.add(trimmed);
     }
-    _historyIndex = _history.length;
 
     // 清空输入
     _controller.clear();
 
     // 提交命令
     widget.onCommand(trimmed);
-  }
-
-  // 键盘上下键历史记录
-  void _navigateHistory(int direction) {
-    if (_history.isEmpty) return;
-
-    final newIndex = (_historyIndex + direction).clamp(0, _history.length - 1);
-    if (newIndex != _historyIndex) {
-      _historyIndex = newIndex;
-      _controller.text = _history[_historyIndex];
-      _controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: _controller.text.length),
-      );
-    }
   }
 }

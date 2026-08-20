@@ -1,4 +1,5 @@
-import 'package:hive/hive.dart';
+// ignore_for_file: must_be_immutable
+import 'package:hive_ce/hive.dart';
 import 'package:equatable/equatable.dart';
 
 part 'question_model.g.dart';
@@ -72,10 +73,10 @@ class Question extends Equatable {
       options: options ?? this.options,
       correctIndex: correctIndex ?? this.correctIndex,
       selectedOption: clearSelectedOption ? null : (selectedOption ?? this.selectedOption),
-      isAnswered: clearIsAnswered ? false : (isAnswered ?? this.isAnsweredValue),
+      isAnswered: clearIsAnswered ? false : (isAnswered ?? isAnsweredValue),
       source: source ?? this.source,
       answer: answer ?? this.answer,
-      isWrong: isWrong ?? this.isWrongValue,
+      isWrong: isWrong ?? isWrongValue,
       isFavorite: isFavorite ?? this.isFavorite, // ✅
     );
   }

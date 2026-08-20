@@ -36,7 +36,7 @@ class _QuizPageState extends State<QuizPage> {
   int _previousIndex = -1;
   List<Question> _filteredQuestions = [];
   Map<int, int> _filterToOriginalIndex = {};
-  Map<String, String> _fillAnswers = {};
+  final Map<String, String> _fillAnswers = {};
 
   bool _isFirstLoad = true;
   String _savedFilterType = '全部';
@@ -65,9 +65,9 @@ class _QuizPageState extends State<QuizPage> {
         _savedFilterType = savedFilter;
         _savedDisplayIndex = savedIndex;
       });
-      print('📂 读取保存的状态: 筛选=$savedFilter, 显示索引=$savedIndex');
+      debugPrint('📂 读取保存的状态: 筛选=$savedFilter, 显示索引=$savedIndex');
     } catch (e) {
-      print('❌ 读取保存状态失败: $e');
+      debugPrint('❌ 读取保存状态失败: $e');
     }
   }
 
@@ -132,16 +132,16 @@ class _QuizPageState extends State<QuizPage> {
 
   Future<void> _saveCurrentState() async {
     if (_filteredQuestions.isEmpty || _displayIndex >= _filteredQuestions.length) {
-      print('❌ 无法保存，无效的显示索引');
+      debugPrint('❌ 无法保存，无效的显示索引');
       return;
     }
     try {
       final repository = QuestionRepository();
       await repository.saveFilterType(widget.setName, _filterType);
       await repository.saveDisplayIndex(widget.setName, _displayIndex);
-      print('📌 保存状态: 筛选=$_filterType, 显示索引=$_displayIndex');
+      debugPrint('📌 保存状态: 筛选=$_filterType, 显示索引=$_displayIndex');
     } catch (e) {
-      print('❌ 保存状态失败: $e');
+      debugPrint('❌ 保存状态失败: $e');
     }
   }
 
@@ -157,10 +157,12 @@ class _QuizPageState extends State<QuizPage> {
     final bloc = context.read<QuizBloc>();
     final theme = Theme.of(context);
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
         await _saveCurrentState();
-        return true;
+        if (mounted) Navigator.pop(this.context);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -441,11 +443,11 @@ class _QuizPageState extends State<QuizPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.filter_alt_off, size: 60, color: theme.colorScheme.onSurface.withOpacity(0.5)),
+            Icon(Icons.filter_alt_off, size: 60, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
             const SizedBox(height: 16),
             Text(
               '当前筛选条件下没有题目',
-              style: TextStyle(fontSize: 16, color: theme.colorScheme.onSurface.withOpacity(0.6)),
+              style: TextStyle(fontSize: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
             ),
             const SizedBox(height: 8),
             ElevatedButton(
@@ -530,7 +532,7 @@ class _QuizPageState extends State<QuizPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceVariant,
+                  color: theme.colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -546,7 +548,7 @@ class _QuizPageState extends State<QuizPage> {
           const SizedBox(height: 8),
           LinearProgressIndicator(
             value: (_displayIndex + 1) / total,
-            backgroundColor: theme.colorScheme.surfaceVariant,
+            backgroundColor: theme.colorScheme.surfaceContainerHighest,
             color: theme.primaryColor,
             minHeight: 8,
             borderRadius: BorderRadius.circular(4),
@@ -585,7 +587,7 @@ class _QuizPageState extends State<QuizPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text('已经是第一题了'),
-                        backgroundColor: theme.colorScheme.onSurface.withOpacity(0.5),
+                        backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         duration: const Duration(seconds: 1),
                       ),
                     );
@@ -594,7 +596,7 @@ class _QuizPageState extends State<QuizPage> {
               },
               child: SingleChildScrollView(
                 child: QuestionCard(
-                  key: ValueKey('${currentQuestion.id}_${_displayIndex}'),
+                  key: ValueKey('${currentQuestion.id}_$_displayIndex'),
                   question: currentQuestion,
                   currentIndex: _displayIndex,
                   total: total,
@@ -732,7 +734,7 @@ class _QuizPageState extends State<QuizPage> {
                     gradient: isFirst
                         ? null
                         : LinearGradient(
-                      colors: [theme.primaryColor, theme.primaryColor.withOpacity(0.7)],
+                      colors: [theme.primaryColor, theme.primaryColor.withValues(alpha: 0.7)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -741,14 +743,14 @@ class _QuizPageState extends State<QuizPage> {
                         ? null
                         : [
                       BoxShadow(
-                        color: theme.primaryColor.withOpacity(0.3),
+                        color: theme.primaryColor.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
                     ],
                   ),
                   child: IconButton(
-                    icon: Icon(Icons.arrow_back_ios, color: isFirst ? theme.colorScheme.onSurface.withOpacity(0.3) : Colors.white, size: 22),
+                    icon: Icon(Icons.arrow_back_ios, color: isFirst ? theme.colorScheme.onSurface.withValues(alpha: 0.3) : Colors.white, size: 22),
                     onPressed: isFirst
                         ? null
                         : () {
@@ -761,7 +763,7 @@ class _QuizPageState extends State<QuizPage> {
                       }
                     },
                     style: IconButton.styleFrom(
-                      backgroundColor: isFirst ? theme.colorScheme.surfaceVariant : theme.primaryColor,
+                      backgroundColor: isFirst ? theme.colorScheme.surfaceContainerHighest : theme.primaryColor,
                       fixedSize: const Size(48, 48),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
@@ -781,14 +783,14 @@ class _QuizPageState extends State<QuizPage> {
                       end: Alignment.bottomRight,
                     )
                         : LinearGradient(
-                      colors: [theme.primaryColor, theme.primaryColor.withOpacity(0.7)],
+                      colors: [theme.primaryColor, theme.primaryColor.withValues(alpha: 0.7)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: (isLast ? Colors.green : theme.primaryColor).withOpacity(0.3),
+                        color: (isLast ? Colors.green : theme.primaryColor).withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -929,14 +931,13 @@ class _QuizPageState extends State<QuizPage> {
       return;
     }
     if (value == 'append') {
-      final result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
+      final files = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['docx', 'json'],
       );
-      if (result != null && result.files.isNotEmpty) {
-        final filePaths = result.files.map((f) => f.path!).toList();
-        final ext = result.files.first.path!.split('.').last.toLowerCase();
+      if (files.isNotEmpty) {
+        final filePaths = files.map((f) => f.path!).toList();
+        final ext = files.first.path!.split('.').last.toLowerCase();
         String type = 'json';
         if (ext == 'docx') type = 'word';
         bloc.add(AppendFiles(filePaths, type));
@@ -945,13 +946,12 @@ class _QuizPageState extends State<QuizPage> {
     }
 
     final extensions = value == 'word' ? ['docx'] : ['json'];
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
+    final files = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: extensions,
     );
-    if (result == null || result.files.isEmpty) return;
-    final filePaths = result.files.map((f) => f.path!).toList();
+    if (files.isEmpty) return;
+    final filePaths = files.map((f) => f.path!).toList();
     bloc.add(ImportFiles(filePaths, value));
   }
 
@@ -998,8 +998,12 @@ class _QuizPageState extends State<QuizPage> {
           TextButton(
             onPressed: () async {
               await _saveCurrentState();
-              Navigator.pop(dialogContext);
-              Navigator.pop(context, true);
+              if (dialogContext.mounted) {
+                Navigator.pop(dialogContext);
+              }
+              if (context.mounted) {
+                Navigator.pop(context, true);
+              }
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('确认退出'),

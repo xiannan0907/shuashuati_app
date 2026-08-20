@@ -96,6 +96,7 @@ class _QuestionCardState extends State<QuestionCard> {
     try {
       final repo = QuestionRepository();
       final result = await repo.toggleFavorite(widget.question.id);
+      if (!mounted) return;
       if (result != newState) {
         // 保存结果与预期不符，回滚
         setState(() {
@@ -123,6 +124,7 @@ class _QuestionCardState extends State<QuestionCard> {
       }
     } catch (e) {
       // 异常回滚
+      if (!mounted) return;
       setState(() {
         _isFavorite = !newState;
       });
@@ -208,7 +210,7 @@ class _QuestionCardState extends State<QuestionCard> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: isStudyMode ? Colors.orange.shade100 : theme.primaryColor.withOpacity(0.1),
+                    color: isStudyMode ? Colors.orange.shade100 : theme.primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -318,7 +320,7 @@ class _QuestionCardState extends State<QuestionCard> {
             tileColor = Colors.red.shade100;
           }
         } else if (isSelected) {
-          tileColor = theme.primaryColor.withOpacity(0.1);
+          tileColor = theme.primaryColor.withValues(alpha: 0.1);
         }
       }
 
@@ -334,13 +336,13 @@ class _QuestionCardState extends State<QuestionCard> {
         style: TextStyle(
           fontSize: 15,
           color: isStudyMode
-              ? (isCorrect ? Colors.green.shade700 : theme.colorScheme.onSurface.withOpacity(0.6))
+              ? (isCorrect ? Colors.green.shade700 : theme.colorScheme.onSurface.withValues(alpha: 0.6))
               : (isAnswered
               ? (isCorrect
               ? Colors.green.shade700
               : (isSelected
               ? Colors.red.shade700
-              : theme.colorScheme.onSurface.withOpacity(0.7)))
+              : theme.colorScheme.onSurface.withValues(alpha: 0.7)))
               : theme.colorScheme.onSurface),
           fontWeight: isStudyMode && isCorrect
               ? FontWeight.bold
@@ -383,8 +385,8 @@ class _QuestionCardState extends State<QuestionCard> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isStudyMode
-                  ? (isCorrect ? Colors.green : theme.colorScheme.surfaceVariant)
-                  : (isSelected ? theme.primaryColor : theme.colorScheme.surfaceVariant),
+                  ? (isCorrect ? Colors.green : theme.colorScheme.surfaceContainerHighest)
+                  : (isSelected ? theme.primaryColor : theme.colorScheme.surfaceContainerHighest),
             ),
             child: Center(
               child: Text(
@@ -431,7 +433,7 @@ class _QuestionCardState extends State<QuestionCard> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceVariant,
+              color: theme.colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: theme.colorScheme.outline),
             ),

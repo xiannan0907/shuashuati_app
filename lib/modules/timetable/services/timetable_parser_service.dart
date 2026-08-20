@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:archive/archive.dart';
@@ -26,13 +27,13 @@ class TimetableParserService {
         return await _parseJson(file);
       case 'xlsx':
       case 'xls':
-        print('📊 开始解析 Excel...');
+        debugPrint('📊 开始解析 Excel...');
         final isMatrix = await _isMatrixFormat(file);
         if (isMatrix) {
-          print('📊 检测到矩阵式课表格式（含"星期一"表头）');
+          debugPrint('📊 检测到矩阵式课表格式（含"星期一"表头）');
           return await _xlsxParser.parse(file);
         } else {
-          print('📊 检测到课程列表格式（导出文件）');
+          debugPrint('📊 检测到课程列表格式（导出文件）');
           return await _parseExportFile(file);
         }
       default:
@@ -81,7 +82,7 @@ class TimetableParserService {
 
       return false;
     } catch (e) {
-      print('⚠️ 格式检测失败: $e，默认使用矩阵式解析器');
+      debugPrint('⚠️ 格式检测失败: $e，默认使用矩阵式解析器');
       return true;
     }
   }
@@ -94,7 +95,7 @@ class TimetableParserService {
       final document = XmlDocument.parse(content);
       final strings = <String>[];
       for (var element in document.findAllElements('si')) {
-        final text = element.findElements('t').map((e) => e.text).join('');
+        final text = element.findElements('t').map((e) => e.innerText).join('');
         strings.add(text);
       }
       return strings;
@@ -139,12 +140,12 @@ class TimetableParserService {
           final cellValue = cellElement.findElements('v').firstOrNull;
           if (cellValue != null) {
             if (type == 's') {
-              final index = int.tryParse(cellValue.text) ?? -1;
+              final index = int.tryParse(cellValue.innerText) ?? -1;
               if (index >= 0 && index < sharedStrings.length) {
                 value = sharedStrings[index];
               }
             } else {
-              value = cellValue.text;
+              value = cellValue.innerText;
             }
           }
           rowData.add(value.trim());
@@ -214,7 +215,7 @@ class TimetableParserService {
       }
 
       final header = rows[headerRowIndex];
-      print('📋 表头: ${header.take(10).join(' | ')}');
+      debugPrint('📋 表头: ${header.take(10).join(' | ')}');
 
       int nameCol = -1, teacherCol = -1, classroomCol = -1,
           weekdayCol = -1, startSlotCol = -1, endSlotCol = -1,
@@ -222,29 +223,36 @@ class TimetableParserService {
 
       for (int i = 0; i < header.length; i++) {
         final val = header[i].trim();
-        if (val.contains('课程名称') || val.contains('名称')) nameCol = i;
-        else if (val.contains('教师') || val.contains('老师')) teacherCol = i;
-        else if (val.contains('教室') || val.contains('地点')) classroomCol = i;
-        else if (val.contains('星期') || val.contains('周几')) weekdayCol = i;
-        else if (val.contains('开始节') || val.contains('开始')) startSlotCol = i;
-        else if (val.contains('结束节') || val.contains('结束')) endSlotCol = i;
-        else if (val.contains('开始周') || val.contains('起始周')) weekStartCol = i;
-        else if (val.contains('结束周') || val.contains('终止周')) weekEndCol = i;
-        else if (val.contains('颜色')) colorCol = i;
-        else if (val.contains('备注') || val.contains('说明')) noteCol = i;
+        if (val.contains('课程名称') || val.contains('名称')) {
+          nameCol = i;
+        } else if (val.contains('教师') || val.contains('老师')) {
+          teacherCol = i;
+        } else if (val.contains('教室') || val.contains('地点')) {
+          classroomCol = i;
+        } else if (val.contains('星期') || val.contains('周几')) {
+          weekdayCol = i;
+        } else if (val.contains('开始节') || val.contains('开始')) {
+          startSlotCol = i;
+        } else if (val.contains('结束节') || val.contains('结束')) {
+          endSlotCol = i;
+        } else if (val.contains('开始周') || val.contains('起始周')) {
+          weekStartCol = i;
+        } else if (val.contains('结束周') || val.contains('终止周')) {
+          weekEndCol = i;
+        } else if (val.contains('颜色')) {
+          colorCol = i;
+        } else if (val.contains('备注') || val.contains('说明')) {
+          noteCol = i;
+        }
       }
 
-      print('📋 列索引 -> 课程名称:$nameCol, 教师:$teacherCol, 教室:$classroomCol, 星期:$weekdayCol, 开始节:$startSlotCol, 结束节:$endSlotCol, 开始周:$weekStartCol, 结束周:$weekEndCol');
+      debugPrint('📋 列索引 -> 课程名称:$nameCol, 教师:$teacherCol, 教室:$classroomCol, 星期:$weekdayCol, 开始节:$startSlotCol, 结束节:$endSlotCol, 开始周:$weekStartCol, 结束周:$weekEndCol');
 
       if (nameCol == -1) {
         throw Exception('未找到"课程名称"列');
       }
 
       final courses = <Course>[];
-      final weekdayNames = {
-        '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '日': 7, '天': 7,
-        '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7,
-      };
 
       for (int i = headerRowIndex + 1; i < rows.length; i++) {
         final row = rows[i];
@@ -292,14 +300,14 @@ class TimetableParserService {
           note: rawNote,
         );
         courses.add(course);
-        print('  ✅ 课程: ${course.name} | 周${course.weekday} | ${course.startSlot}-${course.endSlot}节 | 教师:$teacher | 教室:$classroom | 周${course.weekStart}-${course.weekEnd}');
+        debugPrint('  ✅ 课程: ${course.name} | 周${course.weekday} | ${course.startSlot}-${course.endSlot}节 | 教师:$teacher | 教室:$classroom | 周${course.weekStart}-${course.weekEnd}');
       }
 
-      print('✅ 解析完成，共 ${courses.length} 门课程');
+      debugPrint('✅ 解析完成，共 ${courses.length} 门课程');
       return courses;
 
     } catch (e) {
-      print('❌ 解析导出文件失败: $e');
+      debugPrint('❌ 解析导出文件失败: $e');
       throw Exception('解析导出文件失败: $e');
     }
   }
@@ -503,7 +511,7 @@ class TimetableParserService {
           courses.add(course);
         }
       } catch (e) {
-        print('⚠️ 跳过一条无效课程: $e');
+        debugPrint('⚠️ 跳过一条无效课程: $e');
       }
     }
 
@@ -613,19 +621,16 @@ class TimetableParserService {
       ));
 
       final zipData = ZipEncoder().encode(archive);
-      if (zipData == null) {
-        throw Exception('ZIP 压缩失败');
-      }
 
       final file = File(filePath);
       await file.writeAsBytes(zipData);
-      print('✅ Excel 导出成功: $filePath');
+      debugPrint('✅ Excel 导出成功: $filePath');
       return file;
 
     } catch (e) {
-      print('❌ Excel 导出失败: $e');
+      debugPrint('❌ Excel 导出失败: $e');
       final jsonPath = filePath.replaceAll('.xlsx', '.json');
-      print('⚠️ 降级为 JSON 导出: $jsonPath');
+      debugPrint('⚠️ 降级为 JSON 导出: $jsonPath');
       return await exportToJsonFile(courses, jsonPath);
     }
   }

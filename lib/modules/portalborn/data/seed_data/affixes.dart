@@ -2,6 +2,7 @@
 ///
 /// 词缀（Affix）是装备前面的修饰词，如"锋利的铁剑"
 /// 每个词缀会给装备增加额外的属性
+library;
 
 /// 词缀定义
 class EquipmentAffix {

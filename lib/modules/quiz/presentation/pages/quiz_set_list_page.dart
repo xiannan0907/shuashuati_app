@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
-import '../../../../core/bloc/theme_bloc.dart';
 import '../bloc/quiz_bloc.dart';
 import '../tabs/list_tab.dart';
 import '../tabs/profile_tab.dart';
@@ -112,7 +111,7 @@ class _QuizSetListPageState extends State<QuizSetListPage> {
             .toList();
         _calculateContinuousDays();
       }
-    } catch (e) {}
+    } catch (e) { /* 忽略打卡历史加载失败 */ }
   }
 
   void _calculateContinuousDays() {
@@ -162,8 +161,9 @@ class _QuizSetListPageState extends State<QuizSetListPage> {
       final box = await Hive.openBox<String>('quizSetsBox');
       final dateStrings = _checkinDates.map((d) => d.toIso8601String().split('T')[0]).join(',');
       await box.put('checkin_dates', dateStrings);
-    } catch (e) {}
+    } catch (e) { /* 忽略打卡保存失败 */ }
 
+    if (!mounted) return;
     setState(() {
       _todayChecked = true;
       if (isContinuous) {
@@ -223,6 +223,7 @@ class _QuizSetListPageState extends State<QuizSetListPage> {
   Future<void> _forceRefresh() async {
     _hasLoaded = false;
     await _loadData();
+    if (!mounted) return;
     context.read<QuizBloc>().add(LoadQuizSetList());
     _searchKey.currentState?.clear();
   }
@@ -234,20 +235,11 @@ class _QuizSetListPageState extends State<QuizSetListPage> {
     QuizDialogs.showCreateSetDialog(context, onCreated: _loadData);
   }
 
-  void _showRenameDialog(BuildContext context, String name) {
-    QuizDialogs.showRenameDialog(context, oldName: name, onRenamed: _loadData);
-  }
-
-  void _showDeleteConfirm(BuildContext context, String name) {
-    QuizDialogs.showDeleteConfirm(context, name: name, onDeleted: _loadData);
-  }
-
   // ============================================================
   // Build
   // ============================================================
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final state = context.read<QuizBloc>().state;
 
     if (state is QuizSetListLoaded && !_hasLoaded) {

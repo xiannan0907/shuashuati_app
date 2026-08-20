@@ -8,7 +8,7 @@ part of 'time_table_model.dart';
 
 class TimeTableAdapter extends TypeAdapter<TimeTable> {
   @override
-  final int typeId = 32;
+  final typeId = 32;
 
   @override
   TimeTable read(BinaryReader reader) {
@@ -19,10 +19,10 @@ class TimeTableAdapter extends TypeAdapter<TimeTable> {
     return TimeTable(
       id: fields[0] as String,
       name: fields[1] as String,
-      morningStart: fields[2] as int,
-      afternoonStart: fields[3] as int,
-      classDuration: fields[4] as int,
-      breakDuration: fields[5] as int,
+      morningStart: fields[2] == null ? 8 * 60 : (fields[2] as num).toInt(),
+      afternoonStart: fields[3] == null ? 14 * 60 : (fields[3] as num).toInt(),
+      classDuration: fields[4] == null ? 45 : (fields[4] as num).toInt(),
+      breakDuration: fields[5] == null ? 5 : (fields[5] as num).toInt(),
       createdAt: fields[6] as DateTime?,
     );
   }

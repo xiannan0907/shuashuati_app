@@ -1,4 +1,5 @@
-import 'package:hive/hive.dart';
+import 'package:flutter/foundation.dart';
+import 'package:hive_ce/hive.dart';
 
 import '../models/tower_model.dart';
 
@@ -16,7 +17,7 @@ class TowerRepository {
       await box.put('progress', defaultProgress);
       return defaultProgress;
     } catch (e) {
-      print('❌ 获取爬塔进度失败: $e');
+      debugPrint('❌ 获取爬塔进度失败: $e');
       return TowerProgress();
     }
   }
@@ -25,9 +26,9 @@ class TowerRepository {
     try {
       final box = await Hive.openBox<TowerProgress>(boxName);
       await box.put('progress', progress);
-      print('✅ 爬塔进度已保存: 第${progress.currentFloor}层, 节点${progress.currentNodeIndex}/${progress.floorNodeCount}');
+      debugPrint('✅ 爬塔进度已保存: 第${progress.currentFloor}层, 节点${progress.currentNodeIndex}/${progress.floorNodeCount}');
     } catch (e) {
-      print('❌ 保存爬塔进度失败: $e');
+      debugPrint('❌ 保存爬塔进度失败: $e');
     }
   }
 
@@ -35,9 +36,9 @@ class TowerRepository {
     try {
       final box = await Hive.openBox<TowerProgress>(boxName);
       await box.delete('progress');
-      print('✅ 爬塔进度已重置');
+      debugPrint('✅ 爬塔进度已重置');
     } catch (e) {
-      print('❌ 重置爬塔进度失败: $e');
+      debugPrint('❌ 重置爬塔进度失败: $e');
     }
   }
 }

@@ -3,9 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../data/models/realm_model.dart';
 import '../data/models/monster_model.dart';
-import '../data/models/item_model.dart';
 import '../data/seed_data/monsters.dart';
-import '../data/seed_data/items.dart';
 import 'theme_data.dart';
 import 'gear_generator.dart';
 

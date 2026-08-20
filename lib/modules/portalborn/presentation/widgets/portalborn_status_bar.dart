@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../data/models/character_model.dart';
-import '../../constants/portalborn_colors.dart';
 
 /// 角色状态栏
 class PortalbornStatusBar extends StatelessWidget {
@@ -49,7 +48,7 @@ class PortalbornStatusBar extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF00ff88).withOpacity(0.2),
+                  color: const Color(0xFF00ff88).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -67,7 +66,7 @@ class PortalbornStatusBar extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFaa55ff).withOpacity(0.2),
+                  color: const Color(0xFFaa55ff).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -148,10 +147,10 @@ class PortalbornStatusBar extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFffaa33).withOpacity(0.2),
+                      color: const Color(0xFFffaa33).withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: const Color(0xFFffaa33).withOpacity(0.3),
+                        color: const Color(0xFFffaa33).withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -238,7 +237,7 @@ class _ProgressBar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: [
                       BoxShadow(
-                        color: color.withOpacity(0.3),
+                        color: color.withValues(alpha: 0.3),
                         blurRadius: 4,
                       ),
                     ],

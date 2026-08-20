@@ -8,7 +8,7 @@ part of 'wrong_question_stats.dart';
 
 class WrongQuestionStatsAdapter extends TypeAdapter<WrongQuestionStats> {
   @override
-  final int typeId = 2;
+  final typeId = 2;
 
   @override
   WrongQuestionStats read(BinaryReader reader) {
@@ -18,14 +18,14 @@ class WrongQuestionStatsAdapter extends TypeAdapter<WrongQuestionStats> {
     };
     return WrongQuestionStats(
       questionId: fields[0] as String,
-      wrongCount: fields[1] as int,
-      correctCount: fields[2] as int,
+      wrongCount: fields[1] == null ? 1 : (fields[1] as num).toInt(),
+      correctCount: fields[2] == null ? 0 : (fields[2] as num).toInt(),
       lastReviewed: fields[3] as DateTime?,
-      masteryLevel: fields[4] as double,
-      consecutiveCorrect: fields[5] as int,
+      masteryLevel: fields[4] == null ? 0.0 : (fields[4] as num).toDouble(),
+      consecutiveCorrect: fields[5] == null ? 0 : (fields[5] as num).toInt(),
       lastReviewDate: fields[6] as DateTime?,
-      easinessFactor: fields[7] as double,
-      interval: fields[8] as int,
+      easinessFactor: fields[7] == null ? 2.5 : (fields[7] as num).toDouble(),
+      interval: fields[8] == null ? 1 : (fields[8] as num).toInt(),
     );
   }
 

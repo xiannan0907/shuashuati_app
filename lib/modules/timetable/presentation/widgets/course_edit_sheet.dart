@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/models/course_model.dart';
 import '../bloc/timetable_bloc.dart';
-import '../../utils/color_manager.dart';
 
 class CourseEditSheet extends StatefulWidget {
   final Course? course;
@@ -452,8 +451,11 @@ class _CourseEditSheetState extends State<CourseEditSheet> {
               return GestureDetector(
                 onTap: isDisabled ? null : () {
                   setState(() {
-                    if (isStart) _startSlot = slot;
-                    else _endSlot = slot;
+                    if (isStart) {
+                      _startSlot = slot;
+                    } else {
+                      _endSlot = slot;
+                    }
                   });
                   Navigator.pop(ctx);
                 },
@@ -502,8 +504,11 @@ class _CourseEditSheetState extends State<CourseEditSheet> {
               return GestureDetector(
                 onTap: isDisabled ? null : () {
                   setState(() {
-                    if (isStart) _weekStart = week;
-                    else _weekEnd = week;
+                    if (isStart) {
+                      _weekStart = week;
+                    } else {
+                      _weekEnd = week;
+                    }
                   });
                   Navigator.pop(ctx);
                 },
@@ -514,7 +519,7 @@ class _CourseEditSheetState extends State<CourseEditSheet> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '第${week}周',
+                    '第$week周',
                     style: TextStyle(
                       color: isSelected ? Colors.white : (isDisabled ? Colors.grey.shade400 : Colors.black87),
                     ),

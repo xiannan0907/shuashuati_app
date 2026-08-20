@@ -52,6 +52,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Future<void> _markAllAsRead() async {
     await notificationRepo.markAllAsRead();
     await _loadNotifications();
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('已全部标记为已读'),
@@ -92,6 +93,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Future<void> _doClearAll() async {
     await notificationRepo.clearAll();
     await _loadNotifications();
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('已清空所有通知'),
@@ -252,7 +254,7 @@ class _NotificationPageState extends State<NotificationPage> {
           ),
           const SizedBox(height: 16),
           Text(
-            _filter == '全部' ? '暂无通知' : '暂无${_filter}通知',
+            _filter == '全部' ? '暂无通知' : '暂无$_filter通知',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -299,12 +301,12 @@ class _NotificationPageState extends State<NotificationPage> {
         decoration: BoxDecoration(
           color: item.isRead
               ? (isDark ? Colors.grey.shade800 : Colors.white)
-              : (isDark ? Colors.blue.shade900.withOpacity(0.15) : Colors.blue.shade50),
+              : (isDark ? Colors.blue.shade900.withValues(alpha: 0.15) : Colors.blue.shade50),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: item.isRead
                 ? (isDark ? Colors.grey.shade700 : Colors.grey.shade100)
-                : (isDark ? Colors.blue.shade700.withOpacity(0.3) : Colors.blue.shade200),
+                : (isDark ? Colors.blue.shade700.withValues(alpha: 0.3) : Colors.blue.shade200),
             width: item.isRead ? 1 : 1.5,
           ),
         ),
@@ -316,7 +318,7 @@ class _NotificationPageState extends State<NotificationPage> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: item.typeColor.withOpacity(isDark ? 0.2 : 0.1),
+                color: item.typeColor.withValues(alpha: isDark ? 0.2 : 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(

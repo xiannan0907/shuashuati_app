@@ -1,20 +1,5 @@
-buildscript {
-    ext.kotlin_version = '2.3.0'  // 稳定版本
-    repositories {
-        // 阿里云镜像
-        maven { url 'https://maven.aliyun.com/repository/public' }
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
-        google()
-        mavenCentral()
-    }
-
-    dependencies { // AGP 7.1.1 与 Kotlin 1.7.10 完美兼容
-        classpath 'com.android.tools.build:gradle:8.13.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
+// ═══ Flutter Built-in Kotlin 迁移（2026-08-21）：移除老式 buildscript/kotlin classpath ═══
+// kotlin 插件由 settings.gradle plugins 块声明（org.jetbrains.kotlin.android 2.3.0）
 allprojects {
     repositories {
         maven { url 'https://maven.aliyun.com/repository/public' }

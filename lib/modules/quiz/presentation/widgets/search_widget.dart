@@ -87,7 +87,7 @@ class SearchWidgetState extends State<SearchWidget> {
         _isSearchLoading = false;
       });
     } catch (e) {
-      print('搜索失败: $e');
+      debugPrint('搜索失败: $e');
       setState(() => _isSearchLoading = false);
     }
   }
@@ -206,7 +206,7 @@ class SearchWidgetState extends State<SearchWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: theme.cardColor,
-              border: Border(bottom: BorderSide(color: theme.dividerColor.withOpacity(0.2))),
+              border: Border(bottom: BorderSide(color: theme.dividerColor.withValues(alpha: 0.2))),
             ),
             child: Row(
               children: [
@@ -312,7 +312,7 @@ class SearchWidgetState extends State<SearchWidget> {
           decoration: BoxDecoration(
             color: theme.cardColor,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: theme.dividerColor.withOpacity(0.2), width: 1),
+            border: Border.all(color: theme.dividerColor.withValues(alpha: 0.2), width: 1),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,7 +335,7 @@ class SearchWidgetState extends State<SearchWidget> {
                         child: LinearProgressIndicator(
                           value: progress,
                           minHeight: 3,
-                          backgroundColor: theme.dividerColor.withOpacity(0.15),
+                          backgroundColor: theme.dividerColor.withValues(alpha: 0.15),
                           color: progress >= 0.8 ? Colors.green : Colors.blue,
                         ),
                       ),
@@ -374,7 +374,7 @@ class SearchWidgetState extends State<SearchWidget> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: idx % 2 == 0 ? theme.cardColor : theme.cardColor.withOpacity(0.5),
+                      color: idx % 2 == 0 ? theme.cardColor : theme.cardColor.withValues(alpha: 0.5),
                     ),
                     child: Row(
                       children: [

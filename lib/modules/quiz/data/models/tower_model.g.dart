@@ -8,7 +8,7 @@ part of 'tower_model.dart';
 
 class TowerProgressAdapter extends TypeAdapter<TowerProgress> {
   @override
-  final int typeId = 3;
+  final typeId = 3;
 
   @override
   TowerProgress read(BinaryReader reader) {
@@ -17,24 +17,24 @@ class TowerProgressAdapter extends TypeAdapter<TowerProgress> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return TowerProgress(
-      currentFloor: fields[0] as int,
-      correctCount: fields[1] as int,
-      wrongCount: fields[2] as int,
-      totalCorrect: fields[3] as int,
-      totalWrong: fields[4] as int,
-      maxFloor: fields[5] as int,
+      currentFloor: fields[0] == null ? 1 : (fields[0] as num).toInt(),
+      correctCount: fields[1] == null ? 0 : (fields[1] as num).toInt(),
+      wrongCount: fields[2] == null ? 0 : (fields[2] as num).toInt(),
+      totalCorrect: fields[3] == null ? 0 : (fields[3] as num).toInt(),
+      totalWrong: fields[4] == null ? 0 : (fields[4] as num).toInt(),
+      maxFloor: fields[5] == null ? 1 : (fields[5] as num).toInt(),
       usedQuestionIds: (fields[6] as List?)?.cast<String>(),
-      currentQuestionIndex: fields[7] as int,
-      hp: fields[8] as int,
-      maxHp: fields[9] as int,
-      appleCount: fields[10] as int,
-      shieldCount: fields[11] as int,
-      doubleExpCount: fields[12] as int,
-      lastRestFloor: fields[13] as int,
-      currentNodeIndex: fields[14] as int,
+      currentQuestionIndex: fields[7] == null ? 0 : (fields[7] as num).toInt(),
+      hp: fields[8] == null ? 5 : (fields[8] as num).toInt(),
+      maxHp: fields[9] == null ? 5 : (fields[9] as num).toInt(),
+      appleCount: fields[10] == null ? 0 : (fields[10] as num).toInt(),
+      shieldCount: fields[11] == null ? 0 : (fields[11] as num).toInt(),
+      doubleExpCount: fields[12] == null ? 0 : (fields[12] as num).toInt(),
+      lastRestFloor: fields[13] == null ? 0 : (fields[13] as num).toInt(),
+      currentNodeIndex: fields[14] == null ? 0 : (fields[14] as num).toInt(),
       completedNodeIndices: (fields[15] as List?)?.cast<int>(),
-      floorNodeCount: fields[16] as int,
-      isBossDefeated: fields[17] as bool,
+      floorNodeCount: fields[16] == null ? 4 : (fields[16] as num).toInt(),
+      isBossDefeated: fields[17] == null ? false : fields[17] as bool,
     );
   }
 

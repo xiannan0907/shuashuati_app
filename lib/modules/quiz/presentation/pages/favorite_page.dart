@@ -49,7 +49,7 @@ class FavoritePageState extends State<FavoritePage> {
         }
       }
     } catch (e) {
-      print('加载收藏失败: $e');
+      debugPrint('加载收藏失败: $e');
     }
     setState(() => _isLoading = false);
   }
@@ -107,7 +107,7 @@ class FavoritePageState extends State<FavoritePage> {
         backgroundColor: theme.cardColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
-          side: BorderSide(color: theme.dividerColor.withOpacity(0.3), width: 1),
+          side: BorderSide(color: theme.dividerColor.withValues(alpha: 0.3), width: 1),
         ),
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -119,7 +119,7 @@ class FavoritePageState extends State<FavoritePage> {
                 padding: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: theme.dividerColor.withOpacity(0.3), width: 0.5),
+                    bottom: BorderSide(color: theme.dividerColor.withValues(alpha: 0.3), width: 0.5),
                   ),
                 ),
                 child: Row(
@@ -150,7 +150,7 @@ class FavoritePageState extends State<FavoritePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: theme.cardColor,
-                  border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
+                  border: Border.all(color: theme.dividerColor.withValues(alpha: 0.2)),
                 ),
                 child: Text(
                   q.content.length > 40 ? '${q.content.substring(0, 40)}...' : q.content,
@@ -170,7 +170,7 @@ class FavoritePageState extends State<FavoritePage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                       decoration: BoxDecoration(
-                        border: Border.all(color: theme.dividerColor.withOpacity(0.3)),
+                        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.3)),
                         borderRadius: BorderRadius.circular(2),
                       ),
                       child: Text(
@@ -189,7 +189,7 @@ class FavoritePageState extends State<FavoritePage> {
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                       decoration: BoxDecoration(
                         color: theme.cardColor,
-                        border: Border.all(color: theme.dividerColor.withOpacity(0.3)),
+                        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.3)),
                         borderRadius: BorderRadius.circular(2),
                       ),
                       child: Text(
@@ -212,6 +212,7 @@ class FavoritePageState extends State<FavoritePage> {
     if (confirm == true) {
       final repo = QuestionRepository();
       await repo.toggleFavorite(q.id);
+      if (!mounted) return;
       _loadData();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -225,7 +226,7 @@ class FavoritePageState extends State<FavoritePage> {
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
-            side: BorderSide(color: theme.dividerColor.withOpacity(0.3)),
+            side: BorderSide(color: theme.dividerColor.withValues(alpha: 0.3)),
           ),
         ),
       );
@@ -244,7 +245,7 @@ class FavoritePageState extends State<FavoritePage> {
         backgroundColor: theme.cardColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
-          side: BorderSide(color: theme.dividerColor.withOpacity(0.3), width: 1),
+          side: BorderSide(color: theme.dividerColor.withValues(alpha: 0.3), width: 1),
         ),
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -256,7 +257,7 @@ class FavoritePageState extends State<FavoritePage> {
                 padding: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: theme.dividerColor.withOpacity(0.3), width: 0.5),
+                    bottom: BorderSide(color: theme.dividerColor.withValues(alpha: 0.3), width: 0.5),
                   ),
                 ),
                 child: Row(
@@ -292,7 +293,7 @@ class FavoritePageState extends State<FavoritePage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                       decoration: BoxDecoration(
-                        border: Border.all(color: theme.dividerColor.withOpacity(0.3)),
+                        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.3)),
                         borderRadius: BorderRadius.circular(2),
                       ),
                       child: Text(
@@ -310,8 +311,8 @@ class FavoritePageState extends State<FavoritePage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.red.shade50.withOpacity(0.1),
-                        border: Border.all(color: Colors.red.shade200.withOpacity(0.3)),
+                        color: Colors.red.shade50.withValues(alpha: 0.1),
+                        border: Border.all(color: Colors.red.shade200.withValues(alpha: 0.3)),
                         borderRadius: BorderRadius.circular(2),
                       ),
                       child: Text(
@@ -336,6 +337,7 @@ class FavoritePageState extends State<FavoritePage> {
       for (var item in items) {
         await repo.toggleFavorite(item['question'].id);
       }
+      if (!mounted) return;
       _loadData();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -349,7 +351,7 @@ class FavoritePageState extends State<FavoritePage> {
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
-            side: BorderSide(color: theme.dividerColor.withOpacity(0.3)),
+            side: BorderSide(color: theme.dividerColor.withValues(alpha: 0.3)),
           ),
         ),
       );
@@ -365,7 +367,7 @@ class FavoritePageState extends State<FavoritePage> {
         backgroundColor: theme.cardColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
-          side: BorderSide(color: theme.dividerColor.withOpacity(0.3), width: 1),
+          side: BorderSide(color: theme.dividerColor.withValues(alpha: 0.3), width: 1),
         ),
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -377,7 +379,7 @@ class FavoritePageState extends State<FavoritePage> {
                 padding: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: theme.dividerColor.withOpacity(0.3), width: 0.5),
+                    bottom: BorderSide(color: theme.dividerColor.withValues(alpha: 0.3), width: 0.5),
                   ),
                 ),
                 child: Row(
@@ -413,7 +415,7 @@ class FavoritePageState extends State<FavoritePage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                       decoration: BoxDecoration(
-                        border: Border.all(color: theme.dividerColor.withOpacity(0.3)),
+                        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.3)),
                         borderRadius: BorderRadius.circular(2),
                       ),
                       child: Text(
@@ -431,8 +433,8 @@ class FavoritePageState extends State<FavoritePage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.red.shade50.withOpacity(0.1),
-                        border: Border.all(color: Colors.red.shade200.withOpacity(0.3)),
+                        color: Colors.red.shade50.withValues(alpha: 0.1),
+                        border: Border.all(color: Colors.red.shade200.withValues(alpha: 0.3)),
                         borderRadius: BorderRadius.circular(2),
                       ),
                       child: Text(
@@ -456,6 +458,7 @@ class FavoritePageState extends State<FavoritePage> {
       for (var item in _favorites) {
         await repo.toggleFavorite(item['question'].id);
       }
+      if (!mounted) return;
       _loadData();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -469,7 +472,7 @@ class FavoritePageState extends State<FavoritePage> {
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
-            side: BorderSide(color: theme.dividerColor.withOpacity(0.3)),
+            side: BorderSide(color: theme.dividerColor.withValues(alpha: 0.3)),
           ),
         ),
       );
@@ -480,7 +483,6 @@ class FavoritePageState extends State<FavoritePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final screenWidth = MediaQuery.of(context).size.width;
 
     if (_isLoading) {
       return Center(
@@ -508,7 +510,7 @@ class FavoritePageState extends State<FavoritePage> {
               borderRadius: BorderRadius.circular(4),
               boxShadow: [
                 BoxShadow(
-                  color: theme.shadowColor.withOpacity(isDark ? 0.05 : 0.1),
+                  color: theme.shadowColor.withValues(alpha: isDark ? 0.05 : 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -533,7 +535,7 @@ class FavoritePageState extends State<FavoritePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: theme.cardColor,
-                      border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
+                      border: Border.all(color: theme.dividerColor.withValues(alpha: 0.2)),
                       borderRadius: BorderRadius.circular(2),
                     ),
                     child: Row(
@@ -568,10 +570,10 @@ class FavoritePageState extends State<FavoritePage> {
             decoration: BoxDecoration(
               color: theme.cardColor,
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
+              border: Border.all(color: theme.dividerColor.withValues(alpha: 0.2)),
               boxShadow: [
                 BoxShadow(
-                  color: theme.shadowColor.withOpacity(isDark ? 0.02 : 0.05),
+                  color: theme.shadowColor.withValues(alpha: isDark ? 0.02 : 0.05),
                   blurRadius: 2,
                   offset: const Offset(0, 1),
                 ),
@@ -610,7 +612,7 @@ class FavoritePageState extends State<FavoritePage> {
                 Container(
                   height: 1,
                   margin: const EdgeInsets.symmetric(vertical: 2),
-                  color: theme.dividerColor.withOpacity(0.15),
+                  color: theme.dividerColor.withValues(alpha: 0.15),
                 ),
                 SizedBox(
                   height: 28,
@@ -717,9 +719,9 @@ class FavoritePageState extends State<FavoritePage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(
-          color: isSelected ? theme.dividerColor.withOpacity(0.15) : Colors.transparent,
+          color: isSelected ? theme.dividerColor.withValues(alpha: 0.15) : Colors.transparent,
           border: Border.all(
-            color: isSelected ? theme.dividerColor.withOpacity(0.2) : Colors.transparent,
+            color: isSelected ? theme.dividerColor.withValues(alpha: 0.2) : Colors.transparent,
             width: 1,
           ),
           borderRadius: BorderRadius.circular(2),
@@ -770,12 +772,12 @@ class FavoritePageState extends State<FavoritePage> {
         borderRadius: BorderRadius.circular(4),
         boxShadow: [
           BoxShadow(
-            color: theme.shadowColor.withOpacity(isDark ? 0.03 : 0.08),
+            color: theme.shadowColor.withValues(alpha: isDark ? 0.03 : 0.08),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
           BoxShadow(
-            color: theme.shadowColor.withOpacity(isDark ? 0.02 : 0.04),
+            color: theme.shadowColor.withValues(alpha: isDark ? 0.02 : 0.04),
             blurRadius: 2,
             offset: const Offset(2, 0),
           ),
@@ -792,14 +794,14 @@ class FavoritePageState extends State<FavoritePage> {
                 gradient: LinearGradient(
                   colors: [
                     theme.cardColor,
-                    theme.cardColor.withOpacity(isDark ? 0.5 : 0.8),
+                    theme.cardColor.withValues(alpha: isDark ? 0.5 : 0.8),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 border: Border(
                   bottom: BorderSide(
-                    color: theme.dividerColor.withOpacity(0.15),
+                    color: theme.dividerColor.withValues(alpha: 0.15),
                     width: 1,
                   ),
                 ),
@@ -816,7 +818,7 @@ class FavoritePageState extends State<FavoritePage> {
                           width: 4,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: theme.dividerColor.withOpacity(0.3),
+                            color: theme.dividerColor.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(2),
                           ),
                         );
@@ -853,8 +855,8 @@ class FavoritePageState extends State<FavoritePage> {
                         child: LinearProgressIndicator(
                           value: progress,
                           minHeight: 3,
-                          backgroundColor: theme.dividerColor.withOpacity(0.15),
-                          color: progressColor.withOpacity(isDark ? 0.8 : 1.0),
+                          backgroundColor: theme.dividerColor.withValues(alpha: 0.15),
+                          color: progressColor.withValues(alpha: isDark ? 0.8 : 1.0),
                         ),
                       ),
                     ),
@@ -886,7 +888,7 @@ class FavoritePageState extends State<FavoritePage> {
                           fontSize: 10,
                           color: theme.textTheme.bodySmall?.color,
                           decoration: TextDecoration.underline,
-                          decorationColor: theme.dividerColor.withOpacity(0.3),
+                          decorationColor: theme.dividerColor.withValues(alpha: 0.3),
                         ),
                       ),
                     ),
@@ -899,7 +901,7 @@ class FavoritePageState extends State<FavoritePage> {
                           fontSize: 10,
                           color: isDark ? Colors.red.shade300 : Colors.red.shade400,
                           decoration: TextDecoration.underline,
-                          decorationColor: isDark ? Colors.red.shade200.withOpacity(0.3) : Colors.red.shade200,
+                          decorationColor: isDark ? Colors.red.shade200.withValues(alpha: 0.3) : Colors.red.shade200,
                         ),
                       ),
                     ),
@@ -947,7 +949,7 @@ class FavoritePageState extends State<FavoritePage> {
           Container(
             height: 0.5,
             margin: const EdgeInsets.only(bottom: 3),
-            color: theme.dividerColor.withOpacity(0.12),
+            color: theme.dividerColor.withValues(alpha: 0.12),
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -998,7 +1000,7 @@ class FavoritePageState extends State<FavoritePage> {
                             decoration: isAnswered ? TextDecoration.lineThrough : null,
                             decorationThickness: 1.5,
                             decorationColor: isDark
-                                ? Colors.green.shade200.withOpacity(0.3)
+                                ? Colors.green.shade200.withValues(alpha: 0.3)
                                 : Colors.green.shade300,
                           ),
                         ),
@@ -1040,7 +1042,7 @@ class FavoritePageState extends State<FavoritePage> {
                               '─ $typeLabel',
                               style: TextStyle(
                                 fontSize: 9,
-                                color: typeColor.withOpacity(isDark ? 0.5 : 0.6),
+                                color: typeColor.withValues(alpha: isDark ? 0.5 : 0.6),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -1062,7 +1064,7 @@ class FavoritePageState extends State<FavoritePage> {
                                   fontSize: 9,
                                   color: theme.textTheme.bodySmall?.color,
                                   decoration: TextDecoration.underline,
-                                  decorationColor: theme.dividerColor.withOpacity(0.3),
+                                  decorationColor: theme.dividerColor.withValues(alpha: 0.3),
                                 ),
                               ),
                             ),
@@ -1094,7 +1096,7 @@ class FavoritePageState extends State<FavoritePage> {
               borderRadius: BorderRadius.circular(4),
               boxShadow: [
                 BoxShadow(
-                  color: theme.shadowColor.withOpacity(0.05),
+                  color: theme.shadowColor.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),

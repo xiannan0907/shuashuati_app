@@ -46,14 +46,6 @@ class _CourseEditDialogState extends State<CourseEditDialog> {
     {'key': 'grey', 'color': Colors.grey},
   ];
 
-  final Map<String, String> _typeLabels = {
-    'course': '课程',
-    'exam': '考试',
-    'homework': '作业',
-    'meeting': '会议',
-    'other': '其他',
-  };
-
   @override
   void initState() {
     super.initState();
@@ -461,7 +453,7 @@ class _CourseEditDialogState extends State<CourseEditDialog> {
     return SizedBox(
       width: width,
       child: DropdownButtonFormField<T>(
-        value: value,
+        initialValue: value,
         isDense: true,
         decoration: InputDecoration(
           labelText: label,
@@ -527,7 +519,7 @@ class _CourseEditDialogState extends State<CourseEditDialog> {
     return SizedBox(
       width: 55,
       child: DropdownButtonFormField<int>(
-        value: value,
+        initialValue: value,
         isDense: true,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),

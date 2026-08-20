@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/quiz_bloc.dart';
 import '../pages/quiz_page.dart';
-import '../../data/repositories/question_repository.dart';
 import '../pages/example_import_page.dart';
 
 class ListTab extends StatelessWidget {
@@ -63,9 +62,9 @@ class ListTab extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildStatItem('${setNames.length}', '总题库', Colors.white),
-              Container(width: 1, height: 30, color: Colors.white.withOpacity(0.2)),
+              Container(width: 1, height: 30, color: Colors.white.withValues(alpha: 0.2)),
               _buildStatItem('$totalAnswered', '已答题', Colors.white),
-              Container(width: 1, height: 30, color: Colors.white.withOpacity(0.2)),
+              Container(width: 1, height: 30, color: Colors.white.withValues(alpha: 0.2)),
               _buildStatItem('$overallProgress%', '总进度', Colors.white),
             ],
           ),
@@ -101,7 +100,7 @@ class ListTab extends StatelessWidget {
                       height: 72,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        color: theme.colorScheme.surfaceVariant,
+                        color: theme.colorScheme.surfaceContainerHighest,
                         border: isCurrent
                             ? Border.all(color: theme.primaryColor, width: 2)
                             : null,
@@ -116,7 +115,7 @@ class ListTab extends StatelessWidget {
                                   topLeft: Radius.circular(isCurrent ? 10 : 12),
                                   bottomLeft: Radius.circular(isCurrent ? 10 : 12),
                                 ),
-                                color: progressColor.withOpacity(0.2),
+                                color: progressColor.withValues(alpha: 0.2),
                               ),
                             ),
                           ),
@@ -204,7 +203,7 @@ class ListTab extends StatelessWidget {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: progressColor.withOpacity(0.15),
+                                    color: progressColor.withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -261,7 +260,7 @@ class ListTab extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 11,
-            color: color.withOpacity(0.85),
+            color: color.withValues(alpha: 0.85),
           ),
         ),
       ],

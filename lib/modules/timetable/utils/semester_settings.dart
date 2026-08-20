@@ -1,4 +1,6 @@
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
+
+import 'week_utils.dart';
 
 class SemesterSettings {
   static const String boxName = 'timetable_settings';
@@ -23,6 +25,8 @@ class SemesterSettings {
     try {
       final box = await Hive.openBox<String>(boxName);
       await box.put(keySemesterStart, date.toIso8601String().split('T')[0]);
+      // 同步 WeekUtils，保证周次计算一致
+      WeekUtils.updateSemesterStart(date);
     } catch (_) {}
   }
 

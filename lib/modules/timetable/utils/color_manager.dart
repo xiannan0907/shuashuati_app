@@ -46,7 +46,7 @@ class ColorManager {
   }
 
   static String colorToHex(Color color) {
-    return '#${color.value.toRadixString(16).substring(2).padLeft(6, '0')}';
+    return '#${color.toARGB32().toRadixString(16).substring(2).padLeft(6, '0')}';
   }
 
   static Color hexToColor(String hex) {

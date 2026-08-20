@@ -23,7 +23,7 @@ class TowerNodeDetailDialog extends StatelessWidget {
       backgroundColor: Colors.deepPurple.shade900,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: color.withOpacity(0.5), width: 2),
+        side: BorderSide(color: color.withValues(alpha: 0.5), width: 2),
       ),
       title: Row(
         children: [

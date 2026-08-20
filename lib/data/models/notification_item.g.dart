@@ -8,7 +8,7 @@ part of 'notification_item.dart';
 
 class NotificationItemAdapter extends TypeAdapter<NotificationItem> {
   @override
-  final int typeId = 99;
+  final typeId = 99;
 
   @override
   NotificationItem read(BinaryReader reader) {
@@ -22,7 +22,7 @@ class NotificationItemAdapter extends TypeAdapter<NotificationItem> {
       content: fields[2] as String,
       type: fields[3] as String,
       timestamp: fields[4] as DateTime,
-      isRead: fields[5] as bool,
+      isRead: fields[5] == null ? false : fields[5] as bool,
       actionRoute: fields[6] as String?,
       actionParams: fields[7] as String?,
       icon: fields[8] as String,

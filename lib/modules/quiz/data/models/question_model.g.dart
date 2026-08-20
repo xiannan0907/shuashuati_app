@@ -1,5 +1,4 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_import, directives_ordering
 
 part of 'question_model.dart';
 
@@ -9,7 +8,7 @@ part of 'question_model.dart';
 
 class QuestionAdapter extends TypeAdapter<Question> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   Question read(BinaryReader reader) {
@@ -21,13 +20,13 @@ class QuestionAdapter extends TypeAdapter<Question> {
       id: fields[0] as String,
       content: fields[1] as String,
       options: (fields[2] as List).cast<String>(),
-      correctIndex: fields[3] as int,
-      selectedOption: fields[4] as int?,
-      isAnswered: fields[5] as bool?,
-      source: fields[6] as String,
+      correctIndex: (fields[3] as num).toInt(),
+      selectedOption: (fields[4] as num?)?.toInt(),
+      isAnswered: fields[5] == null ? false : fields[5] as bool?,
+      source: fields[6] == null ? 'imported' : fields[6] as String,
       answer: fields[7] as String?,
-      isWrong: fields[8] as bool?,
-      isFavorite: fields[9] as bool? ?? false,
+      isWrong: fields[8] == null ? false : fields[8] as bool?,
+      isFavorite: fields[9] == null ? false : fields[9] as bool,
     );
   }
 
@@ -58,7 +57,12 @@ class QuestionAdapter extends TypeAdapter<Question> {
   }
 
   @override
-  void writeBinary(BinaryWriter writer, Question obj) {
-    write(writer, obj);
-  }
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is QuestionAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

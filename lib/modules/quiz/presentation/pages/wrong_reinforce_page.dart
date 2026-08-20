@@ -123,7 +123,7 @@ class _WrongReinforcePageState extends State<WrongReinforcePage> {
         title: const Text('确认退出？'),
         content: Text(
           '当前进度：\n'
-              '✅ 已掌握 ${_correctCount} 道\n'
+              '✅ 已掌握 $_correctCount 道\n'
               '❌ 还需练习 ${_practiceQueue.length} 道\n\n'
               '退出后进度将丢失，确定退出吗？',
           style: const TextStyle(height: 1.6),
@@ -188,10 +188,11 @@ class _WrongReinforcePageState extends State<WrongReinforcePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         _showExitConfirm();
-        return false;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -388,7 +389,7 @@ class _WrongReinforcePageState extends State<WrongReinforcePage> {
             '点击「重新开始」继续练习',
             style: TextStyle(
               fontSize: 16,
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 24),
@@ -487,7 +488,7 @@ class _WrongReinforcePageState extends State<WrongReinforcePage> {
           LinearProgressIndicator(
             value: (widget.wrongQuestions.length - _practiceQueue.length) /
                 widget.wrongQuestions.length,
-            backgroundColor: theme.colorScheme.surfaceVariant,
+            backgroundColor: theme.colorScheme.surfaceContainerHighest,
             color: Colors.deepPurple,
             minHeight: 8,
             borderRadius: BorderRadius.circular(4),
@@ -519,7 +520,7 @@ class _WrongReinforcePageState extends State<WrongReinforcePage> {
             height: availableHeight * 0.50,
             child: SingleChildScrollView(
               child: QuestionCard(
-                key: ValueKey('${currentQuestion.id}_${_currentIndex}'),
+                key: ValueKey('${currentQuestion.id}_$_currentIndex'),
                 question: currentQuestion,
                 currentIndex: _currentIndex,
                 total: total,

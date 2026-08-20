@@ -1,4 +1,5 @@
 /// 每日运势系统数据
+library;
 
 class Fortune {
   final String id;

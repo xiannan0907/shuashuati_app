@@ -19,15 +19,15 @@ class TowerMapWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.deepPurple.shade900.withOpacity(0.6), Colors.deepPurple.shade800.withOpacity(0.3)],
+          colors: [Colors.deepPurple.shade900.withValues(alpha: 0.6), Colors.deepPurple.shade800.withValues(alpha: 0.3)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.deepPurple.shade400.withOpacity(0.3), width: 1.5),
+        border: Border.all(color: Colors.deepPurple.shade400.withValues(alpha: 0.3), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.deepPurple.shade900.withOpacity(0.5),
+            color: Colors.deepPurple.shade900.withValues(alpha: 0.5),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -116,7 +116,7 @@ class TowerMapWidget extends StatelessWidget {
                                       ? LinearGradient(
                                     colors: [
                                       progress.getNodeColor(type),
-                                      progress.getNodeColor(type).withOpacity(0.5),
+                                      progress.getNodeColor(type).withValues(alpha: 0.5),
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
@@ -139,7 +139,7 @@ class TowerMapWidget extends StatelessWidget {
                                   boxShadow: isCurrent
                                       ? [
                                     BoxShadow(
-                                      color: Colors.amber.withOpacity(0.6),
+                                      color: Colors.amber.withValues(alpha: 0.6),
                                       blurRadius: 16,
                                       spreadRadius: 2,
                                     ),
@@ -147,7 +147,7 @@ class TowerMapWidget extends StatelessWidget {
                                       : (isCompleted
                                       ? [
                                     BoxShadow(
-                                      color: Colors.green.withOpacity(0.3),
+                                      color: Colors.green.withValues(alpha: 0.3),
                                       blurRadius: 8,
                                     ),
                                   ]
@@ -234,7 +234,7 @@ class TowerLinePainter extends CustomPainter {
       // 绘制发光连线
       if (isCompleted || isActive) {
         // 外层发光
-        paint.color = (isCompleted ? Colors.green : Colors.amber).withOpacity(0.3);
+        paint.color = (isCompleted ? Colors.green : Colors.amber).withValues(alpha: 0.3);
         paint.strokeWidth = 6;
         canvas.drawLine(Offset(x1, centerY), Offset(x2, centerY), paint);
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/services/storage_service.dart';
 import '../../modules/timetable/presentation/pages/timetable_settings_page.dart';
@@ -56,11 +55,13 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
 
     try {
       await StorageService.clearCache();
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('✅ 缓存已清理')),
       );
       _loadData();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('清理失败: $e'), backgroundColor: Colors.red),
       );
@@ -74,6 +75,7 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
   Future<void> _clearOtherData() async {
     // 先获取当前数据
     final info = await _storageFuture;
+    if (!mounted) return;
     if (info.otherCleanableSize == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('没有可清理的其他数据')),
@@ -108,11 +110,13 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
 
     try {
       await StorageService.clearOtherData();
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('✅ 其他数据已清理')),
       );
       _loadData();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('清理失败: $e'), backgroundColor: Colors.red),
       );
@@ -175,7 +179,7 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -319,7 +323,7 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -367,7 +371,7 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
+                color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, size: 20, color: color),

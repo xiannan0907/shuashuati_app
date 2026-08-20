@@ -191,7 +191,6 @@ class GameEngine {
 
     // 玩家行动
     DamageResult playerDamage;
-    bool playerActed = true;
 
     switch (action) {
       case 'attack':
@@ -218,7 +217,6 @@ class GameEngine {
 
       case 'defend':
         playerDamage = DamageResult.zero('🛡️ 你进入防御姿态。');
-        playerActed = true;
         break;
 
       case 'flee':

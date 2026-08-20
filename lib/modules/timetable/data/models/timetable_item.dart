@@ -18,9 +18,9 @@ class TimetableItem extends Equatable {
 
   String get slotDisplay {
     if (isSingleSlot) {
-      return '第${startSlot}节';
+      return '第$startSlot节';
     }
-    return '第$startSlot-${endSlot}节';
+    return '第$startSlot-$endSlot节';
   }
 
   @override

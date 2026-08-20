@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Portalborn 命令解析器
@@ -319,13 +320,13 @@ class CommandParser {
       return ParseResult.error('请输入命令。输入 "help" 查看可用命令。', raw: input);
     }
 
-    print('🔍 解析命令: "$normalized"');
+    debugPrint('🔍 解析命令: "$normalized"');
 
     // 1. 精确匹配
     for (final template in _templates) {
       for (final pattern in template.patterns) {
         if (pattern == normalized) {
-          print('✅ 精确匹配: ${template.action} ${template.params}');
+          debugPrint('✅ 精确匹配: ${template.action} ${template.params}');
           return ParseResult.success(
             action: template.action,
             params: template.params ?? {},
@@ -348,12 +349,12 @@ class CommandParser {
             // ✅ 特殊处理：如果是 'go' 命令，target 就是方向
             if (pattern == 'go') {
               params['direction'] = target;
-              print('✅ go 命令解析: direction=$target');
+              debugPrint('✅ go 命令解析: direction=$target');
             } else {
               params['target'] = target;
             }
 
-            print('✅ 带参数匹配: ${template.action} $params');
+            debugPrint('✅ 带参数匹配: ${template.action} $params');
             return ParseResult.success(
               action: template.action,
               params: params,

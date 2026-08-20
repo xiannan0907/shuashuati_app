@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -35,12 +36,21 @@ class StorageInfo {
 }
 
 class StorageService {
-  // ✅ 白名单文件（不可删除）
+  // ✅ 白名单文件（不可删除）：所有在用 Hive box 的实际文件名
   static const List<String> _keepFiles = [
-    'user_model.hive',
-    'settings.hive',
-    'theme.hive',
-    'notification.hive',
+    'userBox.hive',              // 用户资料
+    'themeSettings.hive',        // 主题设置
+    'settingsBox.hive',          // 刷题设置
+    'timetable_settings.hive',   // 学期设置
+    'notificationBox.hive',      // 通知
+    'quizSetsBox.hive',          // 题库集合索引
+    'wrongQuestionsBox.hive',    // 错题记录
+    'wrongStatsBox.hive',        // 错题统计
+    'towerBox.hive',             // 闯塔进度
+    'portalborn.hive',           // RPG 存档
+    'timetable_courses.hive',    // 课程
+    'timetable_list.hive',       // 课表
+    'time_table_list.hive',      // 作息时段
   ];
 
   /// 获取存储信息
@@ -144,7 +154,7 @@ class StorageService {
       // 目录不删除，只删文件
     }
 
-    print('✅ 清理其他数据完成，删除了 $deletedCount 个文件');
+    debugPrint('✅ 清理其他数据完成，删除了 $deletedCount 个文件');
   }
 
   /// 清理缓存（临时目录）

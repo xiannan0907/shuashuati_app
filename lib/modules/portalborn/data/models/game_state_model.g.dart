@@ -8,7 +8,7 @@ part of 'game_state_model.dart';
 
 class GameStateAdapter extends TypeAdapter<GameState> {
   @override
-  final int typeId = 35;
+  final typeId = 35;
 
   @override
   GameState read(BinaryReader reader) {
@@ -21,13 +21,15 @@ class GameStateAdapter extends TypeAdapter<GameState> {
       currentCharacterId: fields[1] as String,
       currentRealmId: fields[2] as String?,
       currentRoomId: fields[3] as String?,
-      visitedRoomIds: (fields[4] as List).cast<String>(),
-      unlockedThemes: (fields[5] as List).cast<String>(),
-      totalRealmsCompleted: fields[6] as int,
-      totalItemsCrafted: fields[7] as int,
+      visitedRoomIds:
+          fields[4] == null ? const [] : (fields[4] as List).cast<String>(),
+      unlockedThemes:
+          fields[5] == null ? const [] : (fields[5] as List).cast<String>(),
+      totalRealmsCompleted: fields[6] == null ? 0 : (fields[6] as num).toInt(),
+      totalItemsCrafted: fields[7] == null ? 0 : (fields[7] as num).toInt(),
       createdAt: fields[8] as DateTime?,
       lastSavedAt: fields[9] as DateTime?,
-      isInBattle: fields[10] as bool,
+      isInBattle: fields[10] == null ? false : fields[10] as bool,
       currentBattleMonsterId: fields[11] as String?,
     );
   }

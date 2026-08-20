@@ -1,30 +1,34 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// 刷刷题 App 冒烟测试
+import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 import 'package:shuashuati_app/main.dart';
+import 'package:shuashuati_app/hive_registrar.g.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  setUpAll(() async {
+    final dir = await Directory.systemTemp.createTemp('shuashuati_test');
+    Hive.init(dir.path);
+    Hive.registerAdapters();
+  });
+
+  tearDownAll(() async {
+    await Hive.close();
+  });
+
+  testWidgets('App 冒烟测试：首页渲染', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // 品牌区 + 模块网格应渲染
+    expect(find.text('刷刷题'), findsOneWidget);
+    expect(find.text('刷题'), findsOneWidget);
+    expect(find.text('课表'), findsOneWidget);
+
+    // 第三个模块在视口外，滚动后可见
+    await tester.scrollUntilVisible(find.text('传送门编年史'), 200);
+    expect(find.text('传送门编年史'), findsOneWidget);
   });
 }

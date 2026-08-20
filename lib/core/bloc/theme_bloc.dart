@@ -1,6 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 // ============================================================
 // 主题模式枚举
@@ -63,7 +64,14 @@ class ThemeCubit extends Cubit<ThemeState> {
   static const String _keyModulePrefix = 'module_theme_';
 
   ThemeCubit() : super(ThemeState()) {
-    _loadSettings();
+    _loadingFuture = _loadSettings();
+  }
+
+  Future<void>? _loadingFuture;
+
+  /// 等待初始设置加载完成，避免未加载完就被覆盖
+  Future<void> _ensureLoaded() async {
+    await _loadingFuture;
   }
 
   // ============================================================
@@ -96,7 +104,7 @@ class ThemeCubit extends Cubit<ThemeState> {
         moduleModes: moduleModes,
         useGlobalTheme: useGlobal,
       ));
-    } catch (e) {}
+    } catch (e) { /* 忽略加载失败 */ }
   }
 
   // ============================================================
@@ -120,7 +128,7 @@ class ThemeCubit extends Cubit<ThemeState> {
         await box.put(key, _modeToString(entry.value));
       }
     } catch (e) {
-      print('保存主题设置失败: $e');
+      debugPrint('保存主题设置失败: $e');
     }
   }
 
@@ -128,22 +136,26 @@ class ThemeCubit extends Cubit<ThemeState> {
   // 公共方法
   // ============================================================
 
-  void setGlobalTheme(AppThemeMode mode) {
+  Future<void> setGlobalTheme(AppThemeMode mode) async {
+    await _ensureLoaded();
     emit(state.copyWith(globalMode: mode));
-    _saveSettings();
+    await _saveSettings();
   }
 
-  void toggleThemeMode(bool useGlobal) {
+  Future<void> toggleThemeMode(bool useGlobal) async {
+    await _ensureLoaded();
     emit(state.copyWith(useGlobalTheme: useGlobal));
-    _saveSettings();
+    await _saveSettings();
   }
 
-  void setModuleTheme(String moduleId, AppThemeMode mode) {
+  Future<void> setModuleTheme(String moduleId, AppThemeMode mode) async {
+    await _ensureLoaded();
     emit(state.setModuleTheme(moduleId, mode));
-    _saveSettings();
+    await _saveSettings();
   }
 
-  void resetModuleTheme(String moduleId) {
+  Future<void> resetModuleTheme(String moduleId) async {
+    await _ensureLoaded();
     final newModes = Map<String, AppThemeMode>.from(state.moduleModes);
     newModes.remove(moduleId);
     emit(ThemeState(
@@ -151,7 +163,7 @@ class ThemeCubit extends Cubit<ThemeState> {
       moduleModes: newModes,
       useGlobalTheme: state.useGlobalTheme,
     ));
-    _saveSettings();
+    await _saveSettings();
   }
 
   AppThemeMode getEffectiveTheme(String moduleId) {

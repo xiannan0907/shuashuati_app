@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:open_file/open_file.dart';
 import '../bloc/timetable_bloc.dart';
 
 class ShareCenterPage extends StatefulWidget {
@@ -87,7 +85,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -245,7 +243,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -257,7 +255,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
+                color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: color, size: 28),
@@ -307,11 +305,13 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
       final filePath = '${tempDir.path}/$fileName';
 
       // 执行导出到临时文件
+      if (!context.mounted) return;
       context.read<TimetableBloc>().add(ExportCourses(filePath, format));
 
       // ✅ 分享对话框会在 BlocListener 中自动弹出
 
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('导出失败: $e'),
@@ -374,9 +374,11 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
       final fileName = _getFileName(format);
       final filePath = '${tempDir.path}/$fileName';
 
+      if (!context.mounted) return;
       context.read<TimetableBloc>().add(ExportCourses(filePath, format));
 
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('分享失败: $e'),
@@ -392,21 +394,20 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
 
   Future<void> _importCourses(BuildContext context) async {
     try {
-      final result = await FilePicker.platform.pickFiles(
-        allowMultiple: false,
+      final file = await FilePicker.pickFile(
         type: FileType.custom,
         allowedExtensions: ['json', 'xlsx', 'xls'],
       );
 
-      if (result == null || result.files.isEmpty) return;
+      if (file == null) return;
 
-      final file = result.files.first;
       final path = file.path;
 
       if (path == null) {
         throw Exception('无法获取文件路径');
       }
 
+      if (!context.mounted) return;
       final confirm = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -431,8 +432,10 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
 
       if (confirm != true) return;
 
+      if (!context.mounted) return;
       context.read<TimetableBloc>().add(ImportCourses(path));
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('导入失败: $e'),
@@ -486,11 +489,14 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
                       onPressed: () async {
                         Navigator.pop(ctx);
                         try {
-                          await Share.shareXFiles(
-                            [XFile(filePath)],
-                            text: '📚 分享课表文件',
+                          await SharePlus.instance.share(
+                            ShareParams(
+                              files: [XFile(filePath)],
+                              text: '📚 分享课表文件',
+                            ),
                           );
                           // ✅ 分享成功提示
+                          if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('分享完成，点击系统返回键可回到应用'),
@@ -499,7 +505,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
                           );
                         } catch (e) {
                           // 用户取消分享，静默忽略
-                          print('分享取消: $e');
+                          debugPrint('分享取消: $e');
                         }
                       },
                       icon: const Icon(Icons.share),
@@ -514,10 +520,10 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
                   Expanded(
                     child: TextButton(
                       onPressed: () => Navigator.pop(ctx),
-                      child: const Text('关闭'),
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.grey.shade100,
                       ),
+                      child: const Text('关闭'),
                     ),
                   ),
                 ],

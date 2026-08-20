@@ -1,9 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:open_file/open_file.dart';
 
@@ -125,6 +122,7 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
                         onChanged: (date) async {
                           await TimetableSettings.setSemesterStart(date);
                           setState(() => _semesterStart = date);
+                          if (!context.mounted) return;
                           Navigator.pop(context, true);
                         },
                       ),
@@ -237,6 +235,7 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
                         onChanged: (v) async {
                           await TimetableSettings.setShowAllWeeks(v);
                           setState(() => _showAllWeeks = v);
+                          if (!context.mounted) return;
                           context.read<TimetableBloc>().add(LoadTimetables());
                         },
                       ),
@@ -310,6 +309,7 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
                         Navigator.pop(ctx);
                         try {
                           final result = await OpenFile.open(filePath);
+                          if (!context.mounted) return;
                           if (result.type != ResultType.done) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -319,6 +319,7 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
                             );
                           }
                         } catch (e) {
+                          if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('打开失败: $e'),
@@ -341,9 +342,11 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
                       onPressed: () async {
                         Navigator.pop(ctx);
                         try {
-                          await Share.shareXFiles(
-                            [XFile(filePath)],
-                            text: '📚 分享课表文件',
+                          await SharePlus.instance.share(
+                            ShareParams(
+                              files: [XFile(filePath)],
+                              text: '📚 分享课表文件',
+                            ),
                           );
                         } catch (e) {
                           // 分享失败
@@ -361,10 +364,10 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
                   Expanded(
                     child: TextButton(
                       onPressed: () => Navigator.pop(ctx),
-                      child: const Text('关闭'),
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.grey.shade100,
                       ),
+                      child: const Text('关闭'),
                     ),
                   ),
                 ],
@@ -442,6 +445,7 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
             if (date != null) {
               await TimetableSettings.setSemesterStart(date);
               setState(() => _semesterStart = date);
+              if (!mounted) return;
               Navigator.pop(context, true);
             }
           },
@@ -474,7 +478,7 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
         Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: Colors.blue,
+          activeThumbColor: Colors.blue,
         ),
       ],
     );

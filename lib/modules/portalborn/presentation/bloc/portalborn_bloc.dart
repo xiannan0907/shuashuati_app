@@ -10,7 +10,6 @@ import '../../data/models/character_model.dart';
 import '../../data/models/game_state_model.dart';
 import '../../data/models/realm_model.dart';
 import '../../data/models/item_model.dart';
-import '../../data/models/monster_model.dart';
 import '../../data/seed_data/classes.dart';
 import '../../data/seed_data/items.dart';
 import '../../engine/command_parser.dart';
@@ -890,7 +889,7 @@ class PortalbornBloc extends Bloc<PortalbornEvent, PortalbornState> {
     }
     final item = _currentInventory!.removeAt(index);
     _addMessage('🗑️ 你丢弃了 ${item.name}');
-    if (this.state is PortalbornHub) {
+    if (state is PortalbornHub) {
       final state = this.state as PortalbornHub;
       emit(state.copyWith(inventory: _currentInventory!));
     }
@@ -1030,18 +1029,21 @@ class PortalbornBloc extends Bloc<PortalbornEvent, PortalbornState> {
       if (newMessages.length > 100) {
         newMessages.removeRange(0, newMessages.length - 100);
       }
+      // ignore: invalid_use_of_visible_for_testing_member
       emit(state.copyWith(messages: newMessages));
     } else if (state is PortalbornExploring) {
       final newMessages = [...state.messages, msg];
       if (newMessages.length > 100) {
         newMessages.removeRange(0, newMessages.length - 100);
       }
+      // ignore: invalid_use_of_visible_for_testing_member
       emit(state.copyWith(messages: newMessages));
     } else if (state is PortalbornBattle) {
       final newLog = [...state.battleLog, msg];
       if (newLog.length > 50) {
         newLog.removeRange(0, newLog.length - 50);
       }
+      // ignore: invalid_use_of_visible_for_testing_member
       emit(state.copyWith(battleLog: newLog));
     }
   }

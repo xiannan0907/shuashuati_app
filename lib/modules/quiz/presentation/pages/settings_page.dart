@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 import '../../data/repositories/question_repository.dart';
 
@@ -30,14 +30,14 @@ class _SettingsPageState extends State<SettingsPage> {
       _sound = box.get('sound') == 'true';
       _fontSizeIndex = int.tryParse(box.get('font_size') ?? '1') ?? 1;
       setState(() {});
-    } catch (e) {}
+    } catch (e) { /* 忽略设置加载失败 */ }
   }
 
   Future<void> _saveSetting(String key, String value) async {
     try {
       final box = await Hive.openBox<String>('settingsBox');
       await box.put(key, value);
-    } catch (e) {}
+    } catch (e) { /* 忽略设置保存失败 */ }
   }
 
   void _toggleAutoNext(bool value) {
@@ -98,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
               rightWidget: Switch(
                 value: _autoNext,
                 onChanged: _toggleAutoNext,
-                activeColor: Colors.blue,
+                activeThumbColor: Colors.blue,
               ),
             ),
             _buildSettingCard(
@@ -109,7 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
               rightWidget: Switch(
                 value: _vibration,
                 onChanged: _toggleVibration,
-                activeColor: Colors.blue,
+                activeThumbColor: Colors.blue,
               ),
             ),
             _buildSettingCard(
@@ -120,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
               rightWidget: Switch(
                 value: _sound,
                 onChanged: _toggleSound,
-                activeColor: Colors.blue,
+                activeThumbColor: Colors.blue,
               ),
             ),
 
@@ -277,7 +277,7 @@ class _SettingsPageState extends State<SettingsPage> {
           width: 36,
           height: 36,
           decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
+            color: iconColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -425,6 +425,7 @@ class _SettingsPageState extends State<SettingsPage> {
       final settingsBox = await Hive.openBox<String>('settingsBox');
       await settingsBox.clear();
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('✅ 已清空所有数据'),
@@ -434,9 +435,11 @@ class _SettingsPageState extends State<SettingsPage> {
       );
 
       Future.delayed(const Duration(seconds: 1), () {
+        if (!mounted) return;
         Navigator.popUntil(context, (route) => route.isFirst);
       });
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('清空失败: $e'),

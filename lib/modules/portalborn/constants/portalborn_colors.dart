@@ -54,8 +54,8 @@ class PortalbornColors {
   /// 根据 Brightness 获取次级文本色（用于描述/提示）
   static Color textSecondary(Brightness brightness) {
     return brightness == Brightness.dark
-        ? textDark.withOpacity(0.7)
-        : textLight.withOpacity(0.7);
+        ? textDark.withValues(alpha: 0.7)
+        : textLight.withValues(alpha: 0.7);
   }
 
   /// 根据 Brightness 获取 HP 条渐变色

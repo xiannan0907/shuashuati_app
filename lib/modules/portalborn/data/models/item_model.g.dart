@@ -8,7 +8,7 @@ part of 'item_model.dart';
 
 class GameItemAdapter extends TypeAdapter<GameItem> {
   @override
-  final int typeId = 34;
+  final typeId = 34;
 
   @override
   GameItem read(BinaryReader reader) {
@@ -21,18 +21,18 @@ class GameItemAdapter extends TypeAdapter<GameItem> {
       name: fields[1] as String,
       type: fields[2] as String,
       subType: fields[3] as String,
-      atkBonus: fields[4] as int,
-      defBonus: fields[5] as int,
-      healAmount: fields[6] as int,
-      manaRestore: fields[7] as int,
+      atkBonus: fields[4] == null ? 0 : (fields[4] as num).toInt(),
+      defBonus: fields[5] == null ? 0 : (fields[5] as num).toInt(),
+      healAmount: fields[6] == null ? 0 : (fields[6] as num).toInt(),
+      manaRestore: fields[7] == null ? 0 : (fields[7] as num).toInt(),
       description: fields[8] as String,
       emoji: fields[9] as String,
-      value: fields[10] as int,
-      isEquipped: fields[11] as bool,
-      quantity: fields[12] as int,
-      durability: fields[13] as int,
-      maxDurability: fields[14] as int,
-      tags: (fields[15] as List).cast<String>(),
+      value: fields[10] == null ? 0 : (fields[10] as num).toInt(),
+      isEquipped: fields[11] == null ? false : fields[11] as bool,
+      quantity: fields[12] == null ? 1 : (fields[12] as num).toInt(),
+      durability: fields[13] == null ? -1 : (fields[13] as num).toInt(),
+      maxDurability: fields[14] == null ? -1 : (fields[14] as num).toInt(),
+      tags: fields[15] == null ? const [] : (fields[15] as List).cast<String>(),
       extraData: (fields[16] as Map?)?.cast<String, dynamic>(),
     );
   }

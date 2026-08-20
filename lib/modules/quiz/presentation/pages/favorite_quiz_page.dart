@@ -113,7 +113,6 @@ class _FavoriteQuizPageState extends State<FavoriteQuizPage> {
     final isLarge = screenWidth > 600;
     final fontSizeBase = isSmall ? 12.0 : (isLarge ? 17.0 : 14.0);
     final paddingBase = isSmall ? 8.0 : (isLarge ? 20.0 : 12.0);
-    final appBarHeight = 56.0 + topPadding;
 
     // ✅ 状态栏样式
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -427,7 +426,7 @@ class _FavoriteQuizPageState extends State<FavoriteQuizPage> {
                                           ),
                                         ),
                                       );
-                                    }).toList(),
+                                    }),
                                   ],
 
                                   if (isAnswered && !_isStudyMode)

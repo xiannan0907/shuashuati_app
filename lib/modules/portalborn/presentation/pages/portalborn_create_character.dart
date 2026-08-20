@@ -289,7 +289,7 @@ class _ClassCard extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF00ff88).withOpacity(0.15)
+              ? const Color(0xFF00ff88).withValues(alpha: 0.15)
               : const Color(0xFF141425),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(

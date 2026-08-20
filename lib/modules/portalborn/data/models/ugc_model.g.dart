@@ -8,7 +8,7 @@ part of 'ugc_model.dart';
 
 class UGCCustomRealmAdapter extends TypeAdapter<UGCCustomRealm> {
   @override
-  final int typeId = 36;
+  final typeId = 36;
 
   @override
   UGCCustomRealm read(BinaryReader reader) {
@@ -21,13 +21,16 @@ class UGCCustomRealmAdapter extends TypeAdapter<UGCCustomRealm> {
       name: fields[1] as String,
       author: fields[2] as String,
       description: fields[3] as String,
-      version: fields[4] as String,
-      rooms: (fields[5] as List).cast<UGCRoom>(),
+      version: fields[4] == null ? '1.0.0' : fields[4] as String,
+      rooms: fields[5] == null ? const [] : (fields[5] as List).cast<UGCRoom>(),
       entryRoomId: fields[6] as String,
-      customMonsters: (fields[7] as List).cast<UGCMonster>(),
-      customItems: (fields[8] as List).cast<UGCItem>(),
-      requiredItems: (fields[9] as List).cast<String>(),
-      isImported: fields[10] as bool,
+      customMonsters:
+          fields[7] == null ? const [] : (fields[7] as List).cast<UGCMonster>(),
+      customItems:
+          fields[8] == null ? const [] : (fields[8] as List).cast<UGCItem>(),
+      requiredItems:
+          fields[9] == null ? const [] : (fields[9] as List).cast<String>(),
+      isImported: fields[10] == null ? false : fields[10] as bool,
       createdAt: fields[11] as DateTime?,
       lastPlayedAt: fields[12] as DateTime?,
     );
@@ -78,7 +81,7 @@ class UGCCustomRealmAdapter extends TypeAdapter<UGCCustomRealm> {
 
 class UGCRoomAdapter extends TypeAdapter<UGCRoom> {
   @override
-  final int typeId = 37;
+  final typeId = 37;
 
   @override
   UGCRoom read(BinaryReader reader) {
@@ -90,10 +93,12 @@ class UGCRoomAdapter extends TypeAdapter<UGCRoom> {
       id: fields[0] as String?,
       name: fields[1] as String,
       description: fields[2] as String,
-      exits: (fields[3] as List).cast<UGCExit>(),
-      objects: (fields[4] as List).cast<UGCInteractable>(),
+      exits: fields[3] == null ? const [] : (fields[3] as List).cast<UGCExit>(),
+      objects: fields[4] == null
+          ? const []
+          : (fields[4] as List).cast<UGCInteractable>(),
       monsterId: fields[5] as String?,
-      tags: (fields[6] as List).cast<String>(),
+      tags: fields[6] == null ? const [] : (fields[6] as List).cast<String>(),
     );
   }
 
@@ -130,7 +135,7 @@ class UGCRoomAdapter extends TypeAdapter<UGCRoom> {
 
 class UGCExitAdapter extends TypeAdapter<UGCExit> {
   @override
-  final int typeId = 38;
+  final typeId = 38;
 
   @override
   UGCExit read(BinaryReader reader) {
@@ -143,10 +148,10 @@ class UGCExitAdapter extends TypeAdapter<UGCExit> {
       direction: fields[1] as String,
       targetRoomId: fields[2] as String,
       description: fields[3] as String,
-      isHidden: fields[4] as bool,
-      isLocked: fields[5] as bool,
+      isHidden: fields[4] == null ? false : fields[4] as bool,
+      isLocked: fields[5] == null ? false : fields[5] as bool,
       keyItemId: fields[6] as String?,
-      isOneWay: fields[7] as bool,
+      isOneWay: fields[7] == null ? false : fields[7] as bool,
     );
   }
 
@@ -185,7 +190,7 @@ class UGCExitAdapter extends TypeAdapter<UGCExit> {
 
 class UGCInteractableAdapter extends TypeAdapter<UGCInteractable> {
   @override
-  final int typeId = 39;
+  final typeId = 39;
 
   @override
   UGCInteractable read(BinaryReader reader) {
@@ -197,7 +202,8 @@ class UGCInteractableAdapter extends TypeAdapter<UGCInteractable> {
       id: fields[0] as String?,
       name: fields[1] as String,
       description: fields[2] as String,
-      actions: (fields[3] as List).cast<String>(),
+      actions:
+          fields[3] == null ? const [] : (fields[3] as List).cast<String>(),
       result: (fields[4] as Map?)?.cast<String, dynamic>(),
     );
   }
@@ -231,7 +237,7 @@ class UGCInteractableAdapter extends TypeAdapter<UGCInteractable> {
 
 class UGCMonsterAdapter extends TypeAdapter<UGCMonster> {
   @override
-  final int typeId = 40;
+  final typeId = 40;
 
   @override
   UGCMonster read(BinaryReader reader) {
@@ -244,13 +250,13 @@ class UGCMonsterAdapter extends TypeAdapter<UGCMonster> {
       name: fields[1] as String,
       emoji: fields[2] as String,
       description: fields[3] as String,
-      baseHp: fields[4] as int,
-      attack: fields[5] as int,
-      defense: fields[6] as int,
-      expReward: fields[7] as int,
-      goldReward: fields[8] as int,
-      drops: (fields[9] as List).cast<UGCDrop>(),
-      tags: (fields[10] as List).cast<String>(),
+      baseHp: fields[4] == null ? 10 : (fields[4] as num).toInt(),
+      attack: fields[5] == null ? 3 : (fields[5] as num).toInt(),
+      defense: fields[6] == null ? 1 : (fields[6] as num).toInt(),
+      expReward: fields[7] == null ? 5 : (fields[7] as num).toInt(),
+      goldReward: fields[8] == null ? 2 : (fields[8] as num).toInt(),
+      drops: fields[9] == null ? const [] : (fields[9] as List).cast<UGCDrop>(),
+      tags: fields[10] == null ? const [] : (fields[10] as List).cast<String>(),
     );
   }
 
@@ -295,7 +301,7 @@ class UGCMonsterAdapter extends TypeAdapter<UGCMonster> {
 
 class UGCDropAdapter extends TypeAdapter<UGCDrop> {
   @override
-  final int typeId = 41;
+  final typeId = 41;
 
   @override
   UGCDrop read(BinaryReader reader) {
@@ -305,9 +311,9 @@ class UGCDropAdapter extends TypeAdapter<UGCDrop> {
     };
     return UGCDrop(
       itemId: fields[0] as String,
-      probability: fields[1] as double,
-      minCount: fields[2] as int,
-      maxCount: fields[3] as int,
+      probability: (fields[1] as num).toDouble(),
+      minCount: fields[2] == null ? 1 : (fields[2] as num).toInt(),
+      maxCount: fields[3] == null ? 1 : (fields[3] as num).toInt(),
     );
   }
 
@@ -338,7 +344,7 @@ class UGCDropAdapter extends TypeAdapter<UGCDrop> {
 
 class UGCItemAdapter extends TypeAdapter<UGCItem> {
   @override
-  final int typeId = 42;
+  final typeId = 42;
 
   @override
   UGCItem read(BinaryReader reader) {
@@ -351,13 +357,13 @@ class UGCItemAdapter extends TypeAdapter<UGCItem> {
       name: fields[1] as String,
       type: fields[2] as String,
       subType: fields[3] as String,
-      atkBonus: fields[4] as int,
-      defBonus: fields[5] as int,
-      healAmount: fields[6] as int,
+      atkBonus: fields[4] == null ? 0 : (fields[4] as num).toInt(),
+      defBonus: fields[5] == null ? 0 : (fields[5] as num).toInt(),
+      healAmount: fields[6] == null ? 0 : (fields[6] as num).toInt(),
       description: fields[7] as String,
       emoji: fields[8] as String,
-      value: fields[9] as int,
-      tags: (fields[10] as List).cast<String>(),
+      value: fields[9] == null ? 0 : (fields[9] as num).toInt(),
+      tags: fields[10] == null ? const [] : (fields[10] as List).cast<String>(),
     );
   }
 

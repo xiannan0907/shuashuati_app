@@ -177,7 +177,7 @@ class _TowerQuestionCardState extends State<TowerQuestionCard> {
           tileColor = Colors.red.shade100;
         }
       } else if (isSelected) {
-        tileColor = Colors.deepPurple.withOpacity(0.1);
+        tileColor = Colors.deepPurple.withValues(alpha: 0.1);
       }
 
       String displayOption = option;
@@ -219,7 +219,7 @@ class _TowerQuestionCardState extends State<TowerQuestionCard> {
                   ? Colors.green.shade700
                   : (isSelected
                   ? Colors.red.shade700
-                  : theme.colorScheme.onSurface.withOpacity(0.7)))
+                  : theme.colorScheme.onSurface.withValues(alpha: 0.7)))
                   : theme.colorScheme.onSurface,
               fontWeight: isCorrect && isAnswered ? FontWeight.bold : FontWeight.normal,
             ),
@@ -249,7 +249,7 @@ class _TowerQuestionCardState extends State<TowerQuestionCard> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceVariant,
+              color: theme.colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: theme.colorScheme.outline),
             ),

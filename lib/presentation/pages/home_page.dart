@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/module/app_module.dart';
 import '../../core/module/module_registry.dart';
-import '../../core/bloc/theme_bloc.dart';
 import '../../data/repositories/notification_repository.dart'; // ✅ 新增
 import 'global_search_page.dart';
 import 'profile_page.dart';
@@ -57,7 +55,7 @@ class _HomePageState extends State<HomePage> {
           color: theme.cardColor,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, -2),
             ),
@@ -305,7 +303,7 @@ class _HomePageState extends State<HomePage> {
                     return _buildPlaceholderCard(context, theme, isDark);
                   }
                 },
-                childCount: 4,
+                childCount: modules.length + 1, // 模块数 + 1 个"更多模块"占位卡
               ),
             ),
           ),
@@ -356,10 +354,11 @@ class _HomePageState extends State<HomePage> {
 
     return GestureDetector(
       onTap: () {
+        // ✅ 走 buildModulePage，让模块独立主题在入口处生效
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => module.homePage,
+            builder: (_) => module.buildModulePage(context),
           ),
         );
       },
@@ -376,8 +375,8 @@ class _HomePageState extends State<HomePage> {
           boxShadow: [
             BoxShadow(
               color: isDark
-                  ? Colors.black.withOpacity(0.3)
-                  : Colors.grey.shade200.withOpacity(0.5),
+                  ? Colors.black.withValues(alpha: 0.3)
+                  : Colors.grey.shade200.withValues(alpha: 0.5),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -397,7 +396,7 @@ class _HomePageState extends State<HomePage> {
                     height: 48,
                     decoration: BoxDecoration(
                       color: isDark
-                          ? Colors.grey.shade600.withOpacity(0.3)
+                          ? Colors.grey.shade600.withValues(alpha: 0.3)
                           : colors['iconBg'] as Color,
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -411,8 +410,8 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: isDark
-                          ? Colors.grey.shade600.withOpacity(0.4)
-                          : (colors['statusColor'] as Color).withOpacity(0.12),
+                          ? Colors.grey.shade600.withValues(alpha: 0.4)
+                          : (colors['statusColor'] as Color).withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(

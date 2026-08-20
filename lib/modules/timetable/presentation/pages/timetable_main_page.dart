@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:intl/intl.dart';
 
 import '../bloc/timetable_bloc.dart';
 import '../../data/models/course_model.dart';
@@ -268,6 +267,7 @@ class _TimetableMainPageState extends State<TimetableMainPage> {
       ),
     );
     if (result == true) {
+      if (!context.mounted) return;
       context.read<TimetableBloc>().add(LoadTimetables());
       _weekViewKey.currentState?.refreshSlotTimes();
       final start = await TimetableSettings.getSemesterStart();
@@ -606,15 +606,14 @@ class _TimetableMainPageState extends State<TimetableMainPage> {
   // ============================================================
 
   Future<void> _showImportOptions(BuildContext context) async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
+    final file = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['json', 'xlsx', 'xls'],
     );
-    if (result == null || result.files.isEmpty) return;
-    final file = result.files.first;
+    if (file == null) return;
     final path = file.path;
     if (path == null) return;
+    if (!context.mounted) return;
     context.read<TimetableBloc>().add(ImportCourses(path));
   }
 
@@ -892,7 +891,7 @@ class _TimetableMainPageState extends State<TimetableMainPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.15),
+                    color: color.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
@@ -909,7 +908,7 @@ class _TimetableMainPageState extends State<TimetableMainPage> {
             const SizedBox(height: 16),
             _buildInfoRow('教师', course.teacher.isEmpty ? '未设置' : course.teacher),
             _buildInfoRow('教室', course.classroom.isEmpty ? '未设置' : course.classroom),
-            _buildInfoRow('时间', '${weekdayLabels[course.weekday - 1]} ${course.startMinute != null && course.endMinute != null ? _formatMinute(course.startMinute!) + '-' + _formatMinute(course.endMinute!) : '第${course.startSlot}-${course.endSlot}节'}'),
+            _buildInfoRow('时间', '${weekdayLabels[course.weekday - 1]} ${course.startMinute != null && course.endMinute != null ? '${_formatMinute(course.startMinute!)}-${_formatMinute(course.endMinute!)}' : '第${course.startSlot}-${course.endSlot}节'}'),
             _buildInfoRow('周次', '第${course.weekStart}-${course.weekEnd}周'),
             if (course.credit > 0) _buildInfoRow('学分', '${course.credit.toStringAsFixed(1)} 学分'),
             if (course.note != null && course.note!.isNotEmpty) _buildInfoRow('备注', course.note!),

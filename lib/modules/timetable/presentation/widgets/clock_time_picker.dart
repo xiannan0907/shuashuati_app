@@ -392,7 +392,7 @@ class _ClockTimePickerState extends State<ClockTimePicker> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
               decoration: BoxDecoration(
-                color: (_hour >= 12 ? Colors.orange : Colors.blue).withOpacity(0.1),
+                color: (_hour >= 12 ? Colors.orange : Colors.blue).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Text(
@@ -515,7 +515,7 @@ class _ClockPainterSimple extends CustomPainter {
 
     // 范围指示环（极淡）
     final rangePaint = Paint()
-      ..color = rangeColor.withOpacity(0.06)
+      ..color = rangeColor.withValues(alpha: 0.06)
       ..style = PaintingStyle.fill;
     canvas.drawCircle(center, radius * 0.92, rangePaint);
 

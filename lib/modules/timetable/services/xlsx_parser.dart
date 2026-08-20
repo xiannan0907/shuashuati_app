@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:archive/archive.dart';
@@ -9,13 +10,13 @@ import '../utils/color_manager.dart';
 /// 手动解析 xlsx 文件（支持矩阵式课表）
 class XlsxParser {
   Future<List<Course>> parse(File file) async {
-    print('📂 开始手动解析 xlsx...');
+    debugPrint('📂 开始手动解析 xlsx...');
 
     final bytes = await file.readAsBytes();
-    print('📖 文件大小: ${bytes.length} 字节');
+    debugPrint('📖 文件大小: ${bytes.length} 字节');
 
     final archive = ZipDecoder().decodeBytes(bytes);
-    print('📦 解压成功，文件数: ${archive.files.length}');
+    debugPrint('📦 解压成功，文件数: ${archive.files.length}');
 
     final sharedStrings = _readSharedStrings(archive);
     final rows = _readSheet(archive, sharedStrings);
@@ -24,7 +25,7 @@ class XlsxParser {
       throw Exception('没有数据行');
     }
 
-    print('📊 读取到 ${rows.length} 行数据');
+    debugPrint('📊 读取到 ${rows.length} 行数据');
 
     // 重置颜色索引
     ColorManager.resetIndex();
@@ -36,7 +37,7 @@ class XlsxParser {
     try {
       final file = archive.findFile('xl/sharedStrings.xml');
       if (file == null) {
-        print('⚠️ 未找到 sharedStrings.xml，使用空列表');
+        debugPrint('⚠️ 未找到 sharedStrings.xml，使用空列表');
         return [];
       }
 
@@ -45,14 +46,14 @@ class XlsxParser {
 
       final strings = <String>[];
       for (var element in document.findAllElements('si')) {
-        final text = element.findElements('t').map((e) => e.text).join('');
+        final text = element.findElements('t').map((e) => e.innerText).join('');
         strings.add(text);
       }
 
-      print('📋 共享字符串数: ${strings.length}');
+      debugPrint('📋 共享字符串数: ${strings.length}');
       return strings;
     } catch (e) {
-      print('⚠️ 读取共享字符串失败: $e');
+      debugPrint('⚠️ 读取共享字符串失败: $e');
       return [];
     }
   }
@@ -72,7 +73,7 @@ class XlsxParser {
         throw Exception('未找到工作表文件');
       }
 
-      print('📄 找到工作表: ${sheetFile.name}');
+      debugPrint('📄 找到工作表: ${sheetFile.name}');
 
       final content = utf8.decode(sheetFile.content as List<int>);
       final document = XmlDocument.parse(content);
@@ -99,20 +100,20 @@ class XlsxParser {
 
           final inlineStr = cellElement.findElements('is');
           if (inlineStr.isNotEmpty) {
-            final text = inlineStr.first.findElements('t').map((e) => e.text).join('');
+            final text = inlineStr.first.findElements('t').map((e) => e.innerText).join('');
             value = text;
           } else {
             final cellValue = cellElement.findElements('v').firstOrNull;
             if (cellValue != null) {
               if (type == 's') {
-                final index = int.tryParse(cellValue.text) ?? -1;
+                final index = int.tryParse(cellValue.innerText) ?? -1;
                 if (index >= 0 && index < sharedStrings.length) {
                   value = sharedStrings[index];
                 } else {
-                  value = cellValue.text;
+                  value = cellValue.innerText;
                 }
               } else {
-                value = cellValue.text;
+                value = cellValue.innerText;
               }
             }
           }
@@ -136,12 +137,12 @@ class XlsxParser {
         }
       }
 
-      print('📊 读取到 ${rows.length} 行，${maxCols + 1} 列');
+      debugPrint('📊 读取到 ${rows.length} 行，${maxCols + 1} 列');
       return rows;
 
     } catch (e, stack) {
-      print('❌ 读取工作表失败: $e');
-      print(stack);
+      debugPrint('❌ 读取工作表失败: $e');
+      debugPrint(stack.toString());
       throw Exception('读取工作表失败: $e');
     }
   }
@@ -169,9 +170,9 @@ class XlsxParser {
     }
 
     // 打印前5行
-    print('📋 前5行数据:');
+    debugPrint('📋 前5行数据:');
     for (int i = 0; i < rows.length && i < 5; i++) {
-      print('  行 $i: ${rows[i].take(10).join(' | ')}');
+      debugPrint('  行 $i: ${rows[i].take(10).join(' | ')}');
     }
 
     // ============================================================
@@ -182,7 +183,7 @@ class XlsxParser {
       final rowText = rows[i].join('');
       if (rowText.contains('星期一')) {
         headerRowIndex = i;
-        print('✅ 找到表头行: 第 ${i + 1} 行');
+        debugPrint('✅ 找到表头行: 第 ${i + 1} 行');
         break;
       }
     }
@@ -192,7 +193,7 @@ class XlsxParser {
         final rowText = rows[i].join('');
         if (rowText.contains('周') && rowText.contains('节')) {
           headerRowIndex = i;
-          print('✅ 找到表头行(备用): 第 ${i + 1} 行');
+          debugPrint('✅ 找到表头行(备用): 第 ${i + 1} 行');
           break;
         }
       }
@@ -203,7 +204,7 @@ class XlsxParser {
     }
 
     final header = rows[headerRowIndex];
-    print('📋 表头: ${header.take(10).join(' | ')}');
+    debugPrint('📋 表头: ${header.take(10).join(' | ')}');
 
     // ============================================================
     // 第二步：找到星期列
@@ -216,7 +217,7 @@ class XlsxParser {
       for (int i = 0; i < weekdays.length; i++) {
         if (val.contains(weekdays[i])) {
           weekdayColMap[col] = i + 1;
-          print('  列 $col -> ${weekdays[i]}');
+          debugPrint('  列 $col -> ${weekdays[i]}');
           break;
         }
       }
@@ -234,13 +235,13 @@ class XlsxParser {
       final val = header[col];
       if (val.contains('节') || val.contains('时间') || val.contains('第')) {
         slotCol = col;
-        print('✅ 节次列: 列 $col');
+        debugPrint('✅ 节次列: 列 $col');
         break;
       }
     }
     if (slotCol == -1) {
       slotCol = 0;
-      print('⚠️ 未找到节次列，使用第0列');
+      debugPrint('⚠️ 未找到节次列，使用第0列');
     }
 
     // ============================================================
@@ -384,15 +385,15 @@ class XlsxParser {
               color: colorHex,
             );
             courses.add(course);
-            print('  ✅ 课程: $courseName | 周$weekday | $startSlot-$endSlot节 | 教师:$teacher | 教室:$classroom | 周$weekStart-$weekEnd');
+            debugPrint('  ✅ 课程: $courseName | 周$weekday | $startSlot-$endSlot节 | 教师:$teacher | 教室:$classroom | 周$weekStart-$weekEnd');
           } else {
-            print('  ⚠️ 跳过空课程块: ${block.join(' ')}');
+            debugPrint('  ⚠️ 跳过空课程块: ${block.join(' ')}');
           }
         }
       }
     }
 
-    print('✅ 解析完成，共 ${courses.length} 门课程');
+    debugPrint('✅ 解析完成，共 ${courses.length} 门课程');
     return courses;
   }
 

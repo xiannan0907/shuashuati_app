@@ -14,7 +14,7 @@ class PortalbornModule extends AppModule {
   static PortalbornBloc get bloc {
     if (_cachedBloc == null || _cachedBloc!.isClosed) {
       _cachedBloc = PortalbornBloc(repository: GameRepository())..add(PortalbornLoad());
-      print('✅ Portalborn BLoC 重新创建');
+      debugPrint('✅ Portalborn BLoC 重新创建');
     }
     return _cachedBloc!;
   }
@@ -32,7 +32,6 @@ class PortalbornModule extends AppModule {
   );
   @override
   bool get enabled => true;
-  @override
   Map<String, WidgetBuilder> get routes => {
     '/portalborn/main': (context) => BlocProvider.value(
       value: bloc,
@@ -86,8 +85,8 @@ class PortalbornMainMenuPlaceholder extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 32),
               decoration: BoxDecoration(
                 color: isDark
-                    ? const Color(0xFF141425).withOpacity(0.8)
-                    : const Color(0xFFf0eee8).withOpacity(0.8),
+                    ? const Color(0xFF141425).withValues(alpha: 0.8)
+                    : const Color(0xFFf0eee8).withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: isDark ? const Color(0xFF2a2a4a) : const Color(0xFFd0ccc8),
