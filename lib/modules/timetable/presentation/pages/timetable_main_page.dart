@@ -143,9 +143,10 @@ class _TimetableMainPageState extends State<TimetableMainPage> {
   // ============================================================
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AppBar(
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black87,
+      backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
+      foregroundColor: isDark ? Colors.white : Colors.black87,
       elevation: 0,
       title: BlocBuilder<TimetableBloc, TimetableState>(
         builder: (context, state) {
@@ -856,7 +857,9 @@ class _TimetableMainPageState extends State<TimetableMainPage> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? Colors.grey.shade900
+          : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),

@@ -15,12 +15,13 @@ class TimeTableManagePage extends StatefulWidget {
 class _TimeTableManagePageState extends State<TimeTableManagePage> {
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('时间表管理'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
+        foregroundColor: isDark ? Colors.white : Colors.black87,
         elevation: 0,
         actions: [
           IconButton(

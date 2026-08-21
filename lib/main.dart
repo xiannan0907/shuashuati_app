@@ -24,6 +24,33 @@ void main() async {
         debugPrint = (String? message, {int? wrapWidth}) {};
       }
 
+      // ✅ 全局 UI 错误兜底：渲染异常时显示友好页面而非灰屏，并记录日志
+      FlutterError.onError = (details) {
+        FlutterError.presentError(details);
+        debugPrint('❌ Flutter 框架错误: ${details.exception}');
+      };
+      ErrorWidget.builder = (details) => Material(
+            color: Colors.grey.shade100,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 48, color: Colors.redAccent),
+                  const SizedBox(height: 12),
+                  const Text('页面出错了', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 6),
+                  Text(
+                    '${details.exception}',
+                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          );
+
       await Hive.initFlutter();
       debugPrint('✅ 2. Hive 初始化完成');
 

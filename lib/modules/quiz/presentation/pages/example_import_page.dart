@@ -235,8 +235,12 @@ class _ExampleImportPageState extends State<ExampleImportPage> {
                           : const Icon(Icons.download),
                       label: Text(_isImporting ? '导入中...' : '导入示例题库 (9题)'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.blue.shade700,
+                        backgroundColor: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey.shade800
+                            : Colors.white,
+                        foregroundColor: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.blue.shade300
+                            : Colors.blue.shade700,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

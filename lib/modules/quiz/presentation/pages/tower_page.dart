@@ -1779,8 +1779,12 @@ class _TowerPageState extends State<TowerPage> {
               ElevatedButton(
                 onPressed: _continueAfterComplete,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.green.shade700,
+                  backgroundColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey.shade800
+                      : Colors.white,
+                  foregroundColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.green.shade300
+                      : Colors.green.shade700,
                 ),
                 child: const Text('继续冒险'),
               ),
@@ -1848,8 +1852,12 @@ class _TowerPageState extends State<TowerPage> {
               ElevatedButton(
                 onPressed: _goBackFloor,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.red.shade700,
+                  backgroundColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey.shade800
+                      : Colors.white,
+                  foregroundColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.red.shade300
+                      : Colors.red.shade700,
                 ),
                 child: const Text('重新挑战'),
               ),

@@ -45,12 +45,13 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('课表设置'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
+        foregroundColor: isDark ? Colors.white : Colors.black87,
         elevation: 0,
       ),
       body: BlocConsumer<TimetableBloc, TimetableState>(

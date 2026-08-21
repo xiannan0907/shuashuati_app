@@ -1,5 +1,9 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 
+import '../../core/services/backup_service.dart';
 import '../../core/services/storage_service.dart';
 import '../../modules/timetable/presentation/pages/timetable_settings_page.dart';
 
@@ -23,6 +27,86 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
     setState(() {
       _storageFuture = StorageService.getStorageInfo();
     });
+  }
+
+  // ============================================================
+  // ✅ 数据备份 / 恢复
+  // ============================================================
+
+  Future<void> _exportBackup() async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('正在打包备份...'), duration: Duration(seconds: 1)),
+      );
+      final (path, size) = await BackupService.exportBackup();
+      if (!mounted) return;
+      await SharePlus.instance.share(ShareParams(
+        files: [XFile(path)],
+        text: '刷刷题数据备份（${(size / 1024).toStringAsFixed(0)} KB）——请妥善保存',
+      ));
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('备份失败: $e'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  Future<void> _importBackup() async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['zip'],
+      );
+      if (result.isEmpty) return;
+      final path = result.first.path;
+      if (path == null) return;
+
+      if (!mounted) return;
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('恢复备份'),
+          content: const Text(
+            '将用备份文件覆盖当前所有数据（题库/错题/闯塔/课表/游戏存档等），'
+            '此操作不可撤销。\n\n恢复完成后应用会关闭，请重新打开。',
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消')),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('确认恢复'),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !mounted) return;
+
+      await BackupService.restoreBackup(path);
+      if (!mounted) return;
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          title: const Text('✅ 恢复完成'),
+          content: const Text('数据已恢复，应用即将关闭。\n请重新打开刷刷题查看恢复的数据。'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('知道了'),
+            ),
+          ],
+        ),
+      );
+      // 关闭应用让 Hive 重新加载数据文件
+      await SystemNavigator.pop();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('恢复失败: $e'), backgroundColor: Colors.red),
+      );
+    }
   }
 
   // ============================================================
@@ -129,12 +213,13 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF5F5F5),
       appBar: AppBar(
         title: const Text('存储管理'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
+        foregroundColor: isDark ? Colors.white : Colors.black87,
         elevation: 0,
       ),
       body: FutureBuilder<StorageInfo>(
@@ -169,6 +254,63 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // ============================================================
+                // ✅ 数据备份 / 恢复
+                // ============================================================
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.grey.shade800 : Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.cloud_sync, size: 18,
+                              color: isDark ? Colors.blue.shade300 : Colors.blue.shade600),
+                          const SizedBox(width: 6),
+                          Text('数据备份',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: isDark ? Colors.white : Colors.grey.shade800)),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text('备份题库、错题、闯塔、课表与游戏存档；恢复将覆盖当前数据并需重启应用。',
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: isDark ? Colors.grey.shade400 : Colors.grey.shade500)),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: FilledButton.icon(
+                              onPressed: _exportBackup,
+                              icon: const Icon(Icons.ios_share, size: 16),
+                              label: const Text('备份数据'),
+                              style: FilledButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: _importBackup,
+                              icon: const Icon(Icons.restore, size: 16),
+                              label: const Text('恢复备份'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
                 // ============================================================
                 // 总览卡片
                 // ============================================================
