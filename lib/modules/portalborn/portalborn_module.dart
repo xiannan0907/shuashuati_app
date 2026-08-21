@@ -9,35 +9,17 @@ import 'presentation/bloc/portalborn_event.dart';
 import 'presentation/portalborn_screen.dart';
 
 class PortalbornModule extends AppModule {
-  static PortalbornBloc? _cachedBloc;
-
-  static PortalbornBloc get bloc {
-    if (_cachedBloc == null || _cachedBloc!.isClosed) {
-      _cachedBloc = PortalbornBloc(repository: GameRepository())..add(PortalbornLoad());
-      debugPrint('✅ Portalborn BLoC 重新创建');
-    }
-    return _cachedBloc!;
-  }
-
   @override
   String get id => 'portalborn';
   @override
   String get title => '传送门编年史';
   @override
   IconData get icon => Icons.explore;
+  // ✅ 占位页不依赖 Bloc（进入游戏时才创建 PortalbornBloc，见下方按钮）
   @override
-  Widget get homePage => BlocProvider.value(
-    value: bloc,
-    child: const PortalbornMainMenuPlaceholder(),
-  );
+  Widget get homePage => const PortalbornMainMenuPlaceholder();
   @override
   bool get enabled => true;
-  Map<String, WidgetBuilder> get routes => {
-    '/portalborn/main': (context) => BlocProvider.value(
-      value: bloc,
-      child: const PortalbornScreen(),
-    ),
-  };
 }
 
 // 占位页面（含进入按钮）
@@ -116,13 +98,13 @@ class PortalbornMainMenuPlaceholder extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            // ✅ 使用直接构建的方式，不依赖路由
+            // ✅ 进入游戏：创建全新 Bloc（pop 后销毁，避免静态单例跨页面持旧状态）
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => BlocProvider.value(
-                      value: PortalbornModule.bloc,
+                    builder: (_) => BlocProvider(
+                      create: (_) => PortalbornBloc(repository: GameRepository())..add(PortalbornLoad()),
                       child: const PortalbornScreen(),
                     ),
                   ),

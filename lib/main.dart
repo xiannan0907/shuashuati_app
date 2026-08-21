@@ -9,13 +9,7 @@ import 'presentation/pages/home_page.dart';
 import 'core/bloc/theme_bloc.dart';
 import 'core/theme/app_theme.dart';
 import 'data/repositories/notification_repository.dart';
-import 'data/models/user_model.dart';
 import 'data/models/notification_item.dart';
-import 'modules/quiz/data/models/wrong_question_stats.dart';
-import 'modules/quiz/data/models/tower_model.dart';
-import 'modules/timetable/data/models/course_model.dart';
-import 'modules/timetable/data/models/timetable_model.dart';
-import 'modules/timetable/data/models/time_table_model.dart';
 import 'hive_registrar.g.dart';
 
 void main() async {
@@ -37,38 +31,14 @@ void main() async {
       Hive.registerAdapters();
       debugPrint('✅ 3. 适配器注册完成');
 
-      // ✅ 打开所有 Hive Box
-      debugPrint('⏳ 4. 开始打开 Hive Boxes...');
-
-      // ✅ 打开所有 Hive Box（与各 Repository 实际 box 名及泛型一致，避免类型冲突）
-      debugPrint('⏳ 4. 开始打开 Hive Boxes...');
-
-      await Hive.openBox<String>('quizSetsBox');
-      debugPrint('✅ 4.1 quizSetsBox 打开成功');
-      await Hive.openBox<Map>('wrongQuestionsBox');
-      debugPrint('✅ 4.2 wrongQuestionsBox 打开成功');
-      await Hive.openBox<WrongQuestionStats>('wrongStatsBox');
-      debugPrint('✅ 4.3 wrongStatsBox 打开成功');
-      await Hive.openBox<TowerProgress>('towerBox');
-      debugPrint('✅ 4.4 towerBox 打开成功');
+      // ✅ 启动性能优化：仅预开首屏必需的 box（notificationBox=首页红点；
+      //    portalborn=GameRepository 构造要求已打开）。其余 box 由各 Repository
+      //    运行期按需打开（Hive.openBox 幂等，已打开直接返回），大幅减少首帧主线程 IO。
+      debugPrint('⏳ 4. 打开启动必需 Hive Boxes...');
       await Hive.openBox<NotificationItem>('notificationBox');
-      debugPrint('✅ 4.5 notificationBox 打开成功');
-      await Hive.openBox<Course>('timetable_courses');
-      debugPrint('✅ 4.6 timetable_courses 打开成功');
-      await Hive.openBox<Timetable>('timetable_list');
-      debugPrint('✅ 4.7 timetable_list 打开成功');
-      await Hive.openBox<TimeTable>('time_table_list');
-      debugPrint('✅ 4.8 time_table_list 打开成功');
+      debugPrint('✅ 4.1 notificationBox 打开成功');
       await Hive.openBox('portalborn');
-      debugPrint('✅ 4.9 portalborn 打开成功');
-      await Hive.openBox<UserModel>('userBox');
-      debugPrint('✅ 4.10 userBox 打开成功');
-      await Hive.openBox<String>('themeSettings');
-      debugPrint('✅ 4.11 themeSettings 打开成功');
-      await Hive.openBox<String>('settingsBox');
-      debugPrint('✅ 4.12 settingsBox 打开成功');
-      await Hive.openBox<String>('timetable_settings');
-      debugPrint('✅ 4.13 timetable_settings 打开成功');
+      debugPrint('✅ 4.2 portalborn 打开成功');
 
       // ✅ 初始化通知数据
       debugPrint('⏳ 5. 初始化通知数据...');

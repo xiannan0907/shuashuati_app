@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../portalborn_module.dart';
 import '../../presentation/bloc/portalborn_bloc.dart';
 import '../../presentation/bloc/portalborn_event.dart';
 import '../../presentation/bloc/portalborn_state.dart';
@@ -61,7 +60,7 @@ class _HubContent extends StatelessWidget {
               const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
-                  final bloc = PortalbornModule.bloc;
+                  final bloc = context.read<PortalbornBloc>();
                   if (!bloc.isClosed) bloc.add(PortalbornSubmitCommand('go portal'));
                 },
                 style: ElevatedButton.styleFrom(
@@ -101,7 +100,7 @@ class _HubContent extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (_) => BlocProvider.value(
-                      value: PortalbornModule.bloc,
+                      value: context.read<PortalbornBloc>(),
                       child: const PortalbornInventoryPage(),
                     ),
                   );
@@ -115,7 +114,7 @@ class _HubContent extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (_) => BlocProvider.value(
-                      value: PortalbornModule.bloc,
+                      value: context.read<PortalbornBloc>(),
                       child: const PortalbornCraftingPage(),
                     ),
                   );
@@ -126,7 +125,7 @@ class _HubContent extends StatelessWidget {
                 icon: Icons.search,
                 label: '搜索',
                 onTap: () {
-                  final bloc = PortalbornModule.bloc;
+                  final bloc = context.read<PortalbornBloc>();
                   if (!bloc.isClosed) bloc.add(PortalbornSubmitCommand('search'));
                 },
                 color: const Color(0xFF44aaff),
@@ -135,7 +134,7 @@ class _HubContent extends StatelessWidget {
                 icon: Icons.help_outline,
                 label: '帮助',
                 onTap: () {
-                  final bloc = PortalbornModule.bloc;
+                  final bloc = context.read<PortalbornBloc>();
                   if (!bloc.isClosed) bloc.add(PortalbornSubmitCommand('help'));
                 },
                 color: const Color(0xFF8888aa),
@@ -145,7 +144,7 @@ class _HubContent extends StatelessWidget {
         ),
         PortalbornCommandInput(
           onCommand: (command) {
-            final bloc = PortalbornModule.bloc;
+            final bloc = context.read<PortalbornBloc>();
             if (!bloc.isClosed) bloc.add(PortalbornSubmitCommand(command));
           },
         ),
