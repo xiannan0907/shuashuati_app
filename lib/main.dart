@@ -107,7 +107,7 @@ class MyApp extends StatelessWidget {
           }
 
           return MaterialApp(
-            title: '刷刷题',
+            title: '题屿',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme(),
             darkTheme: AppTheme.darkTheme(),

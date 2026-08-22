@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Text(
-                    '刷刷题',
+                    '题屿',
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w700,

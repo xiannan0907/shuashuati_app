@@ -5,6 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../modules/quiz/data/models/question_model.dart';
 import '../../modules/quiz/data/repositories/question_repository.dart';
+import '../../modules/timetable/data/repositories/timetable_repository.dart';
+import '../../modules/timetable/presentation/bloc/timetable_bloc.dart';
+import '../../modules/timetable/presentation/pages/timetable_main_page.dart';
+import '../../modules/timetable/services/timetable_parser_service.dart';
 import '../../modules/quiz/presentation/bloc/quiz_bloc.dart';
 import '../../modules/quiz/presentation/pages/quiz_page.dart';
 import '../../modules/quiz/services/file_parser_service.dart';
@@ -128,7 +132,34 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
         }
       }
 
-      // ====== 3. 搜索模块（未来扩展） ======
+      // ====== 3. 搜索课表课程（课程名/教师/教室） ======
+      try {
+        final timetableRepo = TimetableRepository();
+        final courses = await timetableRepo.getCurrentTimetableCourses();
+        final q = query.toLowerCase();
+        for (var course in courses) {
+          final match = course.name.toLowerCase().contains(q) ||
+              course.teacher.toLowerCase().contains(q) ||
+              course.classroom.toLowerCase().contains(q);
+          if (match) {
+            allResults.add(
+              SearchResultItem(
+                moduleId: 'timetable',
+                moduleName: '课表',
+                title: '📅 ${course.name}',
+                subtitle: '周${course.weekday} · ${course.startSlot}-${course.endSlot}节'
+                    '${course.teacher.isNotEmpty ? ' · ${course.teacher}' : ''}',
+                actionRoute: '/timetable',
+                icon: Icons.calendar_month,
+              ),
+            );
+          }
+        }
+      } catch (_) {
+        // 课表数据不可用时跳过（不影响其他模块搜索）
+      }
+
+      // ====== 4. 搜索模块（未来扩展） ======
       // 这里可以搜索已安装模块的名称
       // final modules = ModuleRegistry.modules;
       // for (var module in modules) {
@@ -399,10 +430,28 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       } else {
         _showUnsupportedSnack(context, item, isDark);
       }
+    } else if (route.startsWith('/timetable')) {
+      _openTimetable(context);
     } else {
       // 未知前缀：保持原提示行为
       _showUnsupportedSnack(context, item, isDark);
     }
+  }
+
+  /// 打开课表主页（自建 TimetableBloc，与 timetable_module 提供方式一致）
+  void _openTimetable(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BlocProvider(
+          create: (_) => TimetableBloc(
+            TimetableRepository(),
+            TimetableParserService(),
+          )..add(LoadTimetables()),
+          child: const TimetableMainPage(),
+        ),
+      ),
+    );
   }
 
   /// 打开指定题库刷题页

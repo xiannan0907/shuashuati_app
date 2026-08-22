@@ -1,4 +1,4 @@
-// 刷刷题 App 冒烟测试
+// 题屿 App 冒烟测试
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -23,7 +23,7 @@ void main() {
     await tester.pump();
 
     // 品牌区 + 模块网格应渲染
-    expect(find.text('刷刷题'), findsOneWidget);
+    expect(find.text('题屿'), findsOneWidget);
     expect(find.text('刷题'), findsOneWidget);
     expect(find.text('课表'), findsOneWidget);
 

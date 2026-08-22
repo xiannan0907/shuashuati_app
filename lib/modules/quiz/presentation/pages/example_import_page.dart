@@ -212,7 +212,7 @@ class _ExampleImportPageState extends State<ExampleImportPage> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    '导入示例题库，立即体验刷刷题的全部功能！',
+                    '导入示例题库，立即体验题屿的全部功能！',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white70,

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/models/notification_item.dart';
 import '../../data/repositories/notification_repository.dart';
+import '../../modules/quiz/data/repositories/question_repository.dart';
+import '../../modules/quiz/presentation/bloc/quiz_bloc.dart';
+import '../../modules/quiz/presentation/pages/quiz_page.dart';
+import '../../modules/quiz/services/file_parser_service.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -285,13 +290,18 @@ class _NotificationPageState extends State<NotificationPage> {
         if (!item.isRead) {
           _markAsRead(item.id);
         }
-        if (item.actionRoute != null) {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('跳转到: ${item.actionRoute}'),
-              duration: const Duration(seconds: 1),
-              backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+        // ✅ actionRoute 跳转（目前支持 /quiz/set/<题库名>）；无路由的通知仅标记已读
+        final route = item.actionRoute;
+        if (route != null && route.startsWith('/quiz/set/')) {
+          final setName = Uri.decodeComponent(route.substring('/quiz/set/'.length));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => BlocProvider(
+                create: (_) => QuizBloc(QuestionRepository(), FileParserService())
+                  ..add(LoadQuizSet(setName)),
+                child: QuizPage(setName: setName),
+              ),
             ),
           );
         }

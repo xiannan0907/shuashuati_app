@@ -1,5 +1,5 @@
 name: shuashuati_app
-description: "刷刷题 - 支持Word/JSON导入"
+description: "题屿 - 支持Word/JSON导入"
 publish_to: 'none'
 version: 1.0.1+2
 

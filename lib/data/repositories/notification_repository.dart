@@ -49,7 +49,7 @@ class NotificationRepository {
     final samples = [
       NotificationItem(
         id: 'sample_1',
-        title: '📚 欢迎使用刷刷题！',
+        title: '📚 欢迎使用题屿！',
         content: '开始你的学习之旅吧，每天进步一点点 💪',
         type: 'system',
         timestamp: now.subtract(const Duration(minutes: 5)),

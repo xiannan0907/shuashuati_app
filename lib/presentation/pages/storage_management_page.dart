@@ -42,7 +42,7 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
       if (!mounted) return;
       await SharePlus.instance.share(ShareParams(
         files: [XFile(path)],
-        text: '刷刷题数据备份（${(size / 1024).toStringAsFixed(0)} KB）——请妥善保存',
+        text: '题屿数据备份（${(size / 1024).toStringAsFixed(0)} KB）——请妥善保存',
       ));
     } catch (e) {
       if (!mounted) return;
@@ -90,7 +90,7 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
         barrierDismissible: false,
         builder: (ctx) => AlertDialog(
           title: const Text('✅ 恢复完成'),
-          content: const Text('数据已恢复，应用即将关闭。\n请重新打开刷刷题查看恢复的数据。'),
+          content: const Text('数据已恢复，应用即将关闭。\n请重新打开题屿查看恢复的数据。'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),

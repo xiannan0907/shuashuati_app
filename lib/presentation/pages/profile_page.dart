@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../core/bloc/theme_bloc.dart';
 import '../../data/models/user_model.dart';
@@ -124,27 +128,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildActionChip(
                   icon: Icons.photo_camera,
                   label: '拍照',
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('📷 拍照功能 - 开发中'),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  },
+                  onTap: () => _pickCustomAvatar(ImageSource.camera),
                 ),
                 const SizedBox(width: 12),
                 _buildActionChip(
                   icon: Icons.photo_library,
                   label: '相册',
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('🖼️ 相册功能 - 开发中'),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  },
+                  onTap: () => _pickCustomAvatar(ImageSource.gallery),
                 ),
                 const SizedBox(width: 12),
                 _buildActionChip(
@@ -160,6 +150,38 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  /// ✅ 从相机/相册选取自定义头像：复制到应用文档目录，avatarKey 存 'file:<路径>'
+  Future<void> _pickCustomAvatar(ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(
+        source: source,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 85,
+      );
+      if (picked == null) return;
+
+      // 复制到应用文档目录（持久化，不受相册变动影响）
+      final docDir = await getApplicationDocumentsDirectory();
+      final saved =
+          await File(picked.path).copy('${docDir.path}/avatar_custom.png');
+
+      await userRepo.updateAvatar('file:${saved.path}');
+      await _loadUser();
+      if (!mounted) return;
+      Navigator.pop(context); // 关闭头像选择弹窗
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('✅ 头像已更新'), duration: Duration(seconds: 1)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('头像设置失败: $e'), backgroundColor: Colors.red),
+      );
+    }
   }
 
   Widget _buildActionChip({
@@ -457,11 +479,25 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               shape: BoxShape.circle,
                             ),
-                            child: Center(
-                              child: Text(
-                                _user?.avatarKey ?? '😊',
-                                style: const TextStyle(fontSize: 34),
-                              ),
+                            child: ClipOval(
+                              // ✅ 支持自定义图片头像（avatarKey 以 file: 开头），否则显示 emoji
+                              child: (_user?.avatarKey.startsWith('file:') ?? false)
+                                  ? Image.file(
+                                      File(_user!.avatarKey.substring(5)),
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => Center(
+                                        child: Text(
+                                          _user?.avatarKey.substring(5) ?? '😊',
+                                          style: const TextStyle(fontSize: 34),
+                                        ),
+                                      ),
+                                    )
+                                  : Center(
+                                      child: Text(
+                                        _user?.avatarKey ?? '😊',
+                                        style: const TextStyle(fontSize: 34),
+                                      ),
+                                    ),
                             ),
                           ),
                           Positioned(
@@ -738,12 +774,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          title: const Text('关于刷刷题'),
+                          title: const Text('关于题屿'),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Text(
-                                '📱 刷刷题',
+                                '📱 题屿',
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
@@ -773,7 +809,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                '© 2025 刷刷题团队',
+                                '© 2025 题屿团队',
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,

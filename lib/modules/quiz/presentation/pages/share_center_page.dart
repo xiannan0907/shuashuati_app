@@ -192,7 +192,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
       // ✅ 纯文本分享使用新 API
       await SharePlus.instance.share(
         ShareParams(
-          text: '📚 我在刷刷题创建了"$_selectedSet"题库，快来一起学习吧！',
+          text: '📚 我在题屿创建了"$_selectedSet"题库，快来一起学习吧！',
         ),
       );
     } catch (e) {
@@ -275,7 +275,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
                 icon: Icons.code,
                 iconColor: Colors.deepPurple,
                 title: '导出 JSON',
-                subtitle: '标准格式，可重新导入刷刷题',
+                subtitle: '标准格式，可重新导入题屿',
                 onTap: _exportJson,
               ),
               _buildShareCard(
@@ -310,7 +310,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
                 icon: Icons.file_upload,
                 iconColor: Colors.orange,
                 title: '导入 JSON',
-                subtitle: '选择刷刷题导出的JSON文件',
+                subtitle: '选择题屿导出的JSON文件',
                 onTap: _importJson,
               ),
 
@@ -333,7 +333,7 @@ class _ShareCenterPageState extends State<ShareCenterPage> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '💡 对方使用刷刷题 App 即可导入题库',
+                        '💡 对方使用题屿 App 即可导入题库',
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.blue.shade700,

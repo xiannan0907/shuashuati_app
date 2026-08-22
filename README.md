@@ -1,4 +1,4 @@
-# 刷刷题 (shuashuati_app)
+# 题屿 (shuashuati_app)
 
 一个模块化的 Flutter 综合学习应用，包含**刷题**、**课程表**和**传送门编年史（文字 RPG）**三个独立模块。
 

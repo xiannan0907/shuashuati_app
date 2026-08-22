@@ -46,7 +46,7 @@ class _ShareQRCodePageState extends State<ShareQRCodePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     // ✅ 使用简短文本，避免数据过大
-    final qrData = '📚 ${widget.setName}（请用刷刷题导入）';
+    final qrData = '📚 ${widget.setName}（请用题屿导入）';
 
     return Scaffold(
       appBar: AppBar(

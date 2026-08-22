@@ -87,7 +87,7 @@ class ToolsDrawer extends StatelessWidget {
                     icon: Icons.auto_awesome,
                     iconColor: Colors.blue,
                     title: '导入示例题库',
-                    subtitle: '快速体验刷刷题功能',
+                    subtitle: '快速体验题屿功能',
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
