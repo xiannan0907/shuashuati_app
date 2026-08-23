@@ -7,6 +7,7 @@ import '../bloc/ledger_bloc.dart';
 import 'account_manage_page.dart';
 import 'budget_page.dart';
 import 'category_manage_page.dart';
+import 'ledger_stats_page.dart';
 import 'transaction_edit_page.dart';
 
 /// 记账主页：月份切换 + 收支汇总 + 分类占比 + 流水列表
@@ -63,41 +64,73 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_balance_wallet_outlined),
-            tooltip: '账户管理',
+            icon: const Icon(Icons.insights),
+            tooltip: '收支统计',
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const AccountManagePage()),
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: context.read<LedgerBloc>(),
+                  child: const LedgerStatsPage(),
+                ),
+              ),
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.category_outlined),
-            tooltip: '分类管理',
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const CategoryManagePage()),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.savings_outlined),
-            tooltip: '预算',
-            onPressed: () {
-              final s = context.read<LedgerBloc>().state;
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => BudgetPage(
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            tooltip: '更多',
+            onSelected: (value) async {
+              final bloc = context.read<LedgerBloc>();
+              final s = bloc.state;
+              late final Widget page;
+              switch (value) {
+                case 'accounts':
+                  page = const AccountManagePage();
+                case 'categories':
+                  page = const CategoryManagePage();
+                default: // budget
+                  page = BudgetPage(
                     month: _month,
                     monthExpenseCents:
                         (s is LedgerLoaded) ? s.expenseCents : 0,
-                  ),
-                ),
-              ).then((_) {
-                if (context.mounted) {
-                  context.read<LedgerBloc>().add(LedgerStarted());
-                }
-              });
+                  );
+              }
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => page),
+              );
+              // 管理页返回后刷新汇总与流水
+              if (context.mounted) bloc.add(LedgerStarted());
             },
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: 'accounts',
+                height: 44,
+                child: Row(children: [
+                  Icon(Icons.account_balance_wallet_outlined, size: 20),
+                  SizedBox(width: 10),
+                  Text('账户管理'),
+                ]),
+              ),
+              PopupMenuItem(
+                value: 'categories',
+                height: 44,
+                child: Row(children: [
+                  Icon(Icons.category_outlined, size: 20),
+                  SizedBox(width: 10),
+                  Text('分类管理'),
+                ]),
+              ),
+              PopupMenuItem(
+                value: 'budget',
+                height: 44,
+                child: Row(children: [
+                  Icon(Icons.savings_outlined, size: 20),
+                  SizedBox(width: 10),
+                  Text('预算'),
+                ]),
+              ),
+            ],
           ),
         ],
       ),
