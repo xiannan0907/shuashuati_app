@@ -10,6 +10,7 @@ import 'core/bloc/theme_bloc.dart';
 import 'core/theme/app_theme.dart';
 import 'data/repositories/notification_repository.dart';
 import 'data/models/notification_item.dart';
+import 'modules/ledger/ledger_module.dart';
 import 'hive_registrar.g.dart';
 
 void main() async {
@@ -71,6 +72,10 @@ void main() async {
       debugPrint('⏳ 5. 初始化通知数据...');
       await notificationRepo.initSampleNotifications();
       debugPrint('✅ 5. 通知数据初始化完成');
+
+      // ✅ 初始化记账模块种子数据（默认账本/账户/预置分类）
+      await LedgerModule.init();
+      debugPrint('✅ 5.1 记账模块初始化完成');
 
       debugPrint('✅ 6. 启动应用...');
       runApp(const MyApp());

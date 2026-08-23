@@ -26,6 +26,7 @@ class BackupService {
     'themeSettings',
     'settingsBox',
     'timetable_settings',
+    'ledger', // 记账
   ];
 
   /// 收集需要备份的 .hive 文件（含按题库名动态创建的题库 box）

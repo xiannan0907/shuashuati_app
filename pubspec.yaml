@@ -46,6 +46,8 @@ dependencies:
   shared_preferences: ^2.5.5
   # 用于生成领域/房间/物品的唯一ID
   uuid: ^4.6.0
+  # 记账模块图表
+  fl_chart: ^1.2.0
 
 dev_dependencies:
   flutter_test:

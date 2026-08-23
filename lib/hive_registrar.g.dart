@@ -5,6 +5,11 @@
 import 'package:hive_ce/hive_ce.dart';
 import 'package:shuashuati_app/data/models/notification_item.dart';
 import 'package:shuashuati_app/data/models/user_model.dart';
+import 'package:shuashuati_app/modules/ledger/data/models/account_model.dart';
+import 'package:shuashuati_app/modules/ledger/data/models/budget_model.dart';
+import 'package:shuashuati_app/modules/ledger/data/models/category_model.dart';
+import 'package:shuashuati_app/modules/ledger/data/models/ledger_book_model.dart';
+import 'package:shuashuati_app/modules/ledger/data/models/transaction_model.dart';
 import 'package:shuashuati_app/modules/portalborn/data/models/character_model.dart';
 import 'package:shuashuati_app/modules/portalborn/data/models/game_state_model.dart';
 import 'package:shuashuati_app/modules/portalborn/data/models/item_model.dart';
@@ -22,6 +27,11 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(GameCharacterAdapter());
     registerAdapter(GameItemAdapter());
     registerAdapter(GameStateAdapter());
+    registerAdapter(LedgerAccountAdapter());
+    registerAdapter(LedgerBookAdapter());
+    registerAdapter(LedgerBudgetAdapter());
+    registerAdapter(LedgerCategoryAdapter());
+    registerAdapter(LedgerTransactionAdapter());
     registerAdapter(NotificationItemAdapter());
     registerAdapter(QuestionAdapter());
     registerAdapter(TimeTableAdapter());
@@ -45,6 +55,11 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(GameCharacterAdapter());
     registerAdapter(GameItemAdapter());
     registerAdapter(GameStateAdapter());
+    registerAdapter(LedgerAccountAdapter());
+    registerAdapter(LedgerBookAdapter());
+    registerAdapter(LedgerBudgetAdapter());
+    registerAdapter(LedgerCategoryAdapter());
+    registerAdapter(LedgerTransactionAdapter());
     registerAdapter(NotificationItemAdapter());
     registerAdapter(QuestionAdapter());
     registerAdapter(TimeTableAdapter());
