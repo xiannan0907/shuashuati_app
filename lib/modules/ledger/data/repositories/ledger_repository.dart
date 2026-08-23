@@ -68,20 +68,34 @@ class LedgerRepository {
       );
     }
 
-    // 默认账户
+    // 默认账户（按账户 id 幂等，避免历史键名差异造成重复）
     final presets = {
       'acc_cash': LedgerAccount(id: 'cash', name: '现金', icon: '💵', sortIndex: 0),
       'acc_wechat': LedgerAccount(id: 'wechat', name: '微信', icon: '💬', sortIndex: 1),
       'acc_alipay': LedgerAccount(id: 'alipay', name: '支付宝', icon: '🅰️', sortIndex: 2),
       'acc_card': LedgerAccount(id: 'card', name: '银行卡', icon: '💳', sortIndex: 3),
     };
+    final existingIds =
+        box.values.whereType<LedgerAccount>().map((a) => a.id).toSet();
     for (final e in presets.entries) {
-      if (!box.containsKey('account_${e.key}')) {
+      if (!existingIds.contains(e.value.id)) {
         await box.put('account_${e.key}', e.value);
       }
     }
 
-    // 预置分类
+    // 历史脏数据清理：同 id 账户去重（保留最先写入的一条）
+    final seenAccountIds = <String>{};
+    final duplicateAccountKeys = <dynamic>[];
+    for (final key in box.keys) {
+      final v = box.get(key);
+      if (v is! LedgerAccount) continue;
+      if (!seenAccountIds.add(v.id)) duplicateAccountKeys.add(key);
+    }
+    for (final key in duplicateAccountKeys) {
+      await box.delete(key);
+    }
+
+    // 预置分类（icon 从名称首段提取，如 '🍜 餐饮' → '🍜'）
     var sort = 0;
     for (final e in presetExpenseCategories.entries) {
       final id = 'cat_exp_${Uri.encodeComponent(e.key)}';
@@ -90,6 +104,7 @@ class LedgerRepository {
           'category_$id',
           LedgerCategory(
             id: id, name: e.key, type: 'expense',
+            icon: e.key.split(' ').first,
             colorKey: e.value.first, sortIndex: sort++,
           ),
         );
@@ -102,9 +117,22 @@ class LedgerRepository {
           'category_$id',
           LedgerCategory(
             id: id, name: e.key, type: 'income',
+            icon: e.key.split(' ').first,
             colorKey: e.value.first, sortIndex: sort++,
           ),
         );
+      }
+    }
+
+    // 旧数据迁移：icon 仍为默认标签的分类，从名称首段提取 emoji
+    for (final key in box.keys.where((k) => k.toString().startsWith('category_'))) {
+      final c = box.get(key);
+      if (c is LedgerCategory &&
+          c.icon == '🏷️' &&
+          c.name.contains(' ') &&
+          c.name.split(' ').first.isNotEmpty) {
+        c.icon = c.name.split(' ').first;
+        await box.put(key, c);
       }
     }
   }

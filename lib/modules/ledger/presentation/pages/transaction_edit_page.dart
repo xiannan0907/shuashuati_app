@@ -109,12 +109,13 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final catColor = Colors.blue.shade400;
+    const catColor = Color(0xFF1565C0);
 
     return Scaffold(
       backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
       appBar: AppBar(
-        backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
+        backgroundColor: const Color(0xFF1565C0),
+        foregroundColor: Colors.white,
         elevation: 0,
         title: const Text('记一笔'),
         actions: [
@@ -141,7 +142,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
               child: Row(
                 children: [
                   _typeTab('expense', '支出', _type == 'expense',
-                      Colors.orange.shade700, isDark),
+                      const Color(0xFF1565C0), isDark),
                   const SizedBox(width: 12),
                   _typeTab('income', '收入', _type == 'income',
                       Colors.green.shade600, isDark),
@@ -203,7 +204,10 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
                         children: [
                           Text(c.icon, style: const TextStyle(fontSize: 20)),
                           const SizedBox(height: 2),
-                          Text(c.name,
+                          Text(
+                              c.name.contains(' ')
+                                  ? c.name.substring(c.name.indexOf(' ') + 1)
+                                  : c.name,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(fontSize: 11)),
                         ],

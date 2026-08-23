@@ -144,20 +144,21 @@ class LedgerStatsPage extends StatelessWidget {
           Expanded(child: _statCol('收入', '¥${yuan(s.incomeCents)}')),
           Expanded(child: _statCol('支出', '¥${yuan(s.expenseCents)}')),
           Expanded(
-              child: _statCol('结余',
-                  '¥${yuan(s.incomeCents - s.expenseCents)}',
-                  highlight: true)),
+              child: _statCol('结余', '¥${yuan(s.incomeCents - s.expenseCents)}',
+                  valueColor: s.incomeCents - s.expenseCents < 0
+                      ? Colors.orangeAccent.shade100
+                      : Colors.yellowAccent.shade100)),
         ],
       ),
     );
   }
 
-  Widget _statCol(String label, String value, {bool highlight = false}) {
+  Widget _statCol(String label, String value, {Color? valueColor}) {
     return Column(
       children: [
         Text(value,
             style: TextStyle(
-                color: highlight ? Colors.yellowAccent.shade100 : Colors.white,
+                color: valueColor ?? Colors.white,
                 fontSize: 17,
                 fontWeight: FontWeight.w800)),
         const SizedBox(height: 3),
@@ -194,103 +195,86 @@ class LedgerStatsPage extends StatelessWidget {
           const SizedBox(height: 14),
           SizedBox(
             height: 190,
-            child: Row(
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                SizedBox(
-                  width: 170,
-                  child: PieChart(
-                    PieChartData(
-                      sectionsSpace: 2,
-                      centerSpaceRadius: 44,
-                      sections: [
-                        for (var i = 0; i < shown.length; i++)
-                          PieChartSectionData(
-                            value: shown[i].totalCents.toDouble(),
-                            color: _colorOf(i, null),
-                            radius: 34,
-                            title: (shown[i].percent * 100) >= 5
-                                ? '${(shown[i].percent * 100).toStringAsFixed(0)}%'
-                                : '',
-                            titleStyle: const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (var i = 0; i < shown.length && i < 6; i++)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 3),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 9,
-                                height: 9,
-                                decoration: BoxDecoration(
-                                    color: _colorOf(i, null),
-                                    shape: BoxShape.circle),
-                              ),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                child: Text('${shown[i].icon}${shown[i].name}',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        color: isDark
-                                            ? Colors.grey.shade300
-                                            : Colors.grey.shade700)),
-                              ),
-                            ],
-                          ),
-                        ),
-                      if (shown.length > 6)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text('等 ${shown.length} 个分类',
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: isDark
-                                      ? Colors.grey.shade500
-                                      : Colors.grey.shade500)),
+                PieChart(
+                  PieChartData(
+                    sectionsSpace: 2,
+                    centerSpaceRadius: 54,
+                    sections: [
+                      for (var i = 0; i < shown.length; i++)
+                        PieChartSectionData(
+                          value: shown[i].totalCents.toDouble(),
+                          color: _colorOf(i, null),
+                          radius: 36,
+                          title: (shown[i].percent * 100) >= 5
+                              ? '${(shown[i].percent * 100).toStringAsFixed(0)}%'
+                              : '',
+                          titleStyle: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
                         ),
                     ],
                   ),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('总计',
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: isDark
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade500)),
+                    Text('¥${(total / 100).toStringAsFixed(total % 100 == 0 ? 0 : 2)}',
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            color:
+                                isDark ? Colors.white : Colors.grey.shade800)),
+                  ],
                 ),
               ],
             ),
           ),
           const SizedBox(height: 10),
-          ...shown.take(5).map((s) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('${s.icon} ${s.name}',
+          ...shown.take(5).map((s) {
+            final idx = shown.indexOf(s);
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: Row(
+                children: [
+                  Container(
+                    width: 9,
+                    height: 9,
+                    decoration: BoxDecoration(
+                        color: _colorOf(idx, null), shape: BoxShape.circle),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                        '${s.icon} ${s.name.contains(' ') ? s.name.substring(s.name.indexOf(' ') + 1) : s.name}',
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12,
                             color: isDark
                                 ? Colors.grey.shade300
                                 : Colors.grey.shade700)),
-                    Text(
-                        '¥${(s.totalCents / 100).toStringAsFixed(2)}'
-                        ' · ${(s.percent * 100).toStringAsFixed(1)}%',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: isDark
-                                ? Colors.white70
-                                : Colors.grey.shade800)),
-                  ],
-                ),
-              )),
+                  ),
+                  Text(
+                      '¥${(s.totalCents / 100).toStringAsFixed(2)}'
+                      ' · ${(s.percent * 100).toStringAsFixed(1)}%',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color:
+                              isDark ? Colors.white70 : Colors.grey.shade800)),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     );

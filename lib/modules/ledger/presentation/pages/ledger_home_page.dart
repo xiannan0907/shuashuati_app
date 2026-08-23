@@ -146,6 +146,8 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
         },
         icon: const Icon(Icons.add),
         label: const Text('记一笔'),
+        backgroundColor: const Color(0xFF1565C0),
+        foregroundColor: Colors.white,
       ),
       body: BlocBuilder<LedgerBloc, LedgerLoaded?>(
         builder: (context, state) {
@@ -156,6 +158,10 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
           final expense = state.expenseCents;
           final txs = state.transactions;
           final byCat = state.expenseByCategory;
+          final iconMap = {
+            for (final s in [...state.expenseByCategory, ...state.incomeByCategory])
+              s.categoryId: s.icon,
+          };
 
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 96),
@@ -166,7 +172,7 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
                 _categoryChart(isDark, byCat, expense),
                 const SizedBox(height: 14),
               ],
-              _txList(isDark, txs),
+              _txList(isDark, txs, iconMap),
             ],
           );
         },
@@ -246,7 +252,10 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
                   Text(s.icon, style: const TextStyle(fontSize: 18)),
                   const SizedBox(width: 8),
                   SizedBox(width: 72,
-                      child: Text(s.name,
+                      child: Text(
+                          s.name.contains(' ')
+                              ? s.name.substring(s.name.indexOf(' ') + 1)
+                              : s.name,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize: 12,
@@ -279,7 +288,8 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
   }
 
   // ── 流水列表（按日分组）──
-  Widget _txList(bool isDark, List<LedgerTransaction> txs) {
+  Widget _txList(bool isDark, List<LedgerTransaction> txs,
+      Map<String, String> iconMap) {
     if (txs.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(40),

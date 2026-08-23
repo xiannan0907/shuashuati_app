@@ -53,3 +53,6 @@ android/gradle/wrapper/*.zip
 android/key.properties
 *.jks
 *.keystore
+
+# 设计工具会话产物
+design/
