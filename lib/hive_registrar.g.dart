@@ -10,10 +10,6 @@ import 'package:shuashuati_app/modules/ledger/data/models/budget_model.dart';
 import 'package:shuashuati_app/modules/ledger/data/models/category_model.dart';
 import 'package:shuashuati_app/modules/ledger/data/models/ledger_book_model.dart';
 import 'package:shuashuati_app/modules/ledger/data/models/transaction_model.dart';
-import 'package:shuashuati_app/modules/portalborn/data/models/character_model.dart';
-import 'package:shuashuati_app/modules/portalborn/data/models/game_state_model.dart';
-import 'package:shuashuati_app/modules/portalborn/data/models/item_model.dart';
-import 'package:shuashuati_app/modules/portalborn/data/models/ugc_model.dart';
 import 'package:shuashuati_app/modules/quiz/data/models/question_model.dart';
 import 'package:shuashuati_app/modules/quiz/data/models/tower_model.dart';
 import 'package:shuashuati_app/modules/quiz/data/models/wrong_question_stats.dart';
@@ -24,9 +20,6 @@ import 'package:shuashuati_app/modules/timetable/data/models/timetable_model.dar
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(CourseAdapter());
-    registerAdapter(GameCharacterAdapter());
-    registerAdapter(GameItemAdapter());
-    registerAdapter(GameStateAdapter());
     registerAdapter(LedgerAccountAdapter());
     registerAdapter(LedgerBookAdapter());
     registerAdapter(LedgerBudgetAdapter());
@@ -37,13 +30,6 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(TimeTableAdapter());
     registerAdapter(TimetableAdapter());
     registerAdapter(TowerProgressAdapter());
-    registerAdapter(UGCCustomRealmAdapter());
-    registerAdapter(UGCDropAdapter());
-    registerAdapter(UGCExitAdapter());
-    registerAdapter(UGCInteractableAdapter());
-    registerAdapter(UGCItemAdapter());
-    registerAdapter(UGCMonsterAdapter());
-    registerAdapter(UGCRoomAdapter());
     registerAdapter(UserModelAdapter());
     registerAdapter(WrongQuestionStatsAdapter());
   }
@@ -52,9 +38,6 @@ extension HiveRegistrar on HiveInterface {
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(CourseAdapter());
-    registerAdapter(GameCharacterAdapter());
-    registerAdapter(GameItemAdapter());
-    registerAdapter(GameStateAdapter());
     registerAdapter(LedgerAccountAdapter());
     registerAdapter(LedgerBookAdapter());
     registerAdapter(LedgerBudgetAdapter());
@@ -65,13 +48,6 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(TimeTableAdapter());
     registerAdapter(TimetableAdapter());
     registerAdapter(TowerProgressAdapter());
-    registerAdapter(UGCCustomRealmAdapter());
-    registerAdapter(UGCDropAdapter());
-    registerAdapter(UGCExitAdapter());
-    registerAdapter(UGCInteractableAdapter());
-    registerAdapter(UGCItemAdapter());
-    registerAdapter(UGCMonsterAdapter());
-    registerAdapter(UGCRoomAdapter());
     registerAdapter(UserModelAdapter());
     registerAdapter(WrongQuestionStatsAdapter());
   }

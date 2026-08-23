@@ -59,14 +59,12 @@ void main() async {
       Hive.registerAdapters();
       debugPrint('✅ 3. 适配器注册完成');
 
-      // ✅ 启动性能优化：仅预开首屏必需的 box（notificationBox=首页红点；
-      //    portalborn=GameRepository 构造要求已打开）。其余 box 由各 Repository
-      //    运行期按需打开（Hive.openBox 幂等，已打开直接返回），大幅减少首帧主线程 IO。
+      // ✅ 启动性能优化：仅预开首屏必需的 box（notificationBox=首页红点）。
+      //    其余 box 由各 Repository 运行期按需打开（Hive.openBox 幂等，已打开直接返回），
+      //    大幅减少首帧主线程 IO。
       debugPrint('⏳ 4. 打开启动必需 Hive Boxes...');
       await Hive.openBox<NotificationItem>('notificationBox');
       debugPrint('✅ 4.1 notificationBox 打开成功');
-      await Hive.openBox('portalborn');
-      debugPrint('✅ 4.2 portalborn 打开成功');
 
       // ✅ 初始化通知数据
       debugPrint('⏳ 5. 初始化通知数据...');

@@ -47,7 +47,6 @@ class StorageService {
     'wrongQuestionsBox.hive',    // 错题记录
     'wrongStatsBox.hive',        // 错题统计
     'towerBox.hive',             // 闯塔进度
-    'portalborn.hive',           // RPG 存档
     'timetable_courses.hive',    // 课程
     'timetable_list.hive',       // 课表
     'time_table_list.hive',      // 作息时段

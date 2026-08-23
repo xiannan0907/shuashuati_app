@@ -1,7 +1,6 @@
 import 'app_module.dart';
 import '../../../modules/quiz/quiz_module.dart';
 import '../../../modules/timetable/timetable_module.dart'; // ✅ 添加这行
-import '../../../modules/portalborn/portalborn_module.dart';
 import '../../../modules/ledger/ledger_module.dart';
 
 class ModuleRegistry {
@@ -9,7 +8,6 @@ class ModuleRegistry {
     QuizModule(),
     TimetableModule(),
     LedgerModule(),
-    PortalbornModule(),
     // 未来在这里添加其他模块：
     // NoteModule(),
   ];

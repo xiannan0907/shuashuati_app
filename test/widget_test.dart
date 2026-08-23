@@ -28,7 +28,7 @@ void main() {
     expect(find.text('课表'), findsOneWidget);
 
     // 第三个模块在视口外，滚动后可见
-    await tester.scrollUntilVisible(find.text('传送门编年史'), 200);
-    expect(find.text('传送门编年史'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('记账'), 200);
+    expect(find.text('记账'), findsOneWidget);
   });
 }

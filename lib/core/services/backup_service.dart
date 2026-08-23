@@ -21,7 +21,6 @@ class BackupService {
     'timetable_courses',
     'timetable_list',
     'time_table_list',
-    'portalborn',
     'userBox',
     'themeSettings',
     'settingsBox',
