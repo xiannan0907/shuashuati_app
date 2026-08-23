@@ -40,22 +40,23 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
     return Scaffold(
       backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF7F8FA),
       appBar: AppBar(
-        backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF7F8FA),
+        backgroundColor: const Color(0xFF1565C0),
+        foregroundColor: Colors.white,
         elevation: 0,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.chevron_left),
+              icon: const Icon(Icons.chevron_left, color: Colors.white),
               onPressed: () => _shiftMonth(-1),
             ),
             Text(_month,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? Colors.white : Colors.grey.shade800)),
+                    color: Colors.white)),
             IconButton(
-              icon: const Icon(Icons.chevron_right),
+              icon: const Icon(Icons.chevron_right, color: Colors.white),
               onPressed: () => _shiftMonth(1),
             ),
           ],

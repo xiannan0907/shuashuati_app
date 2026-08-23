@@ -16,6 +16,7 @@ class ResultDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final percentage = (correctCount / totalCount * 100).toInt();
     final isPass = percentage >= 60;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -43,7 +44,7 @@ class ResultDialog extends StatelessWidget {
                 height: 100,
                 child: CircularProgressIndicator(
                   value: correctCount / totalCount,
-                  backgroundColor: Colors.grey.shade200,
+                  backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
                   color: isPass ? Colors.green : Colors.orange,
                   strokeWidth: 10,
                 ),
@@ -69,7 +70,10 @@ class ResultDialog extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             '共 $totalCount 题',
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+            ),
           ),
         ],
       ),
@@ -85,7 +89,7 @@ class ResultDialog extends StatelessWidget {
             onRetry();
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
+            backgroundColor: const Color(0xFF1565C0),
             foregroundColor: Colors.white,
           ),
           child: const Text('🔄 重新挑战'),

@@ -23,6 +23,13 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+// Release 签名：key.properties 存在时用正式 keystore，不存在（如 CI）回退 debug 签名
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace "com.lsh.example.shuashuati_app"  // ✅ 修改为 com.lsh.example.shuashuati_app
     compileSdk 36
@@ -46,9 +53,20 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
         }
     }
 }

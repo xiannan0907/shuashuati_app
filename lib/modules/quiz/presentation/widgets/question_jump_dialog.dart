@@ -128,6 +128,7 @@ class QuestionJumpDialog extends StatelessWidget {
         required bool isFill,
         required VoidCallback onTap,
       }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // 增加预览长度到50字符
     String contentPreview = question.content;
     if (contentPreview.length > 50) {
@@ -179,7 +180,9 @@ class QuestionJumpDialog extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Material(
-        color: isCurrent ? Colors.blue.shade50 : Colors.transparent,
+        color: isCurrent
+            ? (isDark ? Colors.blue.withValues(alpha: 0.12) : Colors.blue.shade50)
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
@@ -197,8 +200,14 @@ class QuestionJumpDialog extends StatelessWidget {
                     color: isCurrent
                         ? Colors.blue
                         : isAnswered
-                        ? (isCorrect ? Colors.green.shade100 : Colors.red.shade100)
-                        : Colors.grey.shade200,
+                        ? (isCorrect
+                              ? (isDark
+                                    ? Colors.green.withValues(alpha: 0.2)
+                                    : Colors.green.shade100)
+                              : (isDark
+                                    ? Colors.red.withValues(alpha: 0.2)
+                                    : Colors.red.shade100))
+                        : (isDark ? Colors.grey.shade700 : Colors.grey.shade200),
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: Text(
@@ -209,8 +218,12 @@ class QuestionJumpDialog extends StatelessWidget {
                       color: isCurrent
                           ? Colors.white
                           : isAnswered
-                          ? (isCorrect ? Colors.green.shade700 : Colors.red.shade700)
-                          : Colors.grey.shade600,
+                          ? (isCorrect
+                                ? (isDark
+                                      ? Colors.green.shade300
+                                      : Colors.green.shade700)
+                                : (isDark ? Colors.red.shade300 : Colors.red.shade700))
+                          : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
                     ),
                   ),
                 ),
@@ -228,7 +241,9 @@ class QuestionJumpDialog extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: isCurrent ? FontWeight.w600 : FontWeight.normal,
-                                color: isCurrent ? Colors.blue.shade800 : Colors.black87,
+                                color: isCurrent
+                                    ? (isDark ? Colors.blue.shade300 : Colors.blue.shade800)
+                                    : (isDark ? Colors.white70 : Colors.black87),
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -239,8 +254,16 @@ class QuestionJumpDialog extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                             decoration: BoxDecoration(
                               color: isJudge
-                                  ? Colors.purple.shade100
-                                  : (isFill ? Colors.orange.shade100 : Colors.green.shade100),
+                                  ? (isDark
+                                        ? Colors.purple.withValues(alpha: 0.18)
+                                        : Colors.purple.shade100)
+                                  : (isFill
+                                        ? (isDark
+                                              ? Colors.orange.withValues(alpha: 0.18)
+                                              : Colors.orange.shade100)
+                                        : (isDark
+                                              ? Colors.green.withValues(alpha: 0.18)
+                                              : Colors.green.shade100)),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -249,8 +272,16 @@ class QuestionJumpDialog extends StatelessWidget {
                                 fontSize: 9,
                                 fontWeight: FontWeight.w500,
                                 color: isJudge
-                                    ? Colors.purple.shade700
-                                    : (isFill ? Colors.orange.shade700 : Colors.green.shade700),
+                                    ? (isDark
+                                          ? Colors.purple.shade300
+                                          : Colors.purple.shade700)
+                                    : (isFill
+                                          ? (isDark
+                                                ? Colors.orange.shade300
+                                                : Colors.orange.shade700)
+                                          : (isDark
+                                                ? Colors.green.shade300
+                                                : Colors.green.shade700)),
                               ),
                             ),
                           ),
@@ -261,7 +292,7 @@ class QuestionJumpDialog extends StatelessWidget {
                         optionsPreview,
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey.shade600,
+                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

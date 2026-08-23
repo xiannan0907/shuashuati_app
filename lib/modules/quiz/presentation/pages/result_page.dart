@@ -23,6 +23,7 @@ class ResultPage extends StatelessWidget {
     final wrongCount = wrongQuestions.length;
     final percentage = totalCount > 0 ? (correctCount / totalCount * 100).toInt() : 0;
     final isPass = percentage >= 60;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +63,7 @@ class ResultPage extends StatelessWidget {
                           height: 100,
                           child: CircularProgressIndicator(
                             value: totalCount > 0 ? correctCount / totalCount : 0,
-                            backgroundColor: Colors.grey.shade200,
+                            backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
                             color: isPass ? Colors.green : Colors.orange,
                             strokeWidth: 10,
                           ),
@@ -80,7 +81,7 @@ class ResultPage extends StatelessWidget {
                               '正确率',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey.shade600,
+                                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                               ),
                             ),
                           ],
@@ -116,7 +117,7 @@ class ResultPage extends StatelessWidget {
                   '共 $wrongCount 题',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey.shade600,
+                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                   ),
                 ),
               ],
@@ -139,7 +140,7 @@ class ResultPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green.shade700,
+                        color: isDark ? Colors.green.shade400 : Colors.green.shade700,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -147,7 +148,7 @@ class ResultPage extends StatelessWidget {
                       '没有错题需要复习',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.grey.shade600,
+                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                       ),
                     ),
                   ],
@@ -190,11 +191,19 @@ class ResultPage extends StatelessWidget {
                   // 题型标签
                   String typeLabel = isJudge ? '判断题' : (isFill ? '填空题' : '选择题');
                   Color typeColor = isJudge
-                      ? Colors.purple.shade700
-                      : (isFill ? Colors.orange.shade700 : Colors.green.shade700);
+                      ? (isDark ? Colors.purple.shade300 : Colors.purple.shade700)
+                      : (isFill
+                            ? (isDark ? Colors.orange.shade300 : Colors.orange.shade700)
+                            : (isDark ? Colors.green.shade300 : Colors.green.shade700));
                   Color typeBgColor = isJudge
-                      ? Colors.purple.shade100
-                      : (isFill ? Colors.orange.shade100 : Colors.green.shade100);
+                      ? (isDark ? Colors.purple.withValues(alpha: 0.18) : Colors.purple.shade100)
+                      : (isFill
+                            ? (isDark
+                                  ? Colors.orange.withValues(alpha: 0.18)
+                                  : Colors.orange.shade100)
+                            : (isDark
+                                  ? Colors.green.withValues(alpha: 0.18)
+                                  : Colors.green.shade100));
 
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 4),
@@ -211,7 +220,9 @@ class ResultPage extends StatelessWidget {
                                   vertical: 2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.red.shade100,
+                                  color: isDark
+                                      ? Colors.red.withValues(alpha: 0.18)
+                                      : Colors.red.shade100,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
@@ -219,7 +230,7 @@ class ResultPage extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.red.shade700,
+                                    color: isDark ? Colors.red.shade300 : Colors.red.shade700,
                                   ),
                                 ),
                               ),
@@ -248,7 +259,7 @@ class ResultPage extends StatelessWidget {
                                   '你的答案：$userDisplay',
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: Colors.red.shade700,
+                                    color: isDark ? Colors.red.shade300 : Colors.red.shade700,
                                     fontWeight: FontWeight.w500,
                                   ),
                                   overflow: TextOverflow.ellipsis,
@@ -261,14 +272,18 @@ class ResultPage extends StatelessWidget {
                                   vertical: 2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.green.shade100,
+                                  color: isDark
+                                      ? Colors.green.withValues(alpha: 0.18)
+                                      : Colors.green.shade100,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
                                   '正确：$correctDisplay',
                                   style: TextStyle(
                                     fontSize: 11,
-                                    color: Colors.green.shade700,
+                                    color: isDark
+                                        ? Colors.green.shade300
+                                        : Colors.green.shade700,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -305,7 +320,7 @@ class ResultPage extends StatelessWidget {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                                color: isDark ? Colors.grey.shade800 : Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: const Text(
@@ -336,9 +351,13 @@ class ResultPage extends StatelessWidget {
 
                                 Color? bgColor;
                                 if (isUser && idx != correctAnswer) {
-                                  bgColor = Colors.red.shade100;
+                                  bgColor = isDark
+                                      ? Colors.red.withValues(alpha: 0.18)
+                                      : Colors.red.shade100;
                                 } else if (isCorrectAnswer) {
-                                  bgColor = Colors.green.shade100;
+                                  bgColor = isDark
+                                      ? Colors.green.withValues(alpha: 0.18)
+                                      : Colors.green.shade100;
                                 }
 
                                 return Container(
@@ -355,10 +374,12 @@ class ResultPage extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: isUser && idx != correctAnswer
-                                          ? Colors.red.shade700
+                                          ? (isDark ? Colors.red.shade300 : Colors.red.shade700)
                                           : (isCorrectAnswer
-                                          ? Colors.green.shade700
-                                          : Colors.grey),
+                                                ? (isDark
+                                                      ? Colors.green.shade300
+                                                      : Colors.green.shade700)
+                                                : Colors.grey),
                                     ),
                                   ),
                                 );
@@ -400,7 +421,7 @@ class ResultPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        backgroundColor: Colors.blue,
+                        backgroundColor: const Color(0xFF1565C0),
                         foregroundColor: Colors.white,
                       ),
                       child: const Text('🔄 重新挑战'),
