@@ -122,20 +122,24 @@ class _CategoryManagePageState extends State<CategoryManagePage>
       child: Scaffold(
         backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF7F8FA),
         appBar: AppBar(
+            backgroundColor: const Color(0xFF1565C0),
+            foregroundColor: Colors.white,
           title: const Text('分类管理'),
-          backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF7F8FA),
           elevation: 0,
           bottom: TabBar(
             controller: _tab,
-            labelColor: Colors.blue.shade600,
+            labelColor: Colors.white,
             unselectedLabelColor:
-                isDark ? Colors.grey.shade500 : Colors.grey.shade400,
-            indicatorColor: Colors.blue.shade600,
+                isDark ? Colors.grey.shade500 : Colors.white70,
+            indicatorColor: Colors.white,
             tabs: const [Tab(text: '支出'), Tab(text: '收入')],
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: _addDialog,
+          backgroundColor: const Color(0xFF1565C0),
+          foregroundColor: Colors.white,
+          elevation: 4,
           icon: const Icon(Icons.add),
           label: const Text('新分类'),
         ),

@@ -96,12 +96,16 @@ class _BudgetPageState extends State<BudgetPage> {
     return Scaffold(
       backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF7F8FA),
       appBar: AppBar(
+          backgroundColor: const Color(0xFF1565C0),
+          foregroundColor: Colors.white,
         title: Text('预算 · ${widget.month}'),
-        backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF7F8FA),
         elevation: 0,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _editDialog(),
+        backgroundColor: const Color(0xFF1565C0),
+        foregroundColor: Colors.white,
+        elevation: 4,
         icon: const Icon(Icons.add),
         label: const Text('设预算'),
       ),

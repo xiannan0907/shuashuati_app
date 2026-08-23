@@ -139,12 +139,16 @@ class _AccountManagePageState extends State<AccountManagePage> {
     return Scaffold(
       backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF7F8FA),
       appBar: AppBar(
+          backgroundColor: const Color(0xFF1565C0),
+          foregroundColor: Colors.white,
         title: const Text('账户管理'),
-        backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF7F8FA),
         elevation: 0,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _editDialog(),
+        backgroundColor: const Color(0xFF1565C0),
+        foregroundColor: Colors.white,
+        elevation: 4,
         child: const Icon(Icons.add),
       ),
       body: _loading
