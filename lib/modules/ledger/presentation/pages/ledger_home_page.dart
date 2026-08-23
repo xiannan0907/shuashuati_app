@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 
 import '../../data/models/transaction_model.dart';
 import '../bloc/ledger_bloc.dart';
+import 'account_manage_page.dart';
+import 'budget_page.dart';
+import 'category_manage_page.dart';
 import 'transaction_edit_page.dart';
 
 /// 记账主页：月份切换 + 收支汇总 + 分类占比 + 流水列表
@@ -59,9 +62,41 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.pie_chart_outline),
-            tooltip: '统计',
-            onPressed: () {}, // 统计区已内嵌主页，预留
+            icon: const Icon(Icons.account_balance_wallet_outlined),
+            tooltip: '账户管理',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const AccountManagePage()),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.category_outlined),
+            tooltip: '分类管理',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const CategoryManagePage()),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.savings_outlined),
+            tooltip: '预算',
+            onPressed: () {
+              final s = context.read<LedgerBloc>().state;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => BudgetPage(
+                    month: _month,
+                    monthExpenseCents:
+                        (s is LedgerLoaded) ? s.expenseCents : 0,
+                  ),
+                ),
+              ).then((_) {
+                if (context.mounted) {
+                  context.read<LedgerBloc>().add(LedgerStarted());
+                }
+              });
+            },
           ),
         ],
       ),
