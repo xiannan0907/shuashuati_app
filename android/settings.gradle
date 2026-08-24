@@ -11,12 +11,16 @@ pluginManagement {
     includeBuild("${settings.ext.flutterSdkPath}/packages/flutter_tools/gradle")
 
     repositories {
+        // CI（GitHub Actions）环境：官方源优先（runner 可直连，避免镜像 5xx 中断）；
+        // 本地环境保持 aliyun 优先（国内网络更快），aliyun 始终保留兜底
+        if (System.getenv('CI') != null) {
+            google()
+            mavenCentral()
+            gradlePluginPortal()
+        }
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
-        google()
-        mavenCentral()
-        gradlePluginPortal()
     }
 }
 

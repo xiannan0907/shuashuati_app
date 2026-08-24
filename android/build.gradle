@@ -2,10 +2,13 @@
 // kotlin 插件由 settings.gradle plugins 块声明（org.jetbrains.kotlin.android 2.3.0）
 allprojects {
     repositories {
+        // CI 环境官方源优先（GitHub runner 可直连）；本地保持 aliyun 优先
+        if (System.getenv('CI') != null) {
+            google()
+            mavenCentral()
+        }
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/google' }
-        google()
-        mavenCentral()
     }
 }
 
