@@ -5,8 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
 
 import 'package:shuashuati_app/hive_registrar.g.dart';
-import 'package:shuashuati_app/modules/ledger/data/models/account_model.dart';
-import 'package:shuashuati_app/modules/ledger/data/models/category_model.dart';
 import 'package:shuashuati_app/modules/ledger/data/models/transaction_model.dart';
 import 'package:shuashuati_app/modules/ledger/data/repositories/ledger_repository.dart';
 
