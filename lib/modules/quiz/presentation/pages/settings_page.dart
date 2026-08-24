@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
-import '../../../../presentation/pages/error_log_page.dart';
-import '../../../../presentation/pages/storage_management_page.dart';
 import '../../data/repositories/question_repository.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -141,42 +139,6 @@ class _SettingsPageState extends State<SettingsPage> {
             // 💾 数据管理
             // ============================================================
             _buildSectionHeader('💾 数据管理', isDark),
-            _buildSettingCard(
-              icon: Icons.upload_file,
-              iconColor: Colors.blue,
-              title: '导出数据',
-              subtitle: '备份与导出所有学习数据',
-              rightWidget: const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const StorageManagementPage()),
-              ),
-            ),
-            _buildSettingCard(
-              icon: Icons.download,
-              iconColor: Colors.green,
-              title: '导入数据',
-              subtitle: '从备份文件恢复数据',
-              rightWidget: const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const StorageManagementPage()),
-              ),
-            ),
-            _buildSettingCard(
-              icon: Icons.bug_report_outlined,
-              iconColor: Colors.deepOrange,
-              title: '错误日志',
-              subtitle: '查看/导出运行错误记录',
-              rightWidget:
-                  const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ErrorLogPage()),
-              ),
-            ),
             _buildSettingCard(
               icon: Icons.delete_forever,
               iconColor: Colors.red,

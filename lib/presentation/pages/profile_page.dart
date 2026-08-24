@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../core/bloc/theme_bloc.dart';
 import '../../data/models/user_model.dart';
 import '../../data/repositories/user_repository.dart';
+import '../pages/error_log_page.dart';
 import '../pages/notification_page.dart';
 import '../pages/storage_management_page.dart';
 
@@ -686,11 +687,30 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                     ),
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('💾 数据备份与恢复 - 开发中'),
-                          duration: Duration(seconds: 1),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const StorageManagementPage(),
                         ),
+                      );
+                    },
+                  ),
+
+                  _buildListTile(
+                    context,
+                    icon: Icons.bug_report_outlined,
+                    title: '错误日志',
+                    subtitle: '查看 / 导出运行错误记录',
+                    isDark: isDark,
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      size: 18,
+                      color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const ErrorLogPage()),
                       );
                     },
                   ),
