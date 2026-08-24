@@ -193,6 +193,34 @@ class LedgerRepository {
     return all.where((t) => _ym(t.date) == yearMonth).toList();
   }
 
+  /// 导出某月流水为 CSV 文本（带 UTF-8 BOM，Excel 直接打开中文不乱码）
+  Future<String> exportMonthCsv(String yearMonth, {String? ledgerId}) async {
+    final txs = await monthTransactions(yearMonth, ledgerId: ledgerId);
+    final cats = {for (final c in await categories()) c.id: c};
+    final accs = {for (final a in await accounts()) a.id: a};
+
+    String esc(String s) =>
+        s.contains(',') || s.contains('"') || s.contains('\n')
+            ? '"${s.replaceAll('"', '""')}"'
+            : s;
+
+    final buf = StringBuffer('\uFEFF日期,星期,类型,分类,账户,金额(元),备注\n');
+    const weekCn = ['一', '二', '三', '四', '五', '六', '日'];
+    for (final t in txs) {
+      final d = t.date;
+      buf.writeln([
+        '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}',
+        '周${weekCn[d.weekday - 1]}',
+        t.type == 'income' ? '收入' : (t.type == 'transfer' ? '转账' : '支出'),
+        cats[t.categoryId]?.name ?? '',
+        accs[t.accountId]?.name ?? '',
+        (t.amountCents / 100).toStringAsFixed(2),
+        esc(t.note),
+      ].join(','));
+    }
+    return buf.toString();
+  }
+
   // ════════════════════════════════════════════
   // 分类 Category
   // ════════════════════════════════════════════

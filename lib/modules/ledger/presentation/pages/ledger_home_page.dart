@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../data/models/transaction_model.dart';
+import '../../data/repositories/ledger_repository.dart';
 import '../bloc/ledger_bloc.dart';
 import 'account_manage_page.dart';
 import 'budget_page.dart';
@@ -24,8 +29,28 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
   static String _ym(DateTime d) =>
       '${d.year}-${d.month.toString().padLeft(2, '0')}';
 
-  void _shiftMonth(int delta) {
-    final parts = _month.split('-');
+  /// 导出本月流水 CSV 并唤起系统分享
+  Future<void> _exportCsv() async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('正在生成 CSV...'), duration: Duration(seconds: 1)));
+      final csv = await LedgerRepository().exportMonthCsv(_month);
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/tiyu_ledger_$_month.csv');
+      await file.writeAsString(csv);
+      if (!mounted) return;
+      await SharePlus.instance.share(ShareParams(
+        files: [XFile(file.path)],
+        text: '题屿记账 $_month 流水',
+      ));
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('导出失败: $e'), backgroundColor: Colors.red));
+    }
+  }
+
+  void _shiftMonth(int delta) {    final parts = _month.split('-');
     var y = int.parse(parts[0]);
     var m = int.parse(parts[1]) + delta;
     while (m > 12) { m -= 12; y++; }
@@ -80,6 +105,10 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
             icon: const Icon(Icons.more_vert),
             tooltip: '更多',
             onSelected: (value) async {
+              if (value == 'export') {
+                await _exportCsv();
+                return;
+              }
               final bloc = context.read<LedgerBloc>();
               final s = bloc.state;
               late final Widget page;
@@ -103,6 +132,15 @@ class _LedgerHomePageState extends State<LedgerHomePage> {
               if (context.mounted) bloc.add(LedgerStarted());
             },
             itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: 'export',
+                height: 44,
+                child: Row(children: [
+                  Icon(Icons.ios_share, size: 20),
+                  SizedBox(width: 10),
+                  Text('导出本月流水 CSV'),
+                ]),
+              ),
               PopupMenuItem(
                 value: 'accounts',
                 height: 44,

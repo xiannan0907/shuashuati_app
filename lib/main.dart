@@ -7,6 +7,7 @@ import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 import 'presentation/pages/home_page.dart';
 import 'core/bloc/theme_bloc.dart';
+import 'core/services/error_log_service.dart';
 import 'core/theme/app_theme.dart';
 import 'data/repositories/notification_repository.dart';
 import 'data/models/notification_item.dart';
@@ -29,6 +30,7 @@ void main() async {
       FlutterError.onError = (details) {
         FlutterError.presentError(details);
         debugPrint('❌ Flutter 框架错误: ${details.exception}');
+        ErrorLogService.log(details.exception, details.stack, 'Flutter框架错误');
       };
       ErrorWidget.builder = (details) => Material(
             color: Colors.grey.shade100,
@@ -81,6 +83,7 @@ void main() async {
     (error, stack) {
       debugPrint('❌❌❌ 未捕获的异常: $error');
       debugPrint(stack.toString());
+      ErrorLogService.log(error, stack, '未捕获异常');
     },
   );
 }
