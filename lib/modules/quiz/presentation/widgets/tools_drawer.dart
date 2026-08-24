@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../../core/services/app_info.dart';
 import '../pages/example_import_page.dart';
 import '../pages/tower_page.dart';
 import '../pages/settings_page.dart';
@@ -160,7 +162,7 @@ class ToolsDrawer extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12),
               width: double.infinity,
               child: Text(
-                '版本 1.0.0',
+                '版本 ${AppInfo.version}',
                 style: TextStyle(
                   fontSize: 12,
                   color: theme.textTheme.bodySmall?.color,

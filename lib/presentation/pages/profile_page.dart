@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../core/bloc/theme_bloc.dart';
+import '../../core/services/app_info.dart';
 import '../../data/models/user_model.dart';
 import '../../data/repositories/user_repository.dart';
 import '../pages/error_log_page.dart';
@@ -745,7 +746,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     context,
                     icon: Icons.star_outline,
                     title: '给个好评',
-                    subtitle: '在应用商店评分',
+                    subtitle: '暂未上架应用商店，先给作者点个赞吧',
                     isDark: isDark,
                     trailing: Icon(
                       Icons.chevron_right,
@@ -766,13 +767,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     context,
                     icon: Icons.info_outline,
                     title: '关于',
-                    subtitle: '版本 v1.0.0',
+                    subtitle: '版本 v${AppInfo.version}',
                     isDark: isDark,
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'v1.0.0',
+                          'v${AppInfo.version}',
                           style: TextStyle(
                             fontSize: 13,
                             color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
@@ -807,7 +808,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                '版本 1.0.0',
+                                '版本 ${AppInfo.version}',
                                 style: TextStyle(
                                   color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
                                 ),
@@ -821,7 +822,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                '📚 刷题 | 📝 笔记 | 🏋️ 健身',
+                                '📚 刷题 · 📅 课表 · 💰 记账',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
@@ -829,7 +830,15 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                '© 2025 题屿团队',
+                                '个人学习工具 · 数据全部保存在本地',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                '© 2026 题屿',
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,

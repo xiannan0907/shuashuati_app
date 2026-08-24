@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../../core/services/app_info.dart';
 import '../../../../data/repositories/notification_repository.dart'; // ✅ 新增
 
 class ProfileTab extends StatefulWidget {
@@ -234,7 +236,7 @@ class _ProfileTabState extends State<ProfileTab> {
           const SizedBox(height: 16),
           Center(
             child: Text(
-              '版本 1.0.0',
+              '版本 ${AppInfo.version}',
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey.shade500,

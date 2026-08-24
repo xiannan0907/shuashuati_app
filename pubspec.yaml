@@ -48,6 +48,7 @@ dependencies:
   uuid: ^4.6.0
   # 记账模块图表
   fl_chart: ^1.2.0
+  package_info_plus: ^10.2.1
 
 dev_dependencies:
   flutter_test:

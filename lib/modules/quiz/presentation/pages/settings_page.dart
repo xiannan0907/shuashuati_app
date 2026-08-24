@@ -68,8 +68,8 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: isDark ? Colors.grey.shade900 : const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: const Text('⚙️ 刷题设置'),
-        backgroundColor: theme.appBarTheme.backgroundColor,
+        title: const Text('刷题设置'),
+        backgroundColor: const Color(0xFF1565C0),
         foregroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -88,7 +88,6 @@ class _SettingsPageState extends State<SettingsPage> {
               '仅影响刷题模块的行为，与全局主题无关',
               isDark,
             ),
-            const SizedBox(height: 8),
 
             _buildSettingCard(
               icon: Icons.flash_on,
@@ -161,26 +160,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               onTap: () => _showClearAllConfirm(context),
-            ),
-
-            const SizedBox(height: 16),
-
-            // ============================================================
-            // ℹ️ 关于
-            // ============================================================
-            _buildSectionHeader('ℹ️ 关于', isDark),
-            _buildSettingCard(
-              icon: Icons.info_outline,
-              iconColor: Colors.grey,
-              title: '版本',
-              subtitle: '当前应用版本',
-              rightWidget: Text(
-                'v1.0.0',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                ),
-              ),
             ),
           ],
         ),

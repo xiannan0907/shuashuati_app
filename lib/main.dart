@@ -7,6 +7,7 @@ import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 import 'presentation/pages/home_page.dart';
 import 'core/bloc/theme_bloc.dart';
+import 'core/services/app_info.dart';
 import 'core/services/error_log_service.dart';
 import 'core/theme/app_theme.dart';
 import 'data/repositories/notification_repository.dart';
@@ -56,6 +57,10 @@ void main() async {
 
       await Hive.initFlutter();
       debugPrint('✅ 2. Hive 初始化完成');
+
+      // ✅ 加载应用版本信息（关于页/版本展示用）
+      await AppInfo.load();
+      debugPrint('✅ 1.5 版本信息加载完成: v${AppInfo.version}');
 
       // ✅ 注册所有 Hive 适配器（由 hive_ce_generator 自动生成）
       Hive.registerAdapters();
