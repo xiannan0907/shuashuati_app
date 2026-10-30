@@ -4,6 +4,7 @@ import '../../../../core/services/app_info.dart';
 import '../pages/example_import_page.dart';
 import '../pages/tower_page.dart';
 import '../pages/settings_page.dart';
+import '../pages/share_center_page.dart';
 
 class ToolsDrawer extends StatelessWidget {
   final VoidCallback onRefresh;
@@ -126,10 +127,10 @@ class ToolsDrawer extends StatelessWidget {
                     subtitle: '导出 / 分享题库',
                     onTap: () {
                       Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('📤 分享中心 - 开发中'),
-                          duration: Duration(seconds: 1),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ShareCenterPage(),
                         ),
                       );
                     },

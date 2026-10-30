@@ -329,13 +329,13 @@ class _HomePageState extends State<HomePage> {
         'iconColor': Colors.blue.shade700,
         'statusColor': Colors.blue.shade600,
       },
-      'note': {
-        'gradient': [Colors.orange.shade50, Colors.orange.shade100],
-        'iconBg': Colors.orange.shade100,
-        'iconColor': Colors.orange.shade700,
-        'statusColor': Colors.orange.shade600,
+      'timetable': {
+        'gradient': [Colors.teal.shade50, Colors.teal.shade100],
+        'iconBg': Colors.teal.shade100,
+        'iconColor': Colors.teal.shade700,
+        'statusColor': Colors.teal.shade600,
       },
-      'fitness': {
+      'ledger': {
         'gradient': [Colors.green.shade50, Colors.green.shade100],
         'iconBg': Colors.green.shade100,
         'iconColor': Colors.green.shade700,

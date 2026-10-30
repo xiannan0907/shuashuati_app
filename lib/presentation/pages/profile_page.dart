@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -732,14 +733,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       size: 18,
                       color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                     ),
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('💬 意见反馈 - 开发中'),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
-                    },
+                    onTap: _showFeedbackDialog,
                   ),
 
                   _buildListTile(
@@ -877,6 +871,87 @@ class _ProfilePageState extends State<ProfilePage> {
   // ============================================================
   // 辅助组件
   // ============================================================
+
+  /// 意见反馈：给出真实反馈渠道，并支持一键复制环境信息
+  void _showFeedbackDialog() {
+    const issueUrl = 'https://github.com/xiannan0907/shuashuati_app/issues';
+    var copied = false;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          backgroundColor: Theme.of(context).cardColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            '💬 意见反馈',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                '遇到问题或有改进建议，欢迎到项目主页提交 Issue：',
+                style: TextStyle(fontSize: 13, height: 1.5),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).dividerColor.withValues(alpha: 0.25),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const SelectableText(
+                  issueUrl,
+                  style: TextStyle(fontSize: 12, height: 1.4),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                '提问时附上下方信息，能帮我更快定位问题。',
+                style: TextStyle(
+                  fontSize: 12,
+                  height: 1.5,
+                  color: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.color
+                      ?.withValues(alpha: 0.7),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('关闭'),
+            ),
+            FilledButton.icon(
+              onPressed: () async {
+                await Clipboard.setData(
+                  ClipboardData(text: _buildFeedbackEnv()),
+                );
+                setDialogState(() => copied = true);
+              },
+              icon: Icon(copied ? Icons.check : Icons.copy, size: 18),
+              label: Text(copied ? '已复制' : '复制反馈信息'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 反馈用的环境信息（版本 + 平台），不含任何隐私数据
+  String _buildFeedbackEnv() {
+    return '版本：v${AppInfo.version}\n'
+        '平台：${Platform.operatingSystem} ${Platform.operatingSystemVersion}';
+  }
 
   Widget _buildSectionHeader(String title, bool isDark) {
     return Padding(

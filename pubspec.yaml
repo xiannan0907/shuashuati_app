@@ -32,20 +32,12 @@ dependencies:
   # excel解析
   archive: ^4.1.0  # 解压 xlsx（zip格式）
   xml: ^7.0.1
-  # flame引擎
-  flame: ^1.38.0
-  flame_bloc: ^1.12.24
-  flame_audio: ^2.12.2
-  pixel_ui: ^0.5.1
-  google_fonts: ^8.2.1
   # 路径处理
   path_provider: ^2.1.6
   path: ^1.9.1
   # UI组件
   cupertino_icons: ^1.0.9
   shared_preferences: ^2.5.5
-  # 用于生成领域/房间/物品的唯一ID
-  uuid: ^4.6.0
   # 记账模块图表
   fl_chart: ^1.2.0
   package_info_plus: ^10.2.1

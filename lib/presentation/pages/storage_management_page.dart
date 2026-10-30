@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../core/services/backup_service.dart';
 import '../../core/services/storage_service.dart';
+import '../../modules/quiz/presentation/pages/quiz_set_list_page.dart';
 import '../../modules/timetable/presentation/pages/timetable_settings_page.dart';
 
 class StorageManagementPage extends StatefulWidget {
@@ -379,12 +380,12 @@ class _StorageManagementPageState extends State<StorageManagementPage> {
                       size: info.quizSizeStr,
                       color: Colors.orange,
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('刷题模块设置功能开发中，请在刷题模块内清理'),
-                            duration: Duration(seconds: 2),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const QuizSetListPage(),
                           ),
-                        );
+                        ).then((_) => _loadData());
                       },
                     ),
                     // ✅ 其他数据（带清理按钮）
